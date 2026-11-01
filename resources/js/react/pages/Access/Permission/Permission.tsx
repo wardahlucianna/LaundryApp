@@ -49,11 +49,6 @@ export default function PermissionPage({ token, canManage, onChanged }: Props) {
                             ? editing ? "Ubah Fitur" : "Tambah Fitur"
                             : "Manajemen Fitur"}
                     </h1>
-                    <p>
-                        {formVisible
-                            ? "Lengkapi informasi fitur."
-                            : "Kelola daftar fitur aplikasi."}
-                    </p>
                 </div>
             </div>
 
