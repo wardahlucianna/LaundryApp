@@ -432,24 +432,24 @@
 }
 
 
-/* Friendlier, more readable typography for the feature form */
+/* Balanced typography for the feature form */
 .permission-form-grid{
-    gap:20px 22px;
+    gap:18px 20px;
 }
 .permission-form-grid>label{
-    gap:9px;
-    color:#344f69;
-    font:650 14px/1.45 'Nunito Sans','DM Sans',sans-serif;
+    gap:8px;
+    color:#405a72;
+    font:600 12px/1.45 'Nunito Sans','DM Sans',sans-serif;
     letter-spacing:.05px;
 }
 .permission-form-grid>label input{
-    height:47px;
-    padding:0 14px;
+    height:42px;
+    padding:0 12px;
     border:1px solid #dce5ed;
-    border-radius:11px;
+    border-radius:9px;
     color:#29445e;
     background:#fff;
-    font:500 14px 'Nunito Sans','DM Sans',sans-serif;
+    font:500 12px 'Nunito Sans','DM Sans',sans-serif;
     transition:border-color .16s ease,box-shadow .16s ease;
 }
 .permission-form-grid>label input::placeholder{
@@ -459,19 +459,19 @@
 .permission-form-grid>label input:focus{
     border-color:#dfa94f;
     outline:0;
-    box-shadow:0 0 0 3px rgba(223,169,79,.13);
+    box-shadow:0 0 0 3px rgba(223,169,79,.12);
 }
 .permission-form-grid .field-note{
     margin-top:0;
     color:#8796a5;
-    font:400 11.5px/1.65 'Nunito Sans','DM Sans',sans-serif;
+    font:400 10px/1.6 'Nunito Sans','DM Sans',sans-serif;
 }
 .permission-form-actions button{
-    min-height:42px;
-    padding:0 18px;
-    font:700 12px 'Nunito Sans','DM Sans',sans-serif;
+    min-height:38px;
+    padding:0 16px;
+    font:700 11px 'Nunito Sans','DM Sans',sans-serif;
 }
 @media(max-width:620px){
-    .permission-form-grid>label{font-size:13px}
-    .permission-form-grid>label input{height:44px;font-size:13px}
+    .permission-form-grid>label{font-size:12px}
+    .permission-form-grid>label input{height:40px;font-size:12px}
 }
