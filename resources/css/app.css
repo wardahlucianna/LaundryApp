@@ -179,3 +179,49 @@
 .home-shortcut-link{display:flex;align-items:center;gap:5px;color:#a9752b;font-size:10px;font-weight:700}
 @media(max-width:900px){.home-shortcut-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.home-welcome{padding:20px}.home-welcome h2{font-size:18px}.home-shortcut-grid{grid-template-columns:1fr}.home-shortcut-card{min-height:unset}}
+
+
+/* Header user dropdown and profile dialog */
+.access-topbar{position:relative;z-index:8}
+.topbar-user-menu{position:relative;display:flex;align-items:center}
+.topbar-user-trigger{display:flex;align-items:center;gap:10px;padding:5px 8px;border:1px solid transparent;border-radius:10px;background:transparent;color:#29445e;text-align:left;cursor:pointer}
+.topbar-user-trigger:hover,.topbar-user-trigger[aria-expanded="true"]{background:#f7f9fb;border-color:#e8edf2}
+.topbar-user-avatar{width:36px;height:36px;flex:0 0 36px;display:grid;place-items:center;border-radius:50%;background:#f8eddb;color:#966b2e;font-size:12px;font-weight:700}
+.topbar-user-copy{display:grid;gap:3px;min-width:0}
+.topbar-user-copy b{max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#30475e;font-size:11px}
+.topbar-user-copy small{color:#8c9aaa;font-size:9px}
+.user-menu-chevron{color:#8796a5;transition:transform .18s ease}
+.user-menu-chevron.open{transform:rotate(180deg)}
+.user-menu-dismiss{position:fixed;inset:0;z-index:9;border:0;background:transparent;cursor:default}
+.user-dropdown{position:absolute;top:calc(100% + 9px);right:0;z-index:10;width:230px;padding:8px;background:#fff;border:1px solid #e8edf2;border-radius:12px;box-shadow:0 14px 38px rgba(20,45,70,.16)}
+.user-dropdown-heading{display:flex;align-items:center;gap:10px;padding:10px 9px 13px}
+.user-dropdown-heading>span:last-child{display:grid;gap:4px;min-width:0}
+.user-dropdown-heading b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#29445e;font-size:11px}
+.user-dropdown-heading small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#8c9aaa;font-size:9px}
+.user-dropdown>button{width:100%;display:flex;align-items:center;gap:10px;padding:10px;border:0;border-radius:8px;background:transparent;color:#526a80;text-align:left;font:500 11px 'DM Sans';cursor:pointer}
+.user-dropdown>button:hover{background:#f5f7f9}
+.user-dropdown>button.user-dropdown-logout{color:#bd514a}
+.user-dropdown>button.user-dropdown-logout:hover{background:#fff1f0}
+.user-dropdown-divider{height:1px;margin:5px 2px;background:#edf0f3}
+.profile-modal-backdrop{position:fixed;inset:0;z-index:40;display:grid;place-items:center;padding:18px;background:rgba(13,31,51,.48);backdrop-filter:blur(3px)}
+.profile-modal{width:min(390px,100%);padding:24px;background:#fff;border:1px solid #e7edf2;border-radius:16px;box-shadow:0 24px 70px rgba(16,36,61,.2);text-align:center}
+.profile-modal-heading{display:flex;align-items:flex-start;justify-content:space-between;text-align:left}
+.profile-modal-heading small{color:#b78339;font-size:8px;font-weight:700;letter-spacing:1.4px}
+.profile-modal-heading h2{margin:5px 0;color:#173756;font:700 18px Manrope}
+.profile-modal-heading>button{width:30px;height:30px;display:grid;place-items:center;border:0;border-radius:8px;background:#f3f5f7;color:#718294;cursor:pointer}
+.profile-modal-avatar{width:64px;height:64px;display:grid;place-items:center;margin:20px auto 10px;border-radius:50%;background:#f8eddb;color:#966b2e;font-size:19px;font-weight:700}
+.profile-modal>h3{margin:0;color:#29445e;font:700 15px Manrope}
+.profile-modal-role{margin:5px 0 19px;color:#8c9aaa;font-size:10px}
+.profile-details{margin:0;text-align:left;border:1px solid #edf0f3;border-radius:10px}
+.profile-details>div{display:flex;justify-content:space-between;gap:12px;padding:12px;border-bottom:1px solid #edf0f3}
+.profile-details>div:last-child{border-bottom:0}
+.profile-details dt{color:#8796a5;font-size:10px}
+.profile-details dd{margin:0;color:#30475e;font-size:10px;font-weight:600;text-align:right;overflow-wrap:anywhere}
+.profile-modal-actions{display:flex;justify-content:flex-end;margin-top:18px}
+@media(max-width:520px){
+ .topbar-user-trigger{gap:6px;padding:4px}
+ .topbar-user-avatar{width:32px;height:32px;flex-basis:32px}
+ .topbar-user-copy{display:none}
+ .user-dropdown{right:0;width:215px}
+ .profile-modal{padding:20px}
+}
