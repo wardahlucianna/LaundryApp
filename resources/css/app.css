@@ -298,3 +298,105 @@
     .access-sidebar{transform:none!important}
     .mobile-sidebar-toggle,.mobile-menu-toggle,.mobile-sidebar-close,.mobile-sidebar-overlay{display:none!important}
 }
+
+
+/* Centered delete confirmation modal */
+.delete-modal-backdrop{
+    position:fixed;
+    inset:0;
+    z-index:60;
+    display:grid;
+    place-items:center;
+    padding:20px;
+    background:rgba(12,29,47,.56);
+    backdrop-filter:blur(4px);
+    animation:delete-backdrop-enter .16s ease-out;
+}
+.delete-modal{
+    position:relative;
+    width:min(420px,100%);
+    padding:30px 28px 24px;
+    border:1px solid #e8edf2;
+    border-radius:18px;
+    background:#fff;
+    box-shadow:0 28px 80px rgba(10,30,50,.24);
+    text-align:center;
+    animation:delete-modal-enter .2s ease-out;
+}
+.delete-modal-close{
+    position:absolute;
+    top:13px;
+    right:13px;
+    width:32px;
+    height:32px;
+    display:grid;
+    place-items:center;
+    border:0;
+    border-radius:9px;
+    background:#f3f5f7;
+    color:#8190a0;
+    cursor:pointer;
+}
+.delete-modal-close:hover{background:#e9edf1;color:#40576d}
+.delete-modal-icon{
+    width:58px;
+    height:58px;
+    display:grid;
+    place-items:center;
+    margin:2px auto 17px;
+    border-radius:50%;
+    background:#fff1ef;
+    color:#cf6259;
+}
+.delete-modal h2{
+    margin:0 0 9px;
+    color:#1d3b59;
+    font:700 19px Manrope,sans-serif;
+    letter-spacing:-.3px;
+}
+.delete-modal p{
+    max-width:330px;
+    margin:0 auto;
+    color:#7d8b99;
+    font:400 12px/1.7 'DM Sans',sans-serif;
+    overflow-wrap:anywhere;
+}
+.delete-modal p strong{color:#40566b;font-weight:700}
+.delete-modal-actions{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin-top:25px;
+}
+.delete-modal-actions button{
+    min-width:116px;
+    min-height:39px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    border-radius:9px;
+    font:600 11px 'DM Sans',sans-serif;
+    cursor:pointer;
+}
+.delete-modal-actions .btn-secondary{
+    border:1px solid #e2e8ee;
+    background:#fff;
+    color:#5e7285;
+}
+.delete-modal-actions .btn-secondary:hover{background:#f7f9fb}
+.delete-confirm-button{
+    border:1px solid #c94f48;
+    background:#c94f48;
+    color:#fff;
+    box-shadow:0 4px 10px rgba(201,79,72,.16);
+}
+.delete-confirm-button:hover{background:#b9433d;border-color:#b9433d}
+.delete-modal-actions button:disabled,.delete-modal-close:disabled{opacity:.55;cursor:not-allowed}
+@keyframes delete-backdrop-enter{from{opacity:0}to{opacity:1}}
+@keyframes delete-modal-enter{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:520px){
+    .delete-modal{padding:28px 20px 21px;border-radius:16px}
+    .delete-modal-actions{display:grid;grid-template-columns:1fr 1fr}
+    .delete-modal-actions button{width:100%;min-width:0}
+}
