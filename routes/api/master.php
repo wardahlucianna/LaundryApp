@@ -27,5 +27,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/permissions', [PermissionController::class, 'index'])->middleware('permission:FEATURE_VIEW');
     Route::post('/permissions', [PermissionController::class, 'store'])->middleware('permission:FEATURE_CREATE');
     Route::put('/permissions/{permission}', [PermissionController::class, 'update'])->middleware('permission:FEATURE_UPDATE');
-    Route::delete('/permissions/{permission}', [PermissionController::class, 'destroy')->middleware('permission:FEATURE_DELETE');
+    Route::delete('/permissions/{permission}', [PermissionController::class, 'destroy'])->middleware('permission:FEATURE_DELETE');
 });
