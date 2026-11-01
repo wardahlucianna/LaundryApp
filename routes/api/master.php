@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\Api\Master\Fitur\PermissionController;
-use App\Http\Controllers\Api\Master\Fitur\PermissionFeatureController;
-use App\Http\Controllers\Api\Master\KelompokFitur\PermissionGroupController;
+use App\Http\Controllers\Api\Master\Akses\PermissionController;
+use App\Http\Controllers\Api\Master\Akses\PermissionFeatureController;
+use App\Http\Controllers\Api\Master\Akses\PermissionGroupController;
 use App\Http\Controllers\Api\Master\Akses\RoleController;
 use Illuminate\Support\Facades\Route;
 
