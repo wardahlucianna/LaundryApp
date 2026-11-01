@@ -95,7 +95,10 @@ class FeatureSeeder extends Seeder
                 'update' => ['Ubah', 'FEATURE_UPDATE'],
                 'delete' => ['Hapus', 'FEATURE_DELETE'],
             ],
-            'ACCESS' => ['manage' => ['Kelola Hak Akses', 'ACCESS_MANAGE']],
+            'ACCESS' => [
+                'view' => ['Lihat', 'ACCESS_VIEW'],
+                'manage' => ['Kelola Hak Akses', 'ACCESS_MANAGE'],
+            ],
         ];
 
         $permissions = collect();
