@@ -1,6 +1,5 @@
 import { useState, type ReactNode } from "react";
 import {
-    CBadge,
     CBreadcrumb,
     CBreadcrumbItem,
     CButton,
@@ -66,7 +65,7 @@ export default function MainLayout({
                                 <button type="button" key={item.id} className={activePage === item.id ? "coreui-laundry-nav-link active" : "coreui-laundry-nav-link"} onClick={() => onNavigate(item.id)}>
                                     <CIcon icon={coreIcon(item.id)} size="lg" />
                                     <span>{item.label}</span>
-                                    {activePage === item.id && <CBadge color="primary" shape="rounded-pill" className="ms-auto"> </CBadge>}
+                                    {activePage === item.id && <span className="coreui-laundry-active-indicator ms-auto" aria-hidden="true" />}
                                 </button>
                             ))}
                         </div>
