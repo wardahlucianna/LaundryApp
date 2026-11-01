@@ -159,3 +159,23 @@
 .modal-actions button:disabled{opacity:.55;cursor:not-allowed}
 @keyframes modal-enter{from{opacity:0;transform:translateY(7px) scale(.99)}to{opacity:1;transform:translateY(0) scale(1)}}
 @media(max-width:520px){.modal-backdrop{padding:12px;align-items:end}.modal-dialog{padding:18px;border-radius:15px 15px 10px 10px}.modal-actions{display:grid;grid-template-columns:1fr 1fr}.modal-actions button{justify-content:center}}
+
+/* Home dashboard: reusable landing page inside the shared application shell */
+.home-page{display:grid;gap:20px}
+.home-welcome{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:26px 28px;border-radius:15px;background:linear-gradient(115deg,#173b60,#24577d);color:#fff}
+.home-welcome>div:first-child>span{font-size:9px;font-weight:700;letter-spacing:1.6px;color:#f2c77e}
+.home-welcome h2{margin:8px 0 6px;font:700 21px Manrope,sans-serif;letter-spacing:-.35px}
+.home-welcome p{margin:0;color:#d0dce7;font-size:11px;line-height:1.6}
+.home-welcome-mark{display:grid;place-items:center;width:52px;height:52px;flex:0 0 52px;border:1px solid #ffffff30;border-radius:15px;color:#f2c77e;font-size:30px}
+.home-section-heading h2{margin:0;color:#1b3a58;font:700 15px Manrope,sans-serif}
+.home-section-heading p{margin:5px 0 0;color:#8796a5;font-size:10px}
+.home-shortcut-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.home-shortcut-card{display:flex;align-items:flex-start;gap:13px;min-height:150px;padding:18px;text-align:left;border:1px solid #e8edf2;border-radius:13px;background:#fff;box-shadow:0 4px 18px rgba(24,48,72,.035);cursor:pointer;transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease}
+.home-shortcut-card:hover{transform:translateY(-2px);border-color:#e6c58e;box-shadow:0 9px 24px rgba(24,48,72,.07)}
+.home-shortcut-icon{display:grid;place-items:center;width:39px;height:39px;flex:0 0 39px;border-radius:11px;background:#fbf2e5;color:#a9752b}
+.home-shortcut-copy{display:grid;gap:8px;min-width:0}
+.home-shortcut-copy strong{color:#1d3b59;font:700 12px Manrope,sans-serif}
+.home-shortcut-copy small{min-height:34px;color:#8795a3;font-size:10px;line-height:1.6}
+.home-shortcut-link{display:flex;align-items:center;gap:5px;color:#a9752b;font-size:10px;font-weight:700}
+@media(max-width:900px){.home-shortcut-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.home-welcome{padding:20px}.home-welcome h2{font-size:18px}.home-shortcut-grid{grid-template-columns:1fr}.home-shortcut-card{min-height:unset}}
