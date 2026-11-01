@@ -29,16 +29,54 @@ type User = {
 
 type PageId = "dashboard" | "roles" | "features" | "access";
 
+const pagePaths: Record<PageId, string> = {
+    dashboard: "/home",
+    roles: "/roles",
+    features: "/permissions",
+    access: "/access",
+};
+
+function getPageFromPath(pathname: string): PageId {
+    const entry = Object.entries(pagePaths).find(([, path]) => path === pathname);
+    return (entry?.[0] as PageId | undefined) ?? "dashboard";
+}
+
 export default function App() {
     const [token, setToken] = useState<string | null>(
         () => localStorage.getItem("sunrise_token"),
     );
     const [user, setUser] = useState<User | null>(null);
     const [permissionCodes, setPermissionCodes] = useState<string[]>([]);
-    const [page, setPage] = useState<PageId>("dashboard");
+    const [page, setPage] = useState<PageId>(() =>
+        getPageFromPath(window.location.pathname),
+    );
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState("");
     const [notice, setNotice] = useState("");
+
+    const navigate = useCallback((nextPage: PageId) => {
+        const nextPath = pagePaths[nextPage];
+        if (window.location.pathname !== nextPath) {
+            window.history.pushState({}, "", nextPath);
+        }
+        setPage(nextPage);
+    }, []);
+
+    useEffect(() => {
+        const handlePopState = () => {
+            setPage(getPageFromPath(window.location.pathname));
+        };
+
+        window.addEventListener("popstate", handlePopState);
+        return () => window.removeEventListener("popstate", handlePopState);
+    }, []);
+
+    useEffect(() => {
+        if (token && user && !Object.values(pagePaths).includes(window.location.pathname)) {
+            window.history.replaceState({}, "", pagePaths.dashboard);
+            setPage("dashboard");
+        }
+    }, [token, user]);
 
     const can = useCallback(
         (code: string) =>
@@ -118,6 +156,7 @@ export default function App() {
         setToken(null);
         setUser(null);
         setPermissionCodes([]);
+        window.history.pushState({}, "", "/");
         setPage("dashboard");
     };
 
@@ -221,7 +260,7 @@ export default function App() {
         <MainLayout
             groups={navigationGroups}
             activePage={page}
-            onNavigate={value => setPage(value as PageId)}
+            onNavigate={value => navigate(value as PageId)}
             userName={user.full_name}
             username={user.username}
             roleName={user.role?.name || "Pengguna"}
@@ -238,7 +277,7 @@ export default function App() {
             {page === "dashboard" && (
                 <DashboardPage
                     userName={user.full_name}
-                    onNavigate={setPage}
+                    onNavigate={navigate}
                 />
             )}
 
