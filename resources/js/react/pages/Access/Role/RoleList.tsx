@@ -166,7 +166,7 @@ export default function RoleList({
             <div className="access-panel">
                 <div className="panel-heading">
                     <div>
-                        <h2>Daftar Role</h2>
+                        <h2 className="role-panel-title">Daftar Role</h2>
                     </div>
 
                     <div className="heading-actions">
