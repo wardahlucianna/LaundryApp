@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Master\KelompokFitur;
+namespace App\Http\Controllers\Api\Master\Akses;
 
 use App\Http\Controllers\Controller;
 use App\Models\PermissionGroup;
