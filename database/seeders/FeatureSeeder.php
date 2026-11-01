@@ -137,7 +137,7 @@ class FeatureSeeder extends Seeder
         // Admin manages day-to-day modules, but cannot administer roles or access policies.
         $adminPermissions = $permissions->reject(fn ($permission) => in_array(
             $permission->code,
-            ['ROLE_VIEW', 'ROLE_MANAGE', 'ACCESS_MANAGE'],
+            ['ROLE_VIEW', 'ROLE_MANAGE', 'ACCESS_VIEW', 'ACCESS_MANAGE'],
             true,
         ));
         $admin->permissions()->sync($adminPermissions->pluck('id'));
