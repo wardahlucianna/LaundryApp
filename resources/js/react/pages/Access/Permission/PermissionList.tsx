@@ -1,14 +1,219 @@
-import { useCallback,useEffect,useState } from "react";
-import { Pencil,Plus,RotateCcw,Search,Trash2 } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { Pencil, Plus, RotateCcw, Search, Trash2 } from "lucide-react";
 import { request } from "../../../../lib/api/request";
-import type { Permission } from "../../../../features/master/fitur/permission/types/permission";
+import type { Permission } from "../../../types/permission";
 import type { Page } from "../../../../types/pagination";
 import Pagination from "../../../components/common/Pagination";
-type Props={token:string;canManage:boolean;refreshKey:number;onAdd:()=>void;onEdit:(item:Permission)=>void;onDeleted:()=>void};
-export default function PermissionList({token,canManage,refreshKey,onAdd,onEdit,onDeleted}:Props){
- const [data,setData]=useState<Page<Permission>|null>(null),[page,setPage]=useState(1),[perPage,setPerPage]=useState(10),[searchInput,setSearchInput]=useState(""),[search,setSearch]=useState(""),[status,setStatus]=useState(""),[busy,setBusy]=useState(false),[error,setError]=useState("");
- const load=useCallback(async()=>{const q=new URLSearchParams({page:String(page),per_page:String(perPage)});if(search)q.set("search",search);if(status!=="")q.set("is_active",status);setData(await request<Page<Permission>>(`/permissions?${q}`,token));},[token,page,perPage,search,status,refreshKey]);
- useEffect(()=>{load().catch(e=>setError((e as Error).message));},[load]);
- const remove=async(item:Permission)=>{if(!window.confirm(`Hapus fitur "${item.name}"?`))return;setBusy(true);setError("");try{await request(`/permissions/${item.id}`,token,{method:"DELETE"});if((data?.data.length??0)===1&&page>1)setPage(v=>v-1);else onDeleted();}catch(e){setError((e as Error).message);}finally{setBusy(false);}};
- return <>{error&&<div className="alert error">{error}<button onClick={()=>setError("")}>×</button></div>}<div className="access-panel"><div className="panel-heading"><div><h2>Daftar Fitur</h2><p>Fitur yang dapat diberikan kepada setiap role.</p></div><div className="heading-actions"><span>{data?.total??0} fitur</span>{canManage&&<button className="btn-primary" onClick={onAdd}><Plus size={15}/> Tambah Fitur</button>}</div></div><div className="list-toolbar access-toolbar"><input value={searchInput} onChange={e=>setSearchInput(e.target.value)} onKeyDown={e=>e.key==="Enter"&&(setPage(1),setSearch(searchInput.trim()))} placeholder="Cari nama, kode, atau path fitur..."/><select value={status} onChange={e=>{setStatus(e.target.value);setPage(1);}}><option value="">Semua Status</option><option value="1">Aktif</option><option value="0">Nonaktif</option></select><button className="btn-primary" onClick={()=>{setPage(1);setSearch(searchInput.trim());}}><Search size={15}/> Cari</button><button className="btn-secondary" onClick={()=>{setSearchInput("");setSearch("");setStatus("");setPage(1);}}><RotateCcw size={15}/> Atur Ulang</button></div><div className="table-wrap"><table className="access-table"><thead><tr><th>NO</th><th>NAMA FITUR</th><th>KODE</th><th>PATH MENU</th><th>STATUS</th><th>AKSI</th></tr></thead><tbody>{data?.data.map((item,i)=><tr key={item.id}><td>{(page-1)*perPage+i+1}</td><td><b>{item.name}</b></td><td>{item.code}</td><td>{item.path||"—"}</td><td><span className={item.is_active?"pill active":"pill"}>{item.is_active?"Aktif":"Nonaktif"}</span></td><td><div className="row-actions">{canManage&&<><button className="icon-action" title="Edit" onClick={()=>onEdit(item)}><Pencil size={16}/></button><button className="icon-action danger" title="Hapus" disabled={busy} onClick={()=>remove(item)}><Trash2 size={16}/></button></>}</div></td></tr>)}{!data?.data.length&&<tr><td colSpan={6} className="empty-cell">Belum ada data fitur.</td></tr>}</tbody></table></div><Pagination data={data} page={page} setPage={setPage} perPage={perPage} setPerPage={setPerPage}/></div></>;
+
+type Props = {
+    token: string;
+    canManage: boolean;
+    refreshKey: number;
+    onAdd: () => void;
+    onEdit: (permission: Permission) => void;
+    onDeleted: () => void;
+};
+
+export default function PermissionList({
+    token,
+    canManage,
+    refreshKey,
+    onAdd,
+    onEdit,
+    onDeleted,
+}: Props) {
+    const [data, setData] = useState<Page<Permission> | null>(null);
+    const [page, setPage] = useState(1);
+    const [perPage, setPerPage] = useState(10);
+    const [searchInput, setSearchInput] = useState("");
+    const [search, setSearch] = useState("");
+    const [status, setStatus] = useState("");
+    const [busy, setBusy] = useState(false);
+    const [error, setError] = useState("");
+
+    const load = useCallback(async () => {
+        const query = new URLSearchParams({
+            page: String(page),
+            per_page: String(perPage),
+        });
+
+        if (search) query.set("search", search);
+        if (status !== "") query.set("is_active", status);
+
+        const result = await request<Page<Permission>>(
+            `/permissions?${query.toString()}`,
+            token,
+        );
+
+        setData(result);
+    }, [token, page, perPage, search, status, refreshKey]);
+
+    useEffect(() => {
+        load().catch(error => setError((error as Error).message));
+    }, [load]);
+
+    const handleDelete = async (permission: Permission) => {
+        if (!window.confirm(`Hapus fitur "${permission.name}"?`)) return;
+
+        setBusy(true);
+        setError("");
+
+        try {
+            await request(`/permissions/${permission.id}`, token, {
+                method: "DELETE",
+            });
+
+            if ((data?.data.length ?? 0) === 1 && page > 1) {
+                setPage(value => value - 1);
+            } else {
+                onDeleted();
+            }
+        } catch (error) {
+            setError((error as Error).message);
+        } finally {
+            setBusy(false);
+        }
+    };
+
+    const applySearch = () => {
+        setPage(1);
+        setSearch(searchInput.trim());
+    };
+
+    const resetFilters = () => {
+        setSearchInput("");
+        setSearch("");
+        setStatus("");
+        setPage(1);
+    };
+
+    return (
+        <>
+            {error && (
+                <div className="alert error">
+                    {error}
+                    <button onClick={() => setError("")}>×</button>
+                </div>
+            )}
+
+            <div className="access-panel">
+                <div className="panel-heading">
+                    <div>
+                        <h2>Daftar Fitur</h2>
+                        <p>Fitur yang dapat diberikan kepada setiap role.</p>
+                    </div>
+
+                    <div className="heading-actions">
+                        <span>{data?.total ?? 0} fitur</span>
+                        {canManage && (
+                            <button className="btn-primary" onClick={onAdd}>
+                                <Plus size={15} />
+                                Tambah Fitur
+                            </button>
+                        )}
+                    </div>
+                </div>
+
+                <div className="list-toolbar access-toolbar">
+                    <input
+                        value={searchInput}
+                        onChange={event => setSearchInput(event.target.value)}
+                        onKeyDown={event => event.key === "Enter" && applySearch()}
+                        placeholder="Cari nama, kode, atau path fitur..."
+                    />
+
+                    <select
+                        value={status}
+                        onChange={event => {
+                            setStatus(event.target.value);
+                            setPage(1);
+                        }}
+                    >
+                        <option value="">Semua Status</option>
+                        <option value="1">Aktif</option>
+                        <option value="0">Nonaktif</option>
+                    </select>
+
+                    <button className="btn-primary" onClick={applySearch}>
+                        <Search size={15} />
+                        Cari
+                    </button>
+
+                    <button className="btn-secondary" onClick={resetFilters}>
+                        <RotateCcw size={15} />
+                        Atur Ulang
+                    </button>
+                </div>
+
+                <div className="table-wrap">
+                    <table className="access-table">
+                        <thead>
+                            <tr>
+                                <th>NO</th>
+                                <th>NAMA FITUR</th>
+                                <th>KODE</th>
+                                <th>PATH MENU</th>
+                                <th>STATUS</th>
+                                <th>AKSI</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {data?.data.map((permission, index) => (
+                                <tr key={permission.id}>
+                                    <td>{(page - 1) * perPage + index + 1}</td>
+                                    <td><b>{permission.name}</b></td>
+                                    <td>{permission.code}</td>
+                                    <td>{permission.path || "—"}</td>
+                                    <td>
+                                        <span className={permission.is_active ? "pill active" : "pill"}>
+                                            {permission.is_active ? "Aktif" : "Nonaktif"}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div className="row-actions">
+                                            {canManage && (
+                                                <>
+                                                    <button
+                                                        className="icon-action"
+                                                        title="Edit"
+                                                        onClick={() => onEdit(permission)}
+                                                    >
+                                                        <Pencil size={16} />
+                                                    </button>
+                                                    <button
+                                                        className="icon-action danger"
+                                                        title="Hapus"
+                                                        disabled={busy}
+                                                        onClick={() => handleDelete(permission)}
+                                                    >
+                                                        <Trash2 size={16} />
+                                                    </button>
+                                                </>
+                                            )}
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+
+                            {!data?.data.length && (
+                                <tr>
+                                    <td colSpan={6} className="empty-cell">
+                                        Belum ada data fitur.
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+
+                <Pagination
+                    data={data}
+                    page={page}
+                    setPage={setPage}
+                    perPage={perPage}
+                    setPerPage={setPerPage}
+                />
+            </div>
+        </>
+    );
 }
