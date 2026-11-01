@@ -10,8 +10,6 @@ import { Home, ShieldCheck, PanelsTopLeft, KeyRound, Search, RotateCcw, Pencil, 
 
 type User = { id: string; full_name: string; username: string; role?: Role };
 
-const API = "/api";
-
 
 export default function App() {
     const [token, setToken] = useState<string | null>(() => localStorage.getItem("sunrise_token"));
