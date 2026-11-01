@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PermissionController;
+use App\Http\Controllers\Api\PermissionFeatureController;
+use App\Http\Controllers\Api\PermissionGroupController;
 use App\Http\Controllers\Api\RoleController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,7 +26,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->middleware('permission:ROLE_MANAGE');
     Route::put('/roles/{role}/permissions', [RoleController::class, 'syncPermissions'])->middleware('permission:ACCESS_MANAGE');
 
-    Route::get('/permission-groups', [PermissionGroupController::class, 'index'])->middleware('permission:FEATURE_VIEW');\n    Route::post('/permission-groups', [PermissionGroupController::class, 'store'])->middleware('permission:FEATURE_MANAGE');\n    Route::put('/permission-groups/{permissionGroup}', [PermissionGroupController::class, 'update'])->middleware('permission:FEATURE_MANAGE');\n    Route::delete('/permission-groups/{permissionGroup}', [PermissionGroupController::class, 'destroy'])->middleware('permission:FEATURE_MANAGE');\n\n    Route::get('/permission-features', [PermissionFeatureController::class, 'index'])->middleware('permission:FEATURE_VIEW');\n    Route::post('/permission-features', [PermissionFeatureController::class, 'store'])->middleware('permission:FEATURE_MANAGE');\n    Route::put('/permission-features/{permissionFeature}', [PermissionFeatureController::class, 'update'])->middleware('permission:FEATURE_MANAGE');\n    Route::delete('/permission-features/{permissionFeature}', [PermissionFeatureController::class, 'destroy'])->middleware('permission:FEATURE_MANAGE');\n\n    Route::get('/permissions', [PermissionController::class, 'index'])->middleware('permission:FEATURE_VIEW');
+    Route::get('/permission-groups', [PermissionGroupController::class, 'index'])->middleware('permission:FEATURE_VIEW');
+    Route::post('/permission-groups', [PermissionGroupController::class, 'store'])->middleware('permission:FEATURE_MANAGE');
+    Route::put('/permission-groups/{permissionGroup}', [PermissionGroupController::class, 'update'])->middleware('permission:FEATURE_MANAGE');
+    Route::delete('/permission-groups/{permissionGroup}', [PermissionGroupController::class, 'destroy'])->middleware('permission:FEATURE_MANAGE');
+
+    Route::get('/permission-features', [PermissionFeatureController::class, 'index'])->middleware('permission:FEATURE_VIEW');
+    Route::post('/permission-features', [PermissionFeatureController::class, 'store'])->middleware('permission:FEATURE_MANAGE');
+    Route::put('/permission-features/{permissionFeature}', [PermissionFeatureController::class, 'update'])->middleware('permission:FEATURE_MANAGE');
+    Route::delete('/permission-features/{permissionFeature}', [PermissionFeatureController::class, 'destroy'])->middleware('permission:FEATURE_MANAGE');
+
+    Route::get('/permissions', [PermissionController::class, 'index'])->middleware('permission:FEATURE_VIEW');
     Route::post('/permissions', [PermissionController::class, 'store'])->middleware('permission:FEATURE_MANAGE');
     Route::put('/permissions/{permission}', [PermissionController::class, 'update'])->middleware('permission:FEATURE_MANAGE');
     Route::delete('/permissions/{permission}', [PermissionController::class, 'destroy'])->middleware('permission:FEATURE_MANAGE');
