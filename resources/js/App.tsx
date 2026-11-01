@@ -2,32 +2,16 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import RoleFormModal from "./features/master/akses/role/modals/RoleFormModal";
 import PermissionFormModal from "./features/master/fitur/permission/modals/PermissionFormModal";
 import DashboardPage from "./features/home/pages/DashboardPage";
+import { request } from "./lib/api/request";
+import type { Role } from "./features/master/akses/role/types/role";
+import type { Permission } from "./features/master/fitur/permission/types/permission";
+import type { Page } from "./types/pagination";
 import { Home, ShieldCheck, PanelsTopLeft, KeyRound, Search, RotateCcw, Pencil, Trash2, Plus, X } from "lucide-react";
 
-type Role = { id: string; name: string; code: string; is_active: boolean; permissions_count?: number; permissions?: Permission[] };
-type Permission = { id: string; name: string; code: string; path: string | null; is_active: boolean; roles_count?: number };
-type Page<T> = { data: T[]; current_page: number; last_page: number; total: number; per_page: number };
 type User = { id: string; full_name: string; username: string; role?: Role };
 
 const API = "/api";
 
-async function request<T>(path: string, token: string | null, options: RequestInit = {}): Promise<T> {
-    const response = await fetch(`${API}${path}`, {
-        ...options,
-        headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
-            ...options.headers,
-        },
-    });
-    const body = await response.json().catch(() => ({}));
-    if (!response.ok) {
-        const message = body.message || Object.values(body.errors || {}).flat().join(" ") || "Permintaan gagal.";
-        throw new Error(String(message));
-    }
-    return body as T;
-}
 
 export default function App() {
     const [token, setToken] = useState<string | null>(() => localStorage.getItem("sunrise_token"));
