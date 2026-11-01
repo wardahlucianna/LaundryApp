@@ -4,9 +4,9 @@ import DashboardPage from "./features/home/pages/DashboardPage";
 import { request } from "./lib/api/request";
 import type { Role } from "./features/master/akses/role/types/role";
 import MainLayout, { type NavigationGroup } from "./react/layouts/MainLayout";
-import RolePage from "./react/pages/Master/Access/Role/Role";
-import PermissionPage from "./react/pages/Master/Access/Permission/Permission";
-import AccessPage from "./react/pages/Master/Access/Access/Access";
+import RolePage from "./react/pages/Access/Role/Role";
+import PermissionPage from "./react/pages/Access/Permission/Permission";
+import AccessPage from "./react/pages/Access/Access/Access";
 
 type User = { id: string; full_name: string; username: string; role?: Role };
 type PageId = "dashboard" | "roles" | "features" | "access";
