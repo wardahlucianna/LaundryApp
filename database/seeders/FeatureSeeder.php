@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Permission;
-use App\Models\Role;
-use App\Models\User;
+use App\Models\Akses\Permission;
+use App\Models\Akses\Role;
+use App\Models\Akses\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
