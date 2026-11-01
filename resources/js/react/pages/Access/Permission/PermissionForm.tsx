@@ -106,6 +106,10 @@ export default function PermissionForm({
                         }
                         placeholder="/customers"
                     />
+                    <small className="field-note">
+                        Isi path halaman yang digunakan untuk membuka menu. Awali dengan tanda /,
+                        dan pastikan sesuai dengan route halaman di frontend. Contoh: /customers.
+                    </small>
                 </label>
 
                 <div className="modal-actions permission-form-actions">
