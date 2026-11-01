@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import RoleFormModal from "./features/master/akses/role/modals/RoleFormModal";
 import PermissionFormModal from "./features/master/fitur/permission/modals/PermissionFormModal";
-import { ShieldCheck, PanelsTopLeft, KeyRound, Search, RotateCcw, Pencil, Trash2, Plus, X } from "lucide-react";
+import DashboardPage from "./features/home/pages/DashboardPage";
+import { Home, ShieldCheck, PanelsTopLeft, KeyRound, Search, RotateCcw, Pencil, Trash2, Plus, X } from "lucide-react";
 
 type Role = { id: string; name: string; code: string; is_active: boolean; permissions_count?: number; permissions?: Permission[] };
 type Permission = { id: string; name: string; code: string; path: string | null; is_active: boolean; roles_count?: number };
@@ -32,7 +33,7 @@ export default function App() {
     const [token, setToken] = useState<string | null>(() => localStorage.getItem("sunrise_token"));
     const [user, setUser] = useState<User | null>(null);
     const [permissionCodes, setPermissionCodes] = useState<string[]>([]);
-    const [page, setPage] = useState<"roles" | "features" | "access">("roles");
+    const [page, setPage] = useState<"dashboard" | "roles" | "features" | "access">("dashboard");
     const [roles, setRoles] = useState<Page<Role> | null>(null);
     const [features, setFeatures] = useState<Page<Permission> | null>(null);
     const [allFeatures, setAllFeatures] = useState<Permission[]>([]);
@@ -172,6 +173,12 @@ export default function App() {
 
     const navGroups = useMemo(() => [
         {
+            title: "BERANDA",
+            items: [
+                { id: "dashboard" as const, label: "Home", code: "", icon: Home },
+            ],
+        },
+        {
             title: "MASTER DATA",
             items: [
                 { id: "roles" as const, label: "Manajemen Role", code: "ROLE_VIEW", icon: ShieldCheck },
@@ -184,7 +191,7 @@ export default function App() {
                 { id: "access" as const, label: "Hak Akses", code: "ACCESS_MANAGE", icon: KeyRound },
             ],
         },
-    ].map(group => ({ ...group, items: group.items.filter(item => can(item.code)) }))
+    ].map(group => ({ ...group, items: group.items.filter(item => item.id === "dashboard" || can(item.code)) }))
       .filter(group => group.items.length > 0), [can]);
     const nav = navGroups.flatMap(group => group.items);
 
@@ -217,11 +224,13 @@ export default function App() {
             <div className="access-user"><b>{user.full_name}</b><small>{user.role?.name || "Pengguna"}</small><button onClick={logout}>Keluar</button></div>
         </aside>
         <main className="access-main">
-            <header className="access-topbar"><span>Pengaturan / <b>{currentTitle}</b></span><span>Sunrise Laundry</span></header>
+            <header className="access-topbar"><span>Beranda / <b>{currentTitle}</b></span><span>Sunrise Laundry</span></header>
             <section className="access-content">
-                <div className="access-heading"><div><small>ADMINISTRASI</small><h1>{currentTitle}</h1><p>Kelola role, daftar fitur, dan hak akses pengguna.</p></div></div>
+                {page !== "dashboard" && <div className="access-heading"><div><small>ADMINISTRASI</small><h1>{currentTitle}</h1><p>{page === "roles" ? "Kelola kelompok pengguna dan perannya." : page === "features" ? "Kelola daftar fitur aplikasi." : "Atur fitur yang dapat diakses setiap role."}</p></div></div>}
                 {error && <div className="alert error">{error}<button onClick={() => setError("")}>×</button></div>}
                 {notice && <div className="alert success">{notice}<button onClick={() => setNotice("")}>×</button></div>}
+
+                {page === "dashboard" && <DashboardPage userName={user.full_name} onNavigate={setPage} />}
 
                 {page === "roles" && can("ROLE_VIEW") && <div className="access-panel">
                     <div className="panel-heading"><div><h2>Daftar Role</h2><p>Role menentukan kelompok hak akses pengguna.</p></div><div className="heading-actions"><span>{roles?.total ?? 0} role</span>{can("ROLE_MANAGE") && <button className="btn-primary" onClick={() => { setRoleEditingId(null); setRoleForm({ name: "", code: "" }); setShowRoleForm(true); }}><Plus size={15}/> Tambah Role</button>}</div></div>
