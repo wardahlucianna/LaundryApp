@@ -1,11 +1,12 @@
 import React, { Suspense, useEffect } from 'react'
-import { HashRouter, Route, Routes } from 'react-router-dom'
+import { HashRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { CSpinner, useColorModes } from '@coreui/react'
 import './scss/style.scss'
 import './scss/examples.scss'
 
 const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
+const Login = React.lazy(() => import('./views/pages/Login'))
 
 export default function App() {
   const { isColorModeSet, setColorMode } = useColorModes('sunrise-laundry-theme')
@@ -18,7 +19,11 @@ export default function App() {
   return (
     <HashRouter>
       <Suspense fallback={<div className="pt-3 text-center"><CSpinner color="primary" variant="grow" /></div>}>
-        <Routes><Route path="*" element={<DefaultLayout />} /></Routes>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="*" element={<DefaultLayout />} />
+        </Routes>
       </Suspense>
     </HashRouter>
   )
