@@ -1,0 +1,31 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+
+class Role extends Model
+{
+    public $incrementing = false;
+    protected $keyType = 'string';
+    protected $fillable = ['name', 'code', 'is_active'];
+    protected $casts = ['is_active' => 'boolean'];
+
+    protected static function booted(): void
+    {
+        static::creating(function (Role $role) {
+            $role->id ??= (string) Str::uuid();
+        });
+    }
+
+    public function permissions()
+    {
+        return $this->belongsToMany(Permission::class, 'role_permissions');
+    }
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
+}
