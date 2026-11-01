@@ -1,4 +1,4 @@
-import type { Permission } from "../../fitur/permission/types/permission";
+import type { Permission } from "../../../fitur/permission/types/permission";
 
 export type Role = {
     id: string;
