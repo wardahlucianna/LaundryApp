@@ -80,9 +80,7 @@ class FeatureSeeder extends Seeder
             'REPORTS' => ['view' => ['Lihat', 'REPORT_VIEW']],
             'ROLES' => [
                 'view' => ['Lihat', 'ROLE_VIEW'],
-                'create' => ['Tambah', 'ROLE_CREATE'],
-                'update' => ['Edit', 'ROLE_UPDATE'],
-                'delete' => ['Hapus', 'ROLE_DELETE'],
+                'manage' => ['Kelola', 'ROLE_MANAGE'],
             ],
             'FEATURES' => [
                 'view' => ['Lihat', 'FEATURE_VIEW'],
