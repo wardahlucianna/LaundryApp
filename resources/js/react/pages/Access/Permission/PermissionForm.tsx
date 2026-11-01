@@ -61,17 +61,12 @@ export default function PermissionForm({
             <div className="panel-heading">
                 <div>
                     <h2>{permission ? "Ubah Fitur" : "Tambah Fitur"}</h2>
-                    <p>
-                        {permission
-                            ? "Perbarui informasi fitur."
-                            : "Masukkan nama, kode, dan path fitur."}
-                    </p>
                 </div>
             </div>
 
             {error && <div className="alert error">{error}</div>}
 
-            <form className="modal-form" onSubmit={handleSubmit}>
+            <form className="modal-form permission-form-grid" onSubmit={handleSubmit}>
                 <label>
                     Nama Fitur
                     <input
@@ -113,7 +108,7 @@ export default function PermissionForm({
                     />
                 </label>
 
-                <div className="modal-actions">
+                <div className="modal-actions permission-form-actions">
                     <button
                         type="button"
                         className="btn-secondary"
