@@ -4,7 +4,9 @@ namespace Database\Seeders;
 
 use App\Models\Permission;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class FeatureSeeder extends Seeder
 {
@@ -33,33 +35,38 @@ class FeatureSeeder extends Seeder
             ['name' => $item[0], 'path' => $item[2], 'is_active' => true],
         ));
 
-        $owner = Role::updateOrCreate(
-            ['code' => 'OWNER'],
-            ['name' => 'Owner', 'is_active' => true],
-        );
+        $owner = Role::updateOrCreate(['code' => 'OWNER'], ['name' => 'Owner', 'is_active' => true]);
         $owner->permissions()->sync($permissions->pluck('id'));
 
-        $admin = Role::updateOrCreate(
-            ['code' => 'ADMIN'],
-            ['name' => 'Administrator', 'is_active' => true],
-        );
+        $admin = Role::updateOrCreate(['code' => 'ADMIN'], ['name' => 'Administrator', 'is_active' => true]);
         $admin->permissions()->sync($permissions->reject(fn ($permission) => $permission->code === 'ACCESS_MANAGE')->pluck('id'));
 
-        $cashier = Role::updateOrCreate(
-            ['code' => 'KASIR'],
-            ['name' => 'Kasir', 'is_active' => true],
-        );
+        $cashier = Role::updateOrCreate(['code' => 'KASIR'], ['name' => 'Kasir', 'is_active' => true]);
         $cashier->permissions()->sync($permissions->whereIn('code', [
             'DASHBOARD_VIEW', 'TRANSACTION_VIEW', 'TRANSACTION_CREATE', 'TRANSACTION_UPDATE',
             'ORDERS_VIEW', 'CUSTOMER_VIEW', 'PAYMENT_VIEW',
         ])->pluck('id'));
 
-        $operator = Role::updateOrCreate(
-            ['code' => 'OPERATOR'],
-            ['name' => 'Operator Laundry', 'is_active' => true],
-        );
+        $operator = Role::updateOrCreate(['code' => 'OPERATOR'], ['name' => 'Operator Laundry', 'is_active' => true]);
         $operator->permissions()->sync($permissions->whereIn('code', [
             'DASHBOARD_VIEW', 'ORDERS_VIEW', 'LAUNDRY_PROCESS_VIEW',
         ])->pluck('id'));
+
+        if (!User::query()->exists()) {
+            $username = env('INITIAL_OWNER_USERNAME', 'owner');
+            $password = env('INITIAL_OWNER_PASSWORD') ?: Str::random(20);
+
+            User::create([
+                'role_id' => $owner->id,
+                'full_name' => env('INITIAL_OWNER_NAME', 'Owner Sunrise Laundry'),
+                'username' => $username,
+                'email' => env('INITIAL_OWNER_EMAIL', 'owner@sunrise.local'),
+                'password' => $password,
+                'is_active' => true,
+            ]);
+
+            $this->command?->info("Initial owner created. Username: {$username} | Password: {$password}");
+            $this->command?->warn('Simpan kredensial ini dan segera ganti password setelah login pertama.');
+        }
     }
 }
