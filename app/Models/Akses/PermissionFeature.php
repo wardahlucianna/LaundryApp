@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Akses;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
