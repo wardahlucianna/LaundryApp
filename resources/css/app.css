@@ -964,3 +964,26 @@
         animation-duration: .01ms !important;
     }
 }
+
+
+/* Grouped permission actions on the role access screen */
+.access-permission-groups{display:grid;gap:17px}
+.access-permission-group{padding:15px;border:1px solid #e8edf2;border-radius:11px;background:#fbfcfd}
+.access-permission-group>h3{margin:0 0 12px;color:#24425f;font:700 12px Manrope,sans-serif}
+.access-feature-block{padding:12px 0;border-top:1px solid #e9edf2}
+.access-feature-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.access-feature-heading>div{display:grid;gap:4px}
+.access-feature-heading b{color:#304961;font-size:11px}
+.access-feature-heading small{color:#98a5b1;font-size:9px}
+.access-feature-all,.access-action-option{display:flex;align-items:center;gap:7px;color:#64798d;font-size:10px;white-space:nowrap}
+.access-feature-all input,.access-action-option input{accent-color:#dba64f}
+.access-action-list{display:flex;flex-wrap:wrap;gap:9px}
+.access-action-option{padding:8px 10px;border:1px solid #e6ebf0;border-radius:8px;background:#fff}
+.access-action-option small{color:#9aa6b1;font-size:8px}
+.permission-form-grid>label select{width:100%;height:42px;border:1px solid #dce5ed;border-radius:9px;padding:0 12px;background:#fff;color:#29445e;font:500 12px 'DM Sans';outline-color:#d9a34c}
+@media(max-width:620px){
+ .access-permission-group{padding:12px}
+ .access-feature-heading{align-items:flex-start}
+ .access-action-list{display:grid;grid-template-columns:1fr 1fr}
+ .access-action-option{white-space:normal;align-items:flex-start}
+}
