@@ -127,7 +127,7 @@ export default function App() {
         setBusy(true); setError(""); setNotice("");
         try {
             await request(roleEditingId ? `/roles/${roleEditingId}` : "/roles", token, { method: roleEditingId ? "PUT" : "POST", body: JSON.stringify(roleForm) });
-            setRoleForm({ name: "", code: "" }); setRoleEditingId(null); setShowRoleForm(false);
+            setRoleForm({ name: "", code: "" }); setRoleEditingId(null); setShowRoleForm(false); setPage("roles");
             setNotice(roleEditingId ? "Role berhasil diperbarui." : "Role berhasil ditambahkan."); await loadRoles();
         } catch (e) { setError((e as Error).message); } finally { setBusy(false); }
     };
@@ -144,7 +144,7 @@ export default function App() {
         setBusy(true); setError(""); setNotice("");
         try {
             await request(featureEditingId ? `/permissions/${featureEditingId}` : "/permissions", token, { method: featureEditingId ? "PUT" : "POST", body: JSON.stringify({ ...featureForm, path: featureForm.path || null }) });
-            setFeatureForm({ name: "", code: "", path: "" }); setFeatureEditingId(null); setShowFeatureForm(false);
+            setFeatureForm({ name: "", code: "", path: "" }); setFeatureEditingId(null); setShowFeatureForm(false); setPage("features");
             setNotice(featureEditingId ? "Fitur berhasil diperbarui." : "Fitur berhasil ditambahkan."); await loadFeatures(); await loadAllFeatures();
         } catch (e) { setError((e as Error).message); } finally { setBusy(false); }
     };
