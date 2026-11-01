@@ -1,14 +1,14 @@
 <?php
 
-namespace Database\\Seeders;
+namespace Database\Seeders;
 
-use App\\Models\\Akses\\Permission;
-use App\\Models\\Akses\\PermissionFeature;
-use App\\Models\\Akses\\PermissionGroup;
-use App\\Models\\Akses\\Role;
-use App\\Models\\Akses\\User;
-use Illuminate\\Database\\Seeder;
-use Illuminate\\Support\\Str;
+use App\Models\Akses\Permission;
+use App\Models\Akses\PermissionFeature;
+use App\Models\Akses\PermissionGroup;
+use App\Models\Akses\Role;
+use App\Models\Akses\User;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class FeatureSeeder extends Seeder
 {
