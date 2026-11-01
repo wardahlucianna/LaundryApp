@@ -83,9 +83,9 @@ class RoleController extends Controller
             'permission_ids.*' => ['uuid', 'exists:permissions,id'],
         ]);
 
-        if (in_array($role->code, ['SUPERADMIN', 'ADMIN', 'OWNER'], true)) {
+        if ($role->code === 'SUPERADMIN') {
             throw ValidationException::withMessages([
-                'role' => 'Hak akses role bawaan diatur oleh sistem dan tidak dapat ditimpa dari halaman ini.',
+                'role' => 'Hak akses SUPERADMIN selalu penuh dan tidak dapat diubah.',
             ]);
         }
 
