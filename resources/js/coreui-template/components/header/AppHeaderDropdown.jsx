@@ -23,8 +23,22 @@ import {
 import CIcon from '@coreui/icons-react'
 
 import avatar8 from './../../assets/images/avatars/8.jpg'
+import { apiRequest } from '../../lib/api'
 
 const AppHeaderDropdown = () => {
+  const handleLogout = async () => {
+    try {
+      await apiRequest('/auth/logout', { method: 'POST' })
+    } catch (error) {
+      // Clear the local session even if the API token has already expired.
+    } finally {
+      localStorage.removeItem('auth_token')
+      localStorage.removeItem('access_token')
+      localStorage.removeItem('token')
+      window.location.reload()
+    }
+  }
+
   return (
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0 pe-0" caret={false}>
@@ -84,9 +98,9 @@ const AppHeaderDropdown = () => {
           </CBadge>
         </CDropdownItem>
         <CDropdownDivider />
-        <CDropdownItem href="#">
+        <CDropdownItem as="button" type="button" onClick={handleLogout}>
           <CIcon icon={cilLockLocked} className="me-2" />
-          Lock Account
+          Logout
         </CDropdownItem>
       </CDropdownMenu>
     </CDropdown>
