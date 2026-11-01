@@ -40,7 +40,7 @@ export default function RolePage({ token, canManage }: Props) {
         <>
             <div className="access-heading">
                 <div>
-                    <h1>Manajemen Role</h1>
+                    <h1 className="text-lg">Manajemen Role</h1>
                 </div>
             </div>
 
