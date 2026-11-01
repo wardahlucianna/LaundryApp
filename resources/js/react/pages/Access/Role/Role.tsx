@@ -41,9 +41,6 @@ export default function RolePage({ token, canManage }: Props) {
             <div className="access-heading">
                 <div>
                     <h1>Manajemen Role</h1>
-                    {formVisible && (
-                        <p>{editing ? "Ubah Role" : "Tambah Role"}</p>
-                    )}
                 </div>
             </div>
 
