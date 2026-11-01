@@ -18,7 +18,7 @@ class EnsurePermission
 
         $user->loadMissing('role.permissions');
 
-        if ($user->role?->code === 'OWNER') {
+        if ($user->role?->code === 'SUPERADMIN') {
             return $next($request);
         }
 
