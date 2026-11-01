@@ -430,3 +430,48 @@
     color:#8997a5;
     font:400 10px/1.55 'DM Sans',sans-serif;
 }
+
+
+/* Friendlier, more readable typography for the feature form */
+.permission-form-grid{
+    gap:20px 22px;
+}
+.permission-form-grid>label{
+    gap:9px;
+    color:#344f69;
+    font:650 14px/1.45 'Nunito Sans','DM Sans',sans-serif;
+    letter-spacing:.05px;
+}
+.permission-form-grid>label input{
+    height:47px;
+    padding:0 14px;
+    border:1px solid #dce5ed;
+    border-radius:11px;
+    color:#29445e;
+    background:#fff;
+    font:500 14px 'Nunito Sans','DM Sans',sans-serif;
+    transition:border-color .16s ease,box-shadow .16s ease;
+}
+.permission-form-grid>label input::placeholder{
+    color:#a0acb8;
+    font-weight:400;
+}
+.permission-form-grid>label input:focus{
+    border-color:#dfa94f;
+    outline:0;
+    box-shadow:0 0 0 3px rgba(223,169,79,.13);
+}
+.permission-form-grid .field-note{
+    margin-top:0;
+    color:#8796a5;
+    font:400 11.5px/1.65 'Nunito Sans','DM Sans',sans-serif;
+}
+.permission-form-actions button{
+    min-height:42px;
+    padding:0 18px;
+    font:700 12px 'Nunito Sans','DM Sans',sans-serif;
+}
+@media(max-width:620px){
+    .permission-form-grid>label{font-size:13px}
+    .permission-form-grid>label input{height:44px;font-size:13px}
+}
