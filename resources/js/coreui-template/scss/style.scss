@@ -1,55 +1,11 @@
-@use "@coreui/coreui/scss/coreui" as * with (
+@use "@coreui/coreui/scss/coreui" as * with ( 
   $enable-deprecation-messages: false,
 );
 @use "@coreui/chartjs/scss/coreui-chartjs";
 @use "vendors/simplebar";
 
-/* Sunrise Laundry: consistent, compact typography across the admin UI */
-:root {
-  font-size: 14px;
-}
-
 body {
   background-color: var(--cui-tertiary-bg);
-  font-size: 0.875rem;
-  line-height: 1.5;
-}
-
-h1, .h1 { font-size: 1.5rem; }
-h2, .h2 { font-size: 1.3rem; }
-h3, .h3 { font-size: 1.15rem; }
-h4, .h4 { font-size: 1.05rem; }
-h5, .h5 { font-size: 0.95rem; }
-h6, .h6 { font-size: 0.875rem; }
-
-.btn,
-.form-control,
-.form-select,
-.input-group-text,
-.dropdown-menu,
-.dropdown-item,
-.nav-link,
-.sidebar .nav-link,
-.breadcrumb,
-.table,
-.card,
-.modal,
-.pagination {
-  font-size: 0.875rem;
-}
-
-.card-title,
-.modal-title {
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-.sidebar .nav-title {
-  font-size: 0.75rem;
-}
-
-.sidebar .nav-link {
-  padding-block: 0.55rem;
 }
 
 .wrapper {
@@ -61,7 +17,7 @@ h6, .h6 { font-size: 0.875rem; }
 
 .header > .container-fluid,
 .sidebar-header {
-  min-height: calc(3.5rem + 1px);
+  min-height: calc(4rem + 1px); // stylelint-disable-line function-disallowed-list
 }
 
 .sidebar-brand-full {
@@ -77,7 +33,7 @@ h6, .h6 { font-size: 0.875rem; }
   .nav-link {
     display: flex;
     align-items: center;
-    min-height: calc(3.5rem + 1px);
+    min-height: calc(4rem + 1px); // stylelint-disable-line function-disallowed-list
   }
 }
 
@@ -93,12 +49,11 @@ h6, .h6 { font-size: 0.875rem; }
 }
 
 .header > .container-fluid + .container-fluid {
-  min-height: 2.75rem;
+  min-height: 3rem;
 }
 
 .footer {
-  min-height: calc(2.75rem + 1px);
-  font-size: 0.8rem;
+  min-height: calc(3rem + 1px); // stylelint-disable-line function-disallowed-list
 }
 
 @include color-mode(dark) {
