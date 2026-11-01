@@ -421,3 +421,12 @@
     .permission-form-grid{grid-template-columns:1fr;gap:13px}
     .permission-form-grid .permission-form-actions{grid-column:1}
 }
+
+
+/* Helper note for form fields */
+.field-note{
+    display:block;
+    margin-top:-1px;
+    color:#8997a5;
+    font:400 10px/1.55 'DM Sans',sans-serif;
+}
