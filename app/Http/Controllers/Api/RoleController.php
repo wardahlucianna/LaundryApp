@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Role\StoreRoleRequest;
+use App\Http\Requests\Role\UpdateRoleRequest;
 use App\Models\Role;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class RoleController extends Controller
 {
@@ -24,15 +25,9 @@ class RoleController extends Controller
         return response()->json($query->paginate(min(max($request->integer('per_page', 10), 1), 100)));
     }
 
-    public function store(Request $request)
+    public function store(StoreRoleRequest $request)
     {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:100'],
-            'code' => ['required', 'string', 'max:60', 'alpha_dash', 'unique:roles,code'],
-            'is_active' => ['sometimes', 'boolean'],
-        ]);
-
-        return response()->json(['data' => Role::create($data)], 201);
+        return response()->json(['data' => Role::create($request->validated())], 201);
     }
 
     public function show(Role $role)
@@ -40,15 +35,10 @@ class RoleController extends Controller
         return response()->json(['data' => $role->load('permissions')]);
     }
 
-    public function update(Request $request, Role $role)
+    public function update(UpdateRoleRequest $request, Role $role)
     {
-        $data = $request->validate([
-            'name' => ['sometimes', 'required', 'string', 'max:100'],
-            'code' => ['sometimes', 'required', 'string', 'max:60', 'alpha_dash', Rule::unique('roles', 'code')->ignore($role->id)],
-            'is_active' => ['sometimes', 'boolean'],
-        ]);
+        $role->update($request->validated());
 
-        $role->update($data);
         return response()->json(['data' => $role->fresh()]);
     }
 
@@ -63,6 +53,7 @@ class RoleController extends Controller
         }
 
         $role->delete();
+
         return response()->json(['message' => 'Role berhasil dihapus.']);
     }
 
