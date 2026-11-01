@@ -54,8 +54,8 @@ class RoleController extends Controller
 
     public function destroy(Role $role)
     {
-        if ($role->code === 'OWNER') {
-            return response()->json(['message' => 'Role OWNER tidak dapat dihapus.'], 422);
+        if ($role->code === 'SUPERADMIN') {
+            return response()->json(['message' => 'Role SUPERADMIN tidak dapat dihapus.'], 422);
         }
 
         if ($role->users()->exists()) {
@@ -68,8 +68,8 @@ class RoleController extends Controller
 
     public function syncPermissions(Request $request, Role $role)
     {
-        if ($role->code === 'OWNER') {
-            return response()->json(['message' => 'Hak akses OWNER selalu penuh.'], 422);
+        if ($role->code === 'SUPERADMIN') {
+            return response()->json(['message' => 'Hak akses SUPERADMIN selalu penuh.'], 422);
         }
 
         $data = $request->validate([
