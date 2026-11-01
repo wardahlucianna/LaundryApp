@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Pencil, Plus, RotateCcw, Search, Trash2 } from "lucide-react";
+import { AlertTriangle, Pencil, Plus, RotateCcw, Search, Trash2, X } from "lucide-react";
 import { request } from "../../../../lib/api/request";
 import type { Role } from "../../../types/role";
 import type { Page } from "../../../../types/pagination";
@@ -30,6 +30,7 @@ export default function RoleList({
     const [status, setStatus] = useState("");
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState("");
+    const [deleteTarget, setDeleteTarget] = useState<Role | null>(null);
 
     const load = useCallback(async () => {
         const query = new URLSearchParams({
@@ -52,14 +53,14 @@ export default function RoleList({
         load().catch(error => setError((error as Error).message));
     }, [load]);
 
-    const handleDelete = async (role: Role) => {
-        if (!window.confirm(`Hapus role "${role.name}"?`)) return;
+    const confirmDelete = async () => {
+        if (!deleteTarget || busy) return;
 
         setBusy(true);
         setError("");
 
         try {
-            await request(`/roles/${role.id}`, token, {
+            await request(`/roles/${deleteTarget.id}`, token, {
                 method: "DELETE",
             });
 
@@ -72,6 +73,7 @@ export default function RoleList({
             setError((error as Error).message);
         } finally {
             setBusy(false);
+            setDeleteTarget(null);
         }
     };
 
@@ -93,6 +95,59 @@ export default function RoleList({
                 <div className="alert error">
                     {error}
                     <button onClick={() => setError("")}>×</button>
+                </div>
+            )}
+
+            {deleteTarget && (
+                <div
+                    className="delete-modal-backdrop"
+                    onClick={() => !busy && setDeleteTarget(null)}
+                >
+                    <section
+                        className="delete-modal"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="delete-modal-title"
+                        onClick={event => event.stopPropagation()}
+                    >
+                        <button
+                            type="button"
+                            className="delete-modal-close"
+                            aria-label="Tutup"
+                            disabled={busy}
+                            onClick={() => setDeleteTarget(null)}
+                        >
+                            <X size={18} />
+                        </button>
+                        <div className="delete-modal-icon">
+                            <AlertTriangle size={25} />
+                        </div>
+                        <h2 id="delete-modal-title">Hapus role?</h2>
+                        <p>
+                            Apakah kamu yakin ingin menghapus role{" "}
+                            <strong>“{deleteTarget.name}”</strong>? Tindakan ini tidak dapat
+                            dibatalkan.
+                        </p>
+                        <div className="delete-modal-actions">
+                            <button
+                                type="button"
+                                className="btn-secondary"
+                                disabled={busy}
+                                onClick={() => setDeleteTarget(null)}
+                            >
+                                Batal
+                            </button>
+                            <button
+                                type="button"
+                                className="delete-confirm-button"
+                                disabled={busy}
+                                onClick={confirmDelete}
+                            >
+                                <Trash2 size={15} />
+                                {busy ? "Menghapus..." : "Ya, Hapus"}
+                            </button>
+                        </div>
+                    </section>
                 </div>
             )}
 
@@ -184,7 +239,7 @@ export default function RoleList({
                                                         className="icon-action danger"
                                                         title="Hapus"
                                                         disabled={busy || role.code === "SUPERADMIN"}
-                                                        onClick={() => handleDelete(role)}
+                                                        onClick={() => setDeleteTarget(role)}
                                                     >
                                                         <Trash2 size={16} />
                                                     </button>
