@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Master\Akses;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Role\StoreRoleRequest;
-use App\Http\Requests\Role\UpdateRoleRequest;
+use App\Http\Requests\Master\Akses\StoreRoleRequest;
+use App\Http\Requests\Master\Akses\UpdateRoleRequest;
 use App\Models\Role;
-use App\Services\Master\RoleService;
+use App\Services\Master\Akses\RoleService;
 use Illuminate\Http\Request;
 
 class RoleController extends Controller
