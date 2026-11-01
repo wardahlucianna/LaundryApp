@@ -26,7 +26,7 @@ Aplikasi manajemen operasional Sunrise Laundry dengan **Laravel 13 + React + Typ
    ```
 3. Salin `.env.example` menjadi `.env`, lalu sesuaikan kredensial PostgreSQL.
 4. Buat database PostgreSQL bernama `laundyDb`.
-5. Atur `INITIAL_OWNER_USERNAME` dan `INITIAL_OWNER_PASSWORD` pada `.env` untuk akun owner pertama. Jika password dibiarkan kosong, seeder membuat password acak dan menampilkannya satu kali di terminal.
+5. Atur `INITIAL_SUPERADMIN_USERNAME` dan `INITIAL_SUPERADMIN_PASSWORD` pada `.env` untuk akun Super Admin pertama. Jika password dibiarkan kosong, seeder membuat password acak dan menampilkannya satu kali di terminal.
 6. Jalankan:
    ```bash
    php artisan key:generate
@@ -51,7 +51,7 @@ Buka `http://127.0.0.1:8000`. Endpoint pemeriksaan API tersedia di `/api/health`
 - `GET|POST /api/permissions`
 - `PUT|DELETE /api/permissions/{permission}`
 
-Endpoint manajemen memerlukan bearer token dan permission yang sesuai. Role dengan kode `OWNER` memiliki akses penuh. Seeder menyiapkan role Owner, Administrator, Kasir, dan Operator Laundry serta daftar permission awal.
+Endpoint manajemen memerlukan bearer token dan permission yang sesuai. Role dengan kode `SUPERADMIN` memiliki akses penuh. Seeder menyiapkan role Super Admin, Administrator, Kasir, dan Operator Laundry serta daftar permission awal.
 
 ## Catatan
 Pagination API memakai parameter `page`, `per_page`, dan `search`. Nilai `per_page` dibatasi maksimal 100. UI menyediakan pilihan 10, 25, 50, dan 100 data per halaman.
