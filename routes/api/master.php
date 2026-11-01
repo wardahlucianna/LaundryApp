@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\Api\PermissionController;
-use App\Http\Controllers\Api\PermissionFeatureController;
-use App\Http\Controllers\Api\PermissionGroupController;
-use App\Http\Controllers\Api\RoleController;
+use App\Http\Controllers\Api\Master\Fitur\PermissionController;
+use App\Http\Controllers\Api\Master\Fitur\PermissionFeatureController;
+use App\Http\Controllers\Api\Master\KelompokFitur\PermissionGroupController;
+use App\Http\Controllers\Api\Master\Akses\RoleController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->group(function () {
