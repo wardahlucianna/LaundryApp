@@ -1,9 +1,5 @@
 import React from "react";
-
-export type RoleFormValue = {
-    name: string;
-    code: string;
-};
+import type { RoleFormValue } from "../types/role";
 
 type RoleFormModalProps = {
     open: boolean;
