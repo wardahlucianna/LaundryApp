@@ -58,12 +58,6 @@ export default function PermissionForm({
 
     return (
         <div className="access-panel">
-            <div className="panel-heading">
-                <div>
-                    <h2>{permission ? "Ubah Fitur" : "Tambah Fitur"}</h2>
-                </div>
-            </div>
-
             {error && <div className="alert error">{error}</div>}
 
             <form className="modal-form permission-form-grid" onSubmit={handleSubmit}>
