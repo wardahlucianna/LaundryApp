@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { ShieldCheck, PanelsTopLeft, KeyRound } from "lucide-react";
+import { ShieldCheck, PanelsTopLeft, KeyRound, Search, RotateCcw, Pencil, Trash2, Plus, X } from "lucide-react";
 
 type Role = { id: string; name: string; code: string; is_active: boolean; permissions_count?: number; permissions?: Permission[] };
 type Permission = { id: string; name: string; code: string; path: string | null; is_active: boolean; roles_count?: number };
@@ -40,6 +40,12 @@ export default function App() {
     const [featurePage, setFeaturePage] = useState(1);
     const [roleSearch, setRoleSearch] = useState("");
     const [featureSearch, setFeatureSearch] = useState("");
+    const [roleStatus, setRoleStatus] = useState("");
+    const [featureStatus, setFeatureStatus] = useState("");
+    const [roleEditingId, setRoleEditingId] = useState<string | null>(null);
+    const [featureEditingId, setFeatureEditingId] = useState<string | null>(null);
+    const [showRoleForm, setShowRoleForm] = useState(false);
+    const [showFeatureForm, setShowFeatureForm] = useState(false);
     const [perPage, setPerPage] = useState(10);
     const [roleForm, setRoleForm] = useState({ name: "", code: "" });
     const [featureForm, setFeatureForm] = useState({ name: "", code: "", path: "" });
@@ -66,15 +72,15 @@ export default function App() {
 
     const loadRoles = useCallback(async () => {
         if (!token || !can("ROLE_VIEW")) return;
-        const result = await request<Page<Role>>(`/roles?page=${rolePage}&per_page=${perPage}&search=${encodeURIComponent(roleSearch)}`, token);
+        const result = await request<Page<Role>>(`/roles?page=${rolePage}&per_page=${perPage}&search=${encodeURIComponent(roleSearch)}${roleStatus !== "" ? `&is_active=${roleStatus}` : ""}`, token);
         setRoles(result);
-    }, [token, can, rolePage, perPage, roleSearch]);
+    }, [token, can, rolePage, perPage, roleSearch, roleStatus]);
 
     const loadFeatures = useCallback(async () => {
         if (!token || !can("FEATURE_VIEW")) return;
-        const result = await request<Page<Permission>>(`/permissions?page=${featurePage}&per_page=${perPage}&search=${encodeURIComponent(featureSearch)}`, token);
+        const result = await request<Page<Permission>>(`/permissions?page=${featurePage}&per_page=${perPage}&search=${encodeURIComponent(featureSearch)}${featureStatus !== "" ? `&is_active=${featureStatus}` : ""}`, token);
         setFeatures(result);
-    }, [token, can, featurePage, perPage, featureSearch]);
+    }, [token, can, featurePage, perPage, featureSearch, featureStatus]);
 
     const loadAllFeatures = useCallback(async () => {
         if (!token || !can("ACCESS_MANAGE")) return;
@@ -116,22 +122,38 @@ export default function App() {
         localStorage.removeItem("sunrise_token"); setToken(null); setUser(null); setPermissionCodes([]);
     };
 
-    const createRole = async (event: React.FormEvent<HTMLFormElement>) => {
+    const saveRole = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault(); if (!token) return;
         setBusy(true); setError(""); setNotice("");
         try {
-            await request("/roles", token, { method: "POST", body: JSON.stringify(roleForm) });
-            setRoleForm({ name: "", code: "" }); setNotice("Role berhasil ditambahkan."); await loadRoles();
+            await request(roleEditingId ? `/roles/${roleEditingId}` : "/roles", token, { method: roleEditingId ? "PUT" : "POST", body: JSON.stringify(roleForm) });
+            setRoleForm({ name: "", code: "" }); setRoleEditingId(null); setShowRoleForm(false);
+            setNotice(roleEditingId ? "Role berhasil diperbarui." : "Role berhasil ditambahkan."); await loadRoles();
         } catch (e) { setError((e as Error).message); } finally { setBusy(false); }
     };
+    const editRole = (role: Role) => { setRoleEditingId(role.id); setRoleForm({ name: role.name, code: role.code }); setShowRoleForm(true); };
+    const deleteRole = async (role: Role) => {
+        if (!token || !window.confirm(`Hapus role "${role.name}"?`)) return;
+        setBusy(true); setError(""); setNotice("");
+        try { await request(`/roles/${role.id}`, token, { method: "DELETE" }); setNotice("Role berhasil dihapus."); await loadRoles(); }
+        catch (e) { setError((e as Error).message); } finally { setBusy(false); }
+    };
 
-    const createFeature = async (event: React.FormEvent<HTMLFormElement>) => {
+    const saveFeature = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault(); if (!token) return;
         setBusy(true); setError(""); setNotice("");
         try {
-            await request("/permissions", token, { method: "POST", body: JSON.stringify({ ...featureForm, path: featureForm.path || null }) });
-            setFeatureForm({ name: "", code: "", path: "" }); setNotice("Fitur berhasil ditambahkan."); await loadFeatures(); await loadAllFeatures();
+            await request(featureEditingId ? `/permissions/${featureEditingId}` : "/permissions", token, { method: featureEditingId ? "PUT" : "POST", body: JSON.stringify({ ...featureForm, path: featureForm.path || null }) });
+            setFeatureForm({ name: "", code: "", path: "" }); setFeatureEditingId(null); setShowFeatureForm(false);
+            setNotice(featureEditingId ? "Fitur berhasil diperbarui." : "Fitur berhasil ditambahkan."); await loadFeatures(); await loadAllFeatures();
         } catch (e) { setError((e as Error).message); } finally { setBusy(false); }
+    };
+    const editFeature = (feature: Permission) => { setFeatureEditingId(feature.id); setFeatureForm({ name: feature.name, code: feature.code, path: feature.path || "" }); setShowFeatureForm(true); };
+    const deleteFeature = async (feature: Permission) => {
+        if (!token || !window.confirm(`Hapus fitur "${feature.name}"?`)) return;
+        setBusy(true); setError(""); setNotice("");
+        try { await request(`/permissions/${feature.id}`, token, { method: "DELETE" }); setNotice("Fitur berhasil dihapus."); await loadFeatures(); await loadAllFeatures(); }
+        catch (e) { setError((e as Error).message); } finally { setBusy(false); }
     };
 
     const saveAccess = async () => {
@@ -201,31 +223,45 @@ export default function App() {
 
                 {page === "roles" && can("ROLE_VIEW") && <div className="access-panel">
                     <div className="panel-heading"><div><h2>Daftar Role</h2><p>Role menentukan kelompok hak akses pengguna.</p></div><span>{roles?.total ?? 0} role</span></div>
-                    {can("ROLE_MANAGE") && <form className="inline-form" onSubmit={createRole}>
+                    {can("ROLE_MANAGE") && <div className="list-toolbar access-toolbar">
+                        <input value={roleSearch} onChange={e => setRoleSearch(e.target.value)} placeholder="Cari nama atau kode role..." />
+                        <select value={roleStatus} onChange={e => setRoleStatus(e.target.value)}><option value="">Semua Status</option><option value="1">Aktif</option><option value="0">Nonaktif</option></select>
+                        <button className="btn-primary" onClick={() => { setRolePage(1); loadRoles(); }}><Search size={15}/> Cari</button>
+                        <button className="btn-secondary" onClick={() => { setRoleSearch(""); setRoleStatus(""); setRolePage(1); }}><RotateCcw size={15}/> Atur Ulang</button>
+                        <button className="btn-primary" onClick={() => { setRoleEditingId(null); setRoleForm({ name: "", code: "" }); setShowRoleForm(v => !v); }}><Plus size={15}/> Tambah Role</button>
+                    </div>}
+                    {showRoleForm && can("ROLE_MANAGE") && <form className="inline-form" onSubmit={saveRole}>
                         <input value={roleForm.name} onChange={e => setRoleForm({ ...roleForm, name: e.target.value })} placeholder="Nama role" required />
                         <input value={roleForm.code} onChange={e => setRoleForm({ ...roleForm, code: e.target.value.toUpperCase().replace(/[^A-Z0-9_-]/g, "_") })} placeholder="KODE_ROLE" required />
-                        <button className="btn-primary" disabled={busy}>Tambah Role</button>
+                        <button className="btn-primary" disabled={busy}>{roleEditingId ? "Simpan Perubahan" : "Simpan Role"}</button>
+                        <button type="button" className="btn-secondary" onClick={() => { setShowRoleForm(false); setRoleEditingId(null); }}>Batal</button>
                     </form>}
-                    <div className="list-toolbar"><input value={roleSearch} onChange={e => { setRoleSearch(e.target.value); setRolePage(1); }} placeholder="Cari nama atau kode role..." /></div>
-                    <div className="table-wrap"><table className="access-table"><thead><tr><th>NAMA ROLE</th><th>KODE</th><th>JUMLAH FITUR</th><th>STATUS</th></tr></thead><tbody>
-                        {roles?.data.map(role => <tr key={role.id}><td><b>{role.name}</b></td><td>{role.code}</td><td>{role.permissions_count ?? 0}</td><td><span className={role.is_active ? "pill active" : "pill"}>{role.is_active ? "Aktif" : "Nonaktif"}</span></td></tr>)}
-                        {!roles?.data.length && <tr><td colSpan={4} className="empty-cell">Belum ada data role.</td></tr>}
+                    <div className="table-wrap"><table className="access-table"><thead><tr><th>NO</th><th>NAMA ROLE</th><th>KODE</th><th>JUMLAH FITUR</th><th>STATUS</th><th>AKSI</th></tr></thead><tbody>
+                        {roles?.data.map((role,index) => <tr key={role.id}><td>{(rolePage-1)*perPage+index+1}</td><td><b>{role.name}</b></td><td>{role.code}</td><td>{role.permissions_count ?? 0}</td><td><span className={role.is_active ? "pill active" : "pill"}>{role.is_active ? "Aktif" : "Nonaktif"}</span></td><td><div className="row-actions"><button className="icon-action" title="Edit" onClick={() => editRole(role)}><Pencil size={16}/></button><button className="icon-action danger" title="Hapus" disabled={role.code === "SUPERADMIN" || busy} onClick={() => deleteRole(role)}><Trash2 size={16}/></button></div></td></tr>)}
+                        {!roles?.data.length && <tr><td colSpan={6} className="empty-cell">Belum ada data role.</td></tr>}
                     </tbody></table></div>
                     <Pagination data={roles} page={rolePage} setPage={setRolePage} perPage={perPage} setPerPage={setPerPage} />
                 </div>}
 
                 {page === "features" && can("FEATURE_VIEW") && <div className="access-panel">
                     <div className="panel-heading"><div><h2>Daftar Fitur</h2><p>Fitur yang dapat diberikan kepada setiap role.</p></div><span>{features?.total ?? 0} fitur</span></div>
-                    {can("FEATURE_MANAGE") && <form className="inline-form feature-form" onSubmit={createFeature}>
+                    {can("FEATURE_MANAGE") && <div className="list-toolbar access-toolbar">
+                        <input value={featureSearch} onChange={e => setFeatureSearch(e.target.value)} placeholder="Cari nama, kode, atau path fitur..." />
+                        <select value={featureStatus} onChange={e => setFeatureStatus(e.target.value)}><option value="">Semua Status</option><option value="1">Aktif</option><option value="0">Nonaktif</option></select>
+                        <button className="btn-primary" onClick={() => { setFeaturePage(1); loadFeatures(); }}><Search size={15}/> Cari</button>
+                        <button className="btn-secondary" onClick={() => { setFeatureSearch(""); setFeatureStatus(""); setFeaturePage(1); }}><RotateCcw size={15}/> Atur Ulang</button>
+                        <button className="btn-primary" onClick={() => { setFeatureEditingId(null); setFeatureForm({ name: "", code: "", path: "" }); setShowFeatureForm(v => !v); }}><Plus size={15}/> Tambah Fitur</button>
+                    </div>}
+                    {showFeatureForm && can("FEATURE_MANAGE") && <form className="inline-form feature-form" onSubmit={saveFeature}>
                         <input value={featureForm.name} onChange={e => setFeatureForm({ ...featureForm, name: e.target.value })} placeholder="Nama fitur" required />
                         <input value={featureForm.code} onChange={e => setFeatureForm({ ...featureForm, code: e.target.value.toUpperCase().replace(/[^A-Z0-9_-]/g, "_") })} placeholder="KODE_FITUR" required />
                         <input value={featureForm.path} onChange={e => setFeatureForm({ ...featureForm, path: e.target.value })} placeholder="/path-menu" />
-                        <button className="btn-primary" disabled={busy}>Tambah Fitur</button>
+                        <button className="btn-primary" disabled={busy}>{featureEditingId ? "Simpan Perubahan" : "Simpan Fitur"}</button>
+                        <button type="button" className="btn-secondary" onClick={() => { setShowFeatureForm(false); setFeatureEditingId(null); }}>Batal</button>
                     </form>}
-                    <div className="list-toolbar"><input value={featureSearch} onChange={e => { setFeatureSearch(e.target.value); setFeaturePage(1); }} placeholder="Cari nama, kode, atau path fitur..." /></div>
-                    <div className="table-wrap"><table className="access-table"><thead><tr><th>NAMA FITUR</th><th>KODE</th><th>PATH MENU</th><th>STATUS</th></tr></thead><tbody>
-                        {features?.data.map(feature => <tr key={feature.id}><td><b>{feature.name}</b></td><td>{feature.code}</td><td>{feature.path || "—"}</td><td><span className={feature.is_active ? "pill active" : "pill"}>{feature.is_active ? "Aktif" : "Nonaktif"}</span></td></tr>)}
-                        {!features?.data.length && <tr><td colSpan={4} className="empty-cell">Belum ada data fitur.</td></tr>}
+                    <div className="table-wrap"><table className="access-table"><thead><tr><th>NO</th><th>NAMA FITUR</th><th>KODE</th><th>PATH MENU</th><th>STATUS</th><th>AKSI</th></tr></thead><tbody>
+                        {features?.data.map((feature,index) => <tr key={feature.id}><td>{(featurePage-1)*perPage+index+1}</td><td><b>{feature.name}</b></td><td>{feature.code}</td><td>{feature.path || "—"}</td><td><span className={feature.is_active ? "pill active" : "pill"}>{feature.is_active ? "Aktif" : "Nonaktif"}</span></td><td><div className="row-actions"><button className="icon-action" title="Edit" onClick={() => editFeature(feature)}><Pencil size={16}/></button><button className="icon-action danger" title="Hapus" disabled={busy} onClick={() => deleteFeature(feature)}><Trash2 size={16}/></button></div></td></tr>)}
+                        {!features?.data.length && <tr><td colSpan={6} className="empty-cell">Belum ada data fitur.</td></tr>}
                     </tbody></table></div>
                     <Pagination data={features} page={featurePage} setPage={setFeaturePage} perPage={perPage} setPerPage={setPerPage} />
                 </div>}
