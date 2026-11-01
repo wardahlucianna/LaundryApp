@@ -17,6 +17,7 @@ export default function RoleManagement() {
   const [error, setError] = useState('')
   const [search, setSearch] = useState('')
   const [visible, setVisible] = useState(false)
+  const [editingRole, setEditingRole] = useState(null)
   const [form, setForm] = useState(emptyForm)
   const navigate = useNavigate()
 
@@ -40,12 +41,13 @@ export default function RoleManagement() {
     setSaving(true)
     setError('')
     try {
-      await apiRequest('/roles', { method: 'POST', body: JSON.stringify({
+      await apiRequest(editingRole ? `/roles/${editingRole.id}` : '/roles', { method: editingRole ? 'PUT' : 'POST', body: JSON.stringify({
         name: form.name.trim(),
         code: form.code.trim().toUpperCase().replace(/\s+/g, '_'),
         is_active: true,
       }) })
       setVisible(false)
+      setEditingRole(null)
       setForm(emptyForm)
       await loadRoles()
     } catch (err) {
@@ -76,7 +78,7 @@ export default function RoleManagement() {
           <h4 className="mb-1">Manajemen Role</h4>
           <div className="text-body-secondary small">Atur peran pengguna dan hak akses setiap role.</div>
         </div>
-        <CButton color="primary" onClick={() => { setForm(emptyForm); setVisible(true) }}>
+        <CButton color="primary" onClick={() => { setEditingRole(null); setForm(emptyForm); setVisible(true) }}>
           <span className="me-2">+</span> Tambah Role
         </CButton>
       </div>
@@ -123,9 +125,14 @@ export default function RoleManagement() {
                           Atur Hak Akses
                         </CButton>
                         {!systemRole && (
-                          <CButton size="sm" color="danger" variant="ghost" className="ms-1" onClick={() => removeRole(role)}>
-                            Hapus
-                          </CButton>
+                          <>
+                            <CButton size="sm" color="secondary" variant="outline" className="ms-1" onClick={() => { setEditingRole(role); setForm({ name: role.name, code: role.code }); setVisible(true) }}>
+                              Ubah
+                            </CButton>
+                            <CButton size="sm" color="danger" variant="ghost" className="ms-1" onClick={() => removeRole(role)}>
+                              Hapus
+                            </CButton>
+                          </>
                         )}
                       </CTableDataCell>
                     </CTableRow>
@@ -140,7 +147,7 @@ export default function RoleManagement() {
 
       <CModal visible={visible} onClose={() => setVisible(false)} alignment="center">
         <CForm onSubmit={saveRole}>
-          <CModalHeader><CModalTitle>Tambah Role</CModalTitle></CModalHeader>
+          <CModalHeader><CModalTitle>{editingRole ? 'Ubah Role' : 'Tambah Role'}</CModalTitle></CModalHeader>
           <CModalBody>
             <div className="mb-3">
               <CFormLabel>Nama Role</CFormLabel>
