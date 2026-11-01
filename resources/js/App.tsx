@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { ShieldCheck, PanelsTopLeft, KeyRound } from "lucide-react";
 
 type Role = { id: string; name: string; code: string; is_active: boolean; permissions_count?: number; permissions?: Permission[] };
 type Permission = { id: string; name: string; code: string; path: string | null; is_active: boolean; roles_count?: number };
@@ -145,11 +146,23 @@ export default function App() {
         } catch (e) { setError((e as Error).message); } finally { setBusy(false); }
     };
 
-    const nav = useMemo(() => [
-        { id: "roles" as const, label: "Manajemen Role", code: "ROLE_VIEW" },
-        { id: "features" as const, label: "Manajemen Fitur", code: "FEATURE_VIEW" },
-        { id: "access" as const, label: "Pengaturan Hak Akses", code: "ACCESS_MANAGE" },
-    ].filter(item => can(item.code)), [can]);
+    const navGroups = useMemo(() => [
+        {
+            title: "MASTER DATA",
+            items: [
+                { id: "roles" as const, label: "Manajemen Role", code: "ROLE_VIEW", icon: ShieldCheck },
+                { id: "features" as const, label: "Manajemen Fitur", code: "FEATURE_VIEW", icon: PanelsTopLeft },
+            ],
+        },
+        {
+            title: "PENGATURAN",
+            items: [
+                { id: "access" as const, label: "Hak Akses", code: "ACCESS_MANAGE", icon: KeyRound },
+            ],
+        },
+    ].map(group => ({ ...group, items: group.items.filter(item => can(item.code)) }))
+      .filter(group => group.items.length > 0), [can]);
+    const nav = navGroups.flatMap(group => group.items);
 
     if (!token || !user) {
         return <div className="login-shell"><form className="login-card" onSubmit={login}>
@@ -167,8 +180,16 @@ export default function App() {
     return <div className="access-layout">
         <aside className="access-sidebar">
             <div className="login-brand"><span>✦</span><div><b>Sunrise Laundry</b><small>MANAGEMENT SYSTEM</small></div></div>
-            <div className="access-nav-title">PENGATURAN</div>
-            {nav.map(item => <button key={item.id} className={page === item.id ? "access-nav active" : "access-nav"} onClick={() => setPage(item.id)}>{item.label}</button>)}
+            {navGroups.map(group => <div className="access-nav-group" key={group.title}>
+                <div className="access-nav-title">{group.title}</div>
+                {group.items.map(item => {
+                    const Icon = item.icon;
+                    return <button key={item.id} className={page === item.id ? "access-nav active" : "access-nav"} onClick={() => setPage(item.id)}>
+                        <Icon size={18} strokeWidth={1.9} />
+                        <span>{item.label}</span>
+                    </button>;
+                })}
+            </div>)}
             <div className="access-user"><b>{user.full_name}</b><small>{user.role?.name || "Pengguna"}</small><button onClick={logout}>Keluar</button></div>
         </aside>
         <main className="access-main">
