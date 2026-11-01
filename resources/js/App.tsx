@@ -185,6 +185,7 @@ export default function App() {
                         <input value={roleForm.code} onChange={e => setRoleForm({ ...roleForm, code: e.target.value.toUpperCase().replace(/[^A-Z0-9_-]/g, "_") })} placeholder="KODE_ROLE" required />
                         <button className="btn-primary" disabled={busy}>Tambah Role</button>
                     </form>}
+                    <div className="list-toolbar"><input value={roleSearch} onChange={e => { setRoleSearch(e.target.value); setRolePage(1); }} placeholder="Cari nama atau kode role..." /></div>
                     <div className="table-wrap"><table className="access-table"><thead><tr><th>NAMA ROLE</th><th>KODE</th><th>JUMLAH FITUR</th><th>STATUS</th></tr></thead><tbody>
                         {roles?.data.map(role => <tr key={role.id}><td><b>{role.name}</b></td><td>{role.code}</td><td>{role.permissions_count ?? 0}</td><td><span className={role.is_active ? "pill active" : "pill"}>{role.is_active ? "Aktif" : "Nonaktif"}</span></td></tr>)}
                         {!roles?.data.length && <tr><td colSpan={4} className="empty-cell">Belum ada data role.</td></tr>}
@@ -200,6 +201,7 @@ export default function App() {
                         <input value={featureForm.path} onChange={e => setFeatureForm({ ...featureForm, path: e.target.value })} placeholder="/path-menu" />
                         <button className="btn-primary" disabled={busy}>Tambah Fitur</button>
                     </form>}
+                    <div className="list-toolbar"><input value={featureSearch} onChange={e => { setFeatureSearch(e.target.value); setFeaturePage(1); }} placeholder="Cari nama, kode, atau path fitur..." /></div>
                     <div className="table-wrap"><table className="access-table"><thead><tr><th>NAMA FITUR</th><th>KODE</th><th>PATH MENU</th><th>STATUS</th></tr></thead><tbody>
                         {features?.data.map(feature => <tr key={feature.id}><td><b>{feature.name}</b></td><td>{feature.code}</td><td>{feature.path || "—"}</td><td><span className={feature.is_active ? "pill active" : "pill"}>{feature.is_active ? "Aktif" : "Nonaktif"}</span></td></tr>)}
                         {!features?.data.length && <tr><td colSpan={4} className="empty-cell">Belum ada data fitur.</td></tr>}
