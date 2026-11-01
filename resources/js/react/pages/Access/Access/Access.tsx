@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { request } from "../../../../lib/api/request";
 import type { Role } from "../../../types/role";
 import type { Permission } from "../../../types/permission";
@@ -34,6 +34,35 @@ export default function AccessPage({ token, canManage }: Props) {
         }
     }, [canManage, loadOptions]);
 
+    const permissionGroups = useMemo(() => {
+        const groups = new Map<string, {
+            name: string;
+            features: Map<string, { name: string; path: string | null; permissions: Permission[] }>;
+        }>();
+
+        permissions.forEach(permission => {
+            const groupName = permission.feature?.group?.name ?? "Fitur Lainnya";
+            const featureId = permission.feature?.id ?? permission.id;
+            const featureName = permission.feature?.name ?? permission.name;
+
+            if (!groups.has(groupName)) {
+                groups.set(groupName, { name: groupName, features: new Map() });
+            }
+
+            const group = groups.get(groupName)!;
+            if (!group.features.has(featureId)) {
+                group.features.set(featureId, {
+                    name: featureName,
+                    path: permission.feature?.path ?? permission.path,
+                    permissions: [],
+                });
+            }
+            group.features.get(featureId)!.permissions.push(permission);
+        });
+
+        return Array.from(groups.values());
+    }, [permissions]);
+
     const handleRoleChange = async (roleId: string) => {
         setSelectedRole(roleId);
         setSelectedPermissions([]);
@@ -43,11 +72,7 @@ export default function AccessPage({ token, canManage }: Props) {
         if (!roleId) return;
 
         try {
-            const result = await request<{ data: Role }>(
-                `/roles/${roleId}`,
-                token,
-            );
-
+            const result = await request<{ data: Role }>(`/roles/${roleId}`, token);
             setSelectedPermissions(
                 (result.data.permissions ?? []).map(permission => permission.id),
             );
@@ -64,17 +89,10 @@ export default function AccessPage({ token, canManage }: Props) {
         setNotice("");
 
         try {
-            await request(
-                `/roles/${selectedRole}/permissions`,
-                token,
-                {
-                    method: "PUT",
-                    body: JSON.stringify({
-                        permission_ids: selectedPermissions,
-                    }),
-                },
-            );
-
+            await request(`/roles/${selectedRole}/permissions`, token, {
+                method: "PUT",
+                body: JSON.stringify({ permission_ids: selectedPermissions }),
+            });
             setNotice("Hak akses berhasil disimpan.");
         } catch (error) {
             setError((error as Error).message);
@@ -91,13 +109,22 @@ export default function AccessPage({ token, canManage }: Props) {
         );
     };
 
+    const toggleFeature = (featurePermissions: Permission[], checked: boolean) => {
+        setSelectedPermissions(current => {
+            const ids = featurePermissions.map(permission => permission.id);
+            return checked
+                ? Array.from(new Set([...current, ...ids]))
+                : current.filter(id => !ids.includes(id));
+        });
+    };
+
     return (
         <>
             <div className="access-heading">
                 <div>
                     <small>PENGATURAN</small>
                     <h1>Hak Akses</h1>
-                    <p>Atur fitur yang dapat diakses setiap role.</p>
+                    <p>Atur izin Lihat, Tambah, Edit, dan Hapus untuk setiap fitur.</p>
                 </div>
             </div>
 
@@ -119,7 +146,7 @@ export default function AccessPage({ token, canManage }: Props) {
                 <div className="panel-heading">
                     <div>
                         <h2>Pengaturan Hak Akses</h2>
-                        <p>Pilih role, lalu tentukan fitur yang boleh diakses.</p>
+                        <p>Pilih role, lalu tentukan aksi yang boleh dilakukan.</p>
                     </div>
                 </div>
 
@@ -140,42 +167,57 @@ export default function AccessPage({ token, canManage }: Props) {
 
                 {selectedRole && (
                     <>
-                        <div className="permission-grid">
-                            {permissions.map(permission => (
-                                <label
-                                    key={permission.id}
-                                    className="permission-card"
-                                >
-                                    <input
-                                        type="checkbox"
-                                        checked={selectedPermissions.includes(permission.id)}
-                                        onChange={event =>
-                                            togglePermission(
-                                                permission.id,
-                                                event.target.checked,
-                                            )
-                                        }
-                                    />
-                                    <span>
-                                        <b>{permission.name}</b>
-                                        <small>
-                                            {permission.code}
-                                            {permission.path
-                                                ? ` · ${permission.path}`
-                                                : ""}
-                                        </small>
-                                    </span>
-                                </label>
+                        <div className="access-permission-groups">
+                            {permissionGroups.map(group => (
+                                <section className="access-permission-group" key={group.name}>
+                                    <h3>{group.name}</h3>
+                                    {Array.from(group.features.entries()).map(([featureId, feature]) => {
+                                        const featureIds = feature.permissions.map(item => item.id);
+                                        const selectedCount = featureIds.filter(id => selectedPermissions.includes(id)).length;
+                                        const allSelected = featureIds.length > 0 && selectedCount === featureIds.length;
+
+                                        return (
+                                            <div className="access-feature-block" key={featureId}>
+                                                <div className="access-feature-heading">
+                                                    <div>
+                                                        <b>{feature.name}</b>
+                                                        {feature.path && <small>{feature.path}</small>}
+                                                    </div>
+                                                    <label className="access-feature-all">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={allSelected}
+                                                            ref={element => {
+                                                                if (element) element.indeterminate = selectedCount > 0 && !allSelected;
+                                                            }}
+                                                            onChange={event => toggleFeature(feature.permissions, event.target.checked)}
+                                                        />
+                                                        Semua
+                                                    </label>
+                                                </div>
+                                                <div className="access-action-list">
+                                                    {feature.permissions.map(permission => (
+                                                        <label className="access-action-option" key={permission.id}>
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={selectedPermissions.includes(permission.id)}
+                                                                onChange={event => togglePermission(permission.id, event.target.checked)}
+                                                            />
+                                                            <span>{permission.name}</span>
+                                                            <small>{permission.code}</small>
+                                                        </label>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </section>
                             ))}
                         </div>
 
                         <div className="permission-footer">
-                            <span>{selectedPermissions.length} fitur dipilih</span>
-                            <button
-                                className="btn-primary"
-                                onClick={handleSave}
-                                disabled={busy}
-                            >
+                            <span>{selectedPermissions.length} hak akses dipilih</span>
+                            <button className="btn-primary" onClick={handleSave} disabled={busy}>
                                 {busy ? "Menyimpan..." : "Simpan Hak Akses"}
                             </button>
                         </div>
