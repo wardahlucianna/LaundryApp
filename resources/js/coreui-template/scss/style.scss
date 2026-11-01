@@ -65,3 +65,73 @@ body {
     --cui-footer-bg: var(--cui-body-bg);
   }
 }
+
+/* Sunrise Laundry brand palette: navy with soft yellow accents */
+:root {
+  --cui-primary: #E8C96A;
+  --cui-primary-rgb: 232, 201, 106;
+  --cui-link-color: #263B5A;
+  --cui-link-hover-color: #172A45;
+  --cui-body-bg: #F7F8FA;
+  --cui-tertiary-bg: #F1F3F6;
+  --cui-body-color: #26364B;
+  --cui-border-color: #E5E9EF;
+}
+
+body {
+  background-color: #F7F8FA;
+  color: #26364B;
+}
+
+.header {
+  --cui-header-bg: #FFFFFF;
+  --cui-header-color: #26364B;
+  --cui-header-border-color: #E8ECF1;
+}
+
+.sidebar {
+  --cui-sidebar-bg: #172A45;
+  --cui-sidebar-color: #E8EDF5;
+  --cui-sidebar-brand-bg: #172A45;
+  --cui-sidebar-brand-color: #FFFFFF;
+  --cui-sidebar-nav-link-color: #D5DEEA;
+  --cui-sidebar-nav-link-hover-bg: rgba(255, 255, 255, .08);
+  --cui-sidebar-nav-link-hover-color: #FFFFFF;
+  --cui-sidebar-nav-link-active-bg: #E8C96A;
+  --cui-sidebar-nav-link-active-color: #26364B;
+  --cui-sidebar-nav-link-active-icon-color: #26364B;
+  --cui-sidebar-nav-group-bg: rgba(8, 22, 40, .28);
+}
+
+.btn-primary,
+.btn-primary:focus,
+.btn-primary:hover,
+.btn-primary:active {
+  --cui-btn-color: #26364B;
+  --cui-btn-bg: #E8C96A;
+  --cui-btn-border-color: #E8C96A;
+  --cui-btn-hover-color: #26364B;
+  --cui-btn-hover-bg: #F0D98F;
+  --cui-btn-hover-border-color: #F0D98F;
+  --cui-btn-active-color: #26364B;
+  --cui-btn-active-bg: #DDBB55;
+  --cui-btn-active-border-color: #DDBB55;
+  font-weight: 600;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #D8BD70;
+  box-shadow: 0 0 0 .2rem rgba(232, 201, 106, .22);
+}
+
+.page-link {
+  color: #263B5A;
+}
+
+.page-item.active .page-link {
+  color: #26364B;
+  background-color: #E8C96A;
+  border-color: #E8C96A;
+}
+
