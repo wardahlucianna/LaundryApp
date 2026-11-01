@@ -135,3 +135,31 @@ body {
   border-color: #E8C96A;
 }
 
+/* Active navigation state: highlight the currently selected menu */
+.sidebar .nav-link.active,
+.sidebar .nav-group.show > .nav-group-toggle {
+  color: #26364B !important;
+  background-color: #E8C96A !important;
+  border-radius: .5rem;
+  font-weight: 700;
+}
+
+.sidebar .nav-link.active .nav-icon,
+.sidebar .nav-link.active .nav-icon svg,
+.sidebar .nav-group.show > .nav-group-toggle .nav-icon,
+.sidebar .nav-group.show > .nav-group-toggle .nav-icon svg {
+  color: #26364B !important;
+  fill: currentColor;
+}
+
+.sidebar .nav-link.active:hover,
+.sidebar .nav-group.show > .nav-group-toggle:hover {
+  color: #26364B !important;
+  background-color: #F0D98F !important;
+}
+
+.sidebar .nav-group-items .nav-link.active {
+  margin-inline: .5rem;
+  width: calc(100% - 1rem);
+}
+
