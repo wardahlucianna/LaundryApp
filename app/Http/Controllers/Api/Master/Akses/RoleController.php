@@ -3,18 +3,15 @@
 namespace App\Http\Controllers\Api\Master\Akses;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Master\Akses\StoreRoleRequest;
-use App\Http\Requests\Master\Akses\UpdateRoleRequest;
+use App\Http\Requests\Master\Akses\Role\StoreRoleRequest;
+use App\Http\Requests\Master\Akses\Role\UpdateRoleRequest;
 use App\Models\Role;
-use App\Services\Master\Akses\RoleService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class RoleController extends Controller
 {
-    public function __construct(private readonly RoleService $roleService)
-    {
-    }
-
     public function index(Request $request)
     {
         $query = Role::query()->withCount('permissions')->orderBy('name');
@@ -32,7 +29,9 @@ class RoleController extends Controller
 
     public function store(StoreRoleRequest $request)
     {
-        return response()->json(['data' => $this->roleService->create($request->validated())], 201);
+        $role = Role::create($request->validated());
+
+        return response()->json(['data' => $role], 201);
     }
 
     public function show(Role $role)
@@ -42,12 +41,26 @@ class RoleController extends Controller
 
     public function update(UpdateRoleRequest $request, Role $role)
     {
-        return response()->json(['data' => $this->roleService->update($role, $request->validated())]);
+        $role->update($request->validated());
+
+        return response()->json(['data' => $role->fresh()]);
     }
 
     public function destroy(Role $role)
     {
-        $this->roleService->delete($role);
+        if ($role->code === 'SUPERADMIN') {
+            throw ValidationException::withMessages([
+                'role' => 'Role SUPERADMIN tidak dapat dihapus.',
+            ]);
+        }
+
+        if ($role->users()->exists()) {
+            throw ValidationException::withMessages([
+                'role' => 'Role masih digunakan oleh pengguna.',
+            ]);
+        }
+
+        $role->delete();
 
         return response()->json(['message' => 'Role berhasil dihapus.']);
     }
@@ -59,8 +72,16 @@ class RoleController extends Controller
             'permission_ids.*' => ['uuid', 'exists:permissions,id'],
         ]);
 
+        if ($role->code === 'SUPERADMIN') {
+            throw ValidationException::withMessages([
+                'role' => 'Hak akses SUPERADMIN selalu penuh.',
+            ]);
+        }
+
+        DB::transaction(fn () => $role->permissions()->sync($data['permission_ids']));
+
         return response()->json([
-            'data' => $this->roleService->syncPermissions($role, $data['permission_ids']),
+            'data' => $role->load('permissions'),
         ]);
     }
 }
