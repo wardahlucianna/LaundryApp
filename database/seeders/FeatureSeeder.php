@@ -134,10 +134,10 @@ class FeatureSeeder extends Seeder
 
         $superAdmin->permissions()->sync($permissions->pluck('id'));
 
-        // Admin manages day-to-day modules, but cannot administer roles or access policies.
+        // Admin manages day-to-day laundry modules, but cannot change system roles, features, or access policies.
         $adminPermissions = $permissions->reject(fn ($permission) => in_array(
             $permission->code,
-            ['ROLE_VIEW', 'ROLE_MANAGE', 'ACCESS_VIEW', 'ACCESS_MANAGE'],
+            ['ROLE_VIEW', 'ROLE_MANAGE', 'ACCESS_VIEW', 'ACCESS_MANAGE', 'FEATURE_VIEW', 'FEATURE_CREATE', 'FEATURE_UPDATE', 'FEATURE_DELETE'],
             true,
         ));
         $admin->permissions()->sync($adminPermissions->pluck('id'));
