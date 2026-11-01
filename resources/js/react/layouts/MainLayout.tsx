@@ -1,5 +1,12 @@
 import { useState, type ReactNode } from "react";
-import { ChevronDown, CircleUserRound, LogOut, UserRound, X } from "lucide-react";
+import {
+    ChevronDown,
+    CircleUserRound,
+    LogOut,
+    Menu,
+    UserRound,
+    X,
+} from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 export type NavigationItem = { id: string; label: string; icon: LucideIcon };
@@ -22,28 +29,72 @@ export default function MainLayout({
 }: Props) {
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const [profileOpen, setProfileOpen] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const initials = userName.trim().split(/\s+/).slice(0, 2).map(part => part.charAt(0)).join("").toUpperCase();
-    const openProfile = () => { setUserMenuOpen(false); setProfileOpen(true); };
+
+    const openProfile = () => {
+        setUserMenuOpen(false);
+        setProfileOpen(true);
+    };
+
+    const navigate = (page: string) => {
+        onNavigate(page);
+        setMobileMenuOpen(false);
+    };
 
     return (
         <div className="access-layout">
-            <aside className="access-sidebar">
-                <div className="login-brand"><span>✦</span><div><b>Sunrise Laundry</b><small>MANAGEMENT SYSTEM</small></div></div>
+            <aside className={mobileMenuOpen ? "access-sidebar is-open" : "access-sidebar"}>
+                <div className="access-sidebar-header">
+                    <div className="login-brand"><span>✦</span><div><b>Sunrise Laundry</b><small>MANAGEMENT SYSTEM</small></div></div>
+                    <button type="button" className="mobile-sidebar-close" aria-label="Tutup menu navigasi" onClick={() => setMobileMenuOpen(false)}>
+                        <X size={20} />
+                    </button>
+                </div>
                 {groups.map(group => (
                     <div className="access-nav-group" key={group.title}>
                         <div className="access-nav-title">{group.title}</div>
                         {group.items.map(item => {
                             const Icon = item.icon;
-                            return <button key={item.id} className={activePage === item.id ? "access-nav active" : "access-nav"} onClick={() => onNavigate(item.id)}><Icon size={18} strokeWidth={1.9} /><span>{item.label}</span></button>;
+                            return (
+                                <button
+                                    key={item.id}
+                                    className={activePage === item.id ? "access-nav active" : "access-nav"}
+                                    onClick={() => navigate(item.id)}
+                                >
+                                    <Icon size={18} strokeWidth={1.9} />
+                                    <span>{item.label}</span>
+                                </button>
+                            );
                         })}
                     </div>
                 ))}
                 <div className="access-user"><b>{userName}</b><small>{roleName}</small></div>
             </aside>
 
+            {mobileMenuOpen && (
+                <button
+                    type="button"
+                    className="mobile-sidebar-overlay"
+                    aria-label="Tutup menu navigasi"
+                    onClick={() => setMobileMenuOpen(false)}
+                />
+            )}
+
             <main className="access-main">
                 <header className="access-topbar">
-                    <span>Beranda / <b>{pageTitle}</b></span>
+                    <div className="access-topbar-start">
+                        <button
+                            type="button"
+                            className="mobile-menu-toggle"
+                            aria-label="Buka menu navigasi"
+                            aria-expanded={mobileMenuOpen}
+                            onClick={() => setMobileMenuOpen(value => !value)}
+                        >
+                            <Menu size={21} />
+                        </button>
+                        <span>Beranda / <b>{pageTitle}</b></span>
+                    </div>
                     <div className="topbar-user-menu">
                         <button type="button" className="topbar-user-trigger" aria-haspopup="menu" aria-expanded={userMenuOpen} onClick={() => setUserMenuOpen(value => !value)}>
                             <span className="topbar-user-avatar">{initials || <CircleUserRound size={18} />}</span>
