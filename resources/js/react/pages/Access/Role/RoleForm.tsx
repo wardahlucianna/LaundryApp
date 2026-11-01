@@ -83,6 +83,12 @@ export default function RoleForm({
 
     return (
         <div className="access-panel">
+            <div className="panel-heading">
+                <div>
+                    <h2>{role ? "Ubah Role" : "Tambah Role"}</h2>
+                </div>
+            </div>
+
             {error && <div className="alert error">{error}</div>}
 
             {loading ? (
