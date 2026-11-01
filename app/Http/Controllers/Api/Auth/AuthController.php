@@ -53,7 +53,7 @@ class AuthController extends Controller
             ->pluck('code')
             ->all() ?? [];
 
-        $groups = \\App\\Models\\Akses\\PermissionGroup::query()
+        $groups = \App\Models\Akses\PermissionGroup::query()
             ->where('is_active', true)
             ->with(['features' => function ($query) {
                 $query->where('is_active', true)
