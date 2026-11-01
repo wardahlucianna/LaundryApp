@@ -400,3 +400,24 @@
     .delete-modal-actions{display:grid;grid-template-columns:1fr 1fr}
     .delete-modal-actions button{width:100%;min-width:0}
 }
+
+
+/* Permission form: two fields per row */
+.permission-form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    align-items:start;
+    gap:16px;
+    padding-top:18px;
+}
+.permission-form-grid>label{min-width:0}
+.permission-form-grid>label input{width:100%;min-width:0}
+.permission-form-grid .permission-form-actions{
+    grid-column:1/-1;
+    justify-content:flex-end;
+    padding-top:4px;
+}
+@media(max-width:620px){
+    .permission-form-grid{grid-template-columns:1fr;gap:13px}
+    .permission-form-grid .permission-form-actions{grid-column:1}
+}
