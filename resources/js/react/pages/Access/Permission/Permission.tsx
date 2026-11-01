@@ -43,7 +43,6 @@ export default function PermissionPage({ token, canManage, onChanged }: Props) {
         <>
             <div className="access-heading">
                 <div>
-                    <small>MASTER DATA</small>
                     <h1>
                         {formVisible
                             ? editing ? "Ubah Fitur" : "Tambah Fitur"
