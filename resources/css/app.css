@@ -225,3 +225,76 @@
  .user-dropdown{right:0;width:215px}
  .profile-modal{padding:20px}
 }
+
+
+/* Responsive mobile navigation drawer */
+.access-sidebar-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.mobile-menu-toggle,.mobile-sidebar-close,.mobile-sidebar-overlay{display:none}
+.access-topbar-start{display:flex;align-items:center;gap:12px;min-width:0}
+.access-topbar-start>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:620px){
+    .access-sidebar{
+        position:fixed;
+        inset:0 auto 0 0;
+        width:min(290px,86vw);
+        height:100dvh;
+        min-height:100dvh;
+        padding:18px 14px;
+        display:flex;
+        flex-direction:column;
+        overflow-y:auto;
+        transform:translateX(-105%);
+        transition:transform .24s ease;
+        z-index:31;
+        box-shadow:12px 0 32px rgba(9,28,48,.18);
+    }
+    .access-sidebar.is-open{transform:translateX(0)}
+    .access-sidebar-header{align-items:center;margin-bottom:28px}
+    .access-sidebar .login-brand{margin:0;padding:0}
+    .mobile-sidebar-close{
+        width:34px;
+        height:34px;
+        flex:0 0 34px;
+        display:grid;
+        place-items:center;
+        border:1px solid rgba(255,255,255,.16);
+        border-radius:8px;
+        background:rgba(255,255,255,.08);
+        color:#fff;
+        cursor:pointer;
+    }
+    .access-nav-title{padding-top:8px}
+    .access-nav{display:flex;width:100%;margin:3px 0;padding:10px 12px}
+    .access-user{margin-top:auto;padding-top:17px}
+    .access-main{width:100%;margin-left:0}
+    .access-topbar{height:56px;padding:0 12px;gap:8px}
+    .mobile-menu-toggle{
+        width:36px;
+        height:36px;
+        flex:0 0 36px;
+        display:grid;
+        place-items:center;
+        border:1px solid #e7edf2;
+        border-radius:9px;
+        background:#fff;
+        color:#294967;
+        cursor:pointer;
+    }
+    .mobile-menu-toggle:hover{background:#f5f7f9}
+    .mobile-sidebar-overlay{
+        position:fixed;
+        inset:0;
+        z-index:30;
+        display:block;
+        border:0;
+        background:rgba(10,25,42,.52);
+        cursor:pointer;
+        animation:mobile-overlay-enter .18s ease-out;
+    }
+    .access-content{width:100%;padding:18px 12px}
+}
+@keyframes mobile-overlay-enter{from{opacity:0}to{opacity:1}}
+@media(min-width:621px){
+    .access-sidebar{transform:none!important}
+    .mobile-sidebar-toggle,.mobile-menu-toggle,.mobile-sidebar-close,.mobile-sidebar-overlay{display:none!important}
+}
