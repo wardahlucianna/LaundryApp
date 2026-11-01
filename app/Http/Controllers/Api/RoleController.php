@@ -6,10 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Role\StoreRoleRequest;
 use App\Http\Requests\Role\UpdateRoleRequest;
 use App\Models\Role;
+use App\Services\Master\RoleService;
 use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
+    public function __construct(private readonly RoleService $roleService)
+    {
+    }
+
     public function index(Request $request)
     {
         $query = Role::query()->withCount('permissions')->orderBy('name');
@@ -27,7 +32,7 @@ class RoleController extends Controller
 
     public function store(StoreRoleRequest $request)
     {
-        return response()->json(['data' => Role::create($request->validated())], 201);
+        return response()->json(['data' => $this->roleService->create($request->validated())], 201);
     }
 
     public function show(Role $role)
@@ -37,39 +42,25 @@ class RoleController extends Controller
 
     public function update(UpdateRoleRequest $request, Role $role)
     {
-        $role->update($request->validated());
-
-        return response()->json(['data' => $role->fresh()]);
+        return response()->json(['data' => $this->roleService->update($role, $request->validated())]);
     }
 
     public function destroy(Role $role)
     {
-        if ($role->code === 'SUPERADMIN') {
-            return response()->json(['message' => 'Role SUPERADMIN tidak dapat dihapus.'], 422);
-        }
-
-        if ($role->users()->exists()) {
-            return response()->json(['message' => 'Role masih digunakan oleh pengguna.'], 422);
-        }
-
-        $role->delete();
+        $this->roleService->delete($role);
 
         return response()->json(['message' => 'Role berhasil dihapus.']);
     }
 
     public function syncPermissions(Request $request, Role $role)
     {
-        if ($role->code === 'SUPERADMIN') {
-            return response()->json(['message' => 'Hak akses SUPERADMIN selalu penuh.'], 422);
-        }
-
         $data = $request->validate([
             'permission_ids' => ['present', 'array'],
             'permission_ids.*' => ['uuid', 'exists:permissions,id'],
         ]);
 
-        $role->permissions()->sync($data['permission_ids']);
-
-        return response()->json(['data' => $role->load('permissions')]);
+        return response()->json([
+            'data' => $this->roleService->syncPermissions($role, $data['permission_ids']),
+        ]);
     }
 }
