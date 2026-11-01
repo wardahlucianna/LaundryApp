@@ -1,5 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
-import { AlertTriangle, Pencil, Plus, RotateCcw, Search, Trash2, X } from "lucide-react";
+import {
+    AlertTriangle,
+    Pencil,
+    Plus,
+    RotateCcw,
+    Search,
+    Trash2,
+    X,
+} from "lucide-react";
 import { request } from "../../../../lib/api/request";
 import type { Role } from "../../../types/role";
 import type { Page } from "../../../../types/pagination";
@@ -119,15 +127,18 @@ export default function RoleList({
                         >
                             <X size={18} />
                         </button>
+
                         <div className="delete-modal-icon">
                             <AlertTriangle size={25} />
                         </div>
+
                         <h2 id="delete-modal-title">Hapus role?</h2>
                         <p>
                             Apakah kamu yakin ingin menghapus role{" "}
-                            <strong>“{deleteTarget.name}”</strong>? Tindakan ini tidak dapat
-                            dibatalkan.
+                            <strong>“{deleteTarget.name}”</strong>? Tindakan ini
+                            tidak dapat dibatalkan.
                         </p>
+
                         <div className="delete-modal-actions">
                             <button
                                 type="button"
@@ -137,6 +148,7 @@ export default function RoleList({
                             >
                                 Batal
                             </button>
+
                             <button
                                 type="button"
                                 className="delete-confirm-button"
@@ -155,11 +167,9 @@ export default function RoleList({
                 <div className="panel-heading">
                     <div>
                         <h2>Daftar Role</h2>
-                        <p>Role menentukan kelompok hak akses pengguna.</p>
                     </div>
 
                     <div className="heading-actions">
-                        <span>{data?.total ?? 0} role</span>
                         {canManage && (
                             <button className="btn-primary" onClick={onAdd}>
                                 <Plus size={15} />
@@ -173,7 +183,9 @@ export default function RoleList({
                     <input
                         value={searchInput}
                         onChange={event => setSearchInput(event.target.value)}
-                        onKeyDown={event => event.key === "Enter" && applySearch()}
+                        onKeyDown={event =>
+                            event.key === "Enter" && applySearch()
+                        }
                         placeholder="Cari nama atau kode role..."
                     />
 
@@ -212,16 +224,27 @@ export default function RoleList({
                                 <th>AKSI</th>
                             </tr>
                         </thead>
+
                         <tbody>
                             {data?.data.map((role, index) => (
                                 <tr key={role.id}>
                                     <td>{(page - 1) * perPage + index + 1}</td>
-                                    <td><b>{role.name}</b></td>
+                                    <td>
+                                        <b>{role.name}</b>
+                                    </td>
                                     <td>{role.code}</td>
                                     <td>{role.permissions_count ?? 0}</td>
                                     <td>
-                                        <span className={role.is_active ? "pill active" : "pill"}>
-                                            {role.is_active ? "Aktif" : "Nonaktif"}
+                                        <span
+                                            className={
+                                                role.is_active
+                                                    ? "pill active"
+                                                    : "pill"
+                                            }
+                                        >
+                                            {role.is_active
+                                                ? "Aktif"
+                                                : "Nonaktif"}
                                         </span>
                                     </td>
                                     <td>
@@ -231,15 +254,24 @@ export default function RoleList({
                                                     <button
                                                         className="icon-action"
                                                         title="Edit"
-                                                        onClick={() => onEdit(role)}
+                                                        onClick={() =>
+                                                            onEdit(role)
+                                                        }
                                                     >
                                                         <Pencil size={16} />
                                                     </button>
+
                                                     <button
                                                         className="icon-action danger"
                                                         title="Hapus"
-                                                        disabled={busy || role.code === "SUPERADMIN"}
-                                                        onClick={() => setDeleteTarget(role)}
+                                                        disabled={
+                                                            busy ||
+                                                            role.code ===
+                                                                "SUPERADMIN"
+                                                        }
+                                                        onClick={() =>
+                                                            setDeleteTarget(role)
+                                                        }
                                                     >
                                                         <Trash2 size={16} />
                                                     </button>
