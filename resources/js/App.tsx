@@ -46,7 +46,7 @@ export default function App() {
     const [error, setError] = useState("");
     const [notice, setNotice] = useState("");
 
-    const can = useCallback((code: string) => permissionCodes.includes(code) || user?.role?.code === "OWNER", [permissionCodes, user]);
+    const can = useCallback((code: string) => permissionCodes.includes(code) || user?.role?.code === "SUPERADMIN", [permissionCodes, user]);
 
     const loadIdentity = useCallback(async (authToken: string) => {
         const result = await request<{ user: User; permissions: string[] }>("/auth/me", authToken);
