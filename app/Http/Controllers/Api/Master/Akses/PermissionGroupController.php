@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Master\Akses;
 
 use App\Http\Controllers\Controller;
-use App\Models\PermissionGroup;
+use App\Models\Akses\PermissionGroup;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
