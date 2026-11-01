@@ -35,8 +35,24 @@ class FeatureSeeder extends Seeder
             ['name' => $item[0], 'path' => $item[2], 'is_active' => true],
         ));
 
-        $owner = Role::updateOrCreate(['code' => 'OWNER'], ['name' => 'Owner', 'is_active' => true]);
-        $owner->permissions()->sync($permissions->pluck('id'));
+        // Migrate the previous OWNER role to SUPERADMIN without losing its user assignments.
+        $superAdmin = Role::where('code', 'OWNER')->first();
+        if ($superAdmin) {
+            $superAdmin->update(['code' => 'SUPERADMIN', 'name' => 'Super Admin', 'is_active' => true]);
+        } else {
+            $superAdmin = Role::updateOrCreate(
+                ['code' => 'SUPERADMIN'],
+                ['name' => 'Super Admin', 'is_active' => true],
+            );
+        }
+        $superAdmin->permissions()->sync($permissions->pluck('id'));
+
+        // Keep an already-created initial owner account, but rename it to Super Admin.
+        User::where('role_id', $superAdmin->id)->where('username', 'owner')->update([
+            'username' => 'superadmin',
+            'full_name' => 'Super Admin',
+            'email' => env('INITIAL_SUPERADMIN_EMAIL', 'superadmin@sunrise.local'),
+        ]);
 
         $admin = Role::updateOrCreate(['code' => 'ADMIN'], ['name' => 'Administrator', 'is_active' => true]);
         $admin->permissions()->sync($permissions->reject(fn ($permission) => $permission->code === 'ACCESS_MANAGE')->pluck('id'));
@@ -53,19 +69,19 @@ class FeatureSeeder extends Seeder
         ])->pluck('id'));
 
         if (!User::query()->exists()) {
-            $username = env('INITIAL_OWNER_USERNAME', 'owner');
-            $password = env('INITIAL_OWNER_PASSWORD') ?: Str::random(20);
+            $username = env('INITIAL_SUPERADMIN_USERNAME', 'superadmin');
+            $password = env('INITIAL_SUPERADMIN_PASSWORD') ?: Str::random(20);
 
             User::create([
-                'role_id' => $owner->id,
-                'full_name' => env('INITIAL_OWNER_NAME', 'Owner Sunrise Laundry'),
+                'role_id' => $superAdmin->id,
+                'full_name' => env('INITIAL_SUPERADMIN_NAME', 'Super Admin'),
                 'username' => $username,
-                'email' => env('INITIAL_OWNER_EMAIL', 'owner@sunrise.local'),
+                'email' => env('INITIAL_SUPERADMIN_EMAIL', 'superadmin@sunrise.local'),
                 'password' => $password,
                 'is_active' => true,
             ]);
 
-            $this->command?->info("Initial owner created. Username: {$username} | Password: {$password}");
+            $this->command?->info("Initial Super Admin created. Username: {$username} | Password: {$password}");
             $this->command?->warn('Simpan kredensial ini dan segera ganti password setelah login pertama.');
         }
     }
