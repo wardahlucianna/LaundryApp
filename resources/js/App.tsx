@@ -228,7 +228,6 @@ export default function App() {
                         <select value={roleStatus} onChange={e => setRoleStatus(e.target.value)}><option value="">Semua Status</option><option value="1">Aktif</option><option value="0">Nonaktif</option></select>
                         <button className="btn-primary" onClick={() => { setRolePage(1); loadRoles(); }}><Search size={15}/> Cari</button>
                         <button className="btn-secondary" onClick={() => { setRoleSearch(""); setRoleStatus(""); setRolePage(1); }}><RotateCcw size={15}/> Atur Ulang</button>
-                        {can("ROLE_MANAGE") && }
                     </div>}
                     {showRoleForm && can("ROLE_MANAGE") && <form className="inline-form" onSubmit={saveRole}>
                         <input value={roleForm.name} onChange={e => setRoleForm({ ...roleForm, name: e.target.value })} placeholder="Nama role" required />
@@ -250,7 +249,6 @@ export default function App() {
                         <select value={featureStatus} onChange={e => setFeatureStatus(e.target.value)}><option value="">Semua Status</option><option value="1">Aktif</option><option value="0">Nonaktif</option></select>
                         <button className="btn-primary" onClick={() => { setFeaturePage(1); loadFeatures(); }}><Search size={15}/> Cari</button>
                         <button className="btn-secondary" onClick={() => { setFeatureSearch(""); setFeatureStatus(""); setFeaturePage(1); }}><RotateCcw size={15}/> Atur Ulang</button>
-                        {can("FEATURE_MANAGE") && }
                     </div>}
                     {showFeatureForm && can("FEATURE_MANAGE") && <form className="inline-form feature-form" onSubmit={saveFeature}>
                         <input value={featureForm.name} onChange={e => setFeatureForm({ ...featureForm, name: e.target.value })} placeholder="Nama fitur" required />
