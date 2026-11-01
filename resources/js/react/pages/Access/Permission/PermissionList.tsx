@@ -155,11 +155,9 @@ export default function PermissionList({
                 <div className="panel-heading">
                     <div>
                         <h2>Daftar Fitur</h2>
-                        <p>Fitur yang dapat diberikan kepada setiap role.</p>
                     </div>
 
                     <div className="heading-actions">
-                        <span>{data?.total ?? 0} fitur</span>
                         {canManage && (
                             <button className="btn-primary" onClick={onAdd}>
                                 <Plus size={15} />
