@@ -17,7 +17,7 @@ import MainLayout, {
     type NavigationGroup,
 } from "./react/layouts/MainLayout";
 import RolePage from "./react/pages/Access/Role/Role";
-import PermissionPage from "./react/pages/Access/Permission/Permission";
+import FeaturePage from "./react/pages/Access/Permission/FeaturePage";
 import AccessPage from "./react/pages/Access/Access/Access";
 
 type User = {
@@ -289,10 +289,11 @@ export default function App() {
             )}
 
             {page === "features" && can("FEATURE_VIEW") && (
-                <PermissionPage
+                <FeaturePage
                     token={token}
-                    canManage={can("FEATURE_MANAGE")}
-                    onChanged={() => undefined}
+                    canCreate={can("FEATURE_CREATE")}
+                    canUpdate={can("FEATURE_UPDATE")}
+                    canDelete={can("FEATURE_DELETE")}
                 />
             )}
 
