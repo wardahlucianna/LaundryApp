@@ -9,7 +9,12 @@ type Props = {
     onCancel: () => void;
 };
 
-export default function RoleForm({ token, role, onSaved, onCancel }: Props) {
+export default function RoleForm({
+    token,
+    role,
+    onSaved,
+    onCancel,
+}: Props) {
     const [form, setForm] = useState<RoleFormValue>({
         name: "",
         code: "",
@@ -38,10 +43,14 @@ export default function RoleForm({ token, role, onSaved, onCancel }: Props) {
                 }
             })
             .catch(error => {
-                if (active) setError((error as Error).message);
+                if (active) {
+                    setError((error as Error).message);
+                }
             })
             .finally(() => {
-                if (active) setLoading(false);
+                if (active) {
+                    setLoading(false);
+                }
             });
 
         return () => {
@@ -74,29 +83,24 @@ export default function RoleForm({ token, role, onSaved, onCancel }: Props) {
 
     return (
         <div className="access-panel">
-            <div className="panel-heading">
-                <div>
-                    <h2>{role ? "Ubah Role" : "Tambah Role"}</h2>
-                    <p>
-                        {role
-                            ? "Perbarui informasi role."
-                            : "Masukkan nama dan kode role baru."}
-                    </p>
-                </div>
-            </div>
-
             {error && <div className="alert error">{error}</div>}
 
             {loading ? (
                 <p>Memuat data role...</p>
             ) : (
-                <form className="modal-form" onSubmit={handleSubmit}>
+                <form
+                    className="modal-form permission-form-grid"
+                    onSubmit={handleSubmit}
+                >
                     <label>
                         Nama Role
                         <input
                             value={form.name}
                             onChange={event =>
-                                setForm({ ...form, name: event.target.value })
+                                setForm({
+                                    ...form,
+                                    name: event.target.value,
+                                })
                             }
                             placeholder="Contoh: Administrator"
                             required
@@ -121,7 +125,7 @@ export default function RoleForm({ token, role, onSaved, onCancel }: Props) {
                         />
                     </label>
 
-                    <div className="modal-actions">
+                    <div className="modal-actions permission-form-actions">
                         <button
                             type="button"
                             className="btn-secondary"
@@ -130,6 +134,7 @@ export default function RoleForm({ token, role, onSaved, onCancel }: Props) {
                         >
                             Batal
                         </button>
+
                         <button className="btn-primary" disabled={busy}>
                             {busy
                                 ? "Menyimpan..."
