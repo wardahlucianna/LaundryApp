@@ -89,3 +89,26 @@
 .permission-card b{font-size:13px}
 .permission-card small{font-size:11px}
 @media(max-width:760px){.access-toolbar{align-items:stretch}.access-toolbar input{flex-basis:100%;min-width:100%}.access-toolbar select{flex:1}.access-toolbar button{flex:1}}
+
+/* Typography midpoint and separate create/edit pages */
+.access-heading h1{font-size:29px}
+.access-heading p{font-size:13px}
+.access-nav{font-size:13px}
+.access-nav-title{font-size:10.5px}
+.access-topbar{font-size:12px}
+.panel-heading h2{font-size:17px}
+.panel-heading p{font-size:12px}
+.access-toolbar input,.access-toolbar select{font-size:12px}
+.access-toolbar .btn-primary,.access-toolbar .btn-secondary{font-size:11px}
+.access-table th{font-size:10px}
+.access-table td,.access-table td b{font-size:12px}
+.pill{font-size:10px}
+.pagination-bar{font-size:11px}
+.pagination-actions select,.pagination-actions button{font-size:11px}
+.heading-actions{display:flex;align-items:center;gap:10px}
+.heading-actions .btn-primary{font-size:11px}
+.create-page-form{display:grid;grid-template-columns:minmax(240px,620px);gap:16px;max-width:760px}
+.create-page-form label{display:grid;gap:7px;color:#526a80;font-size:13px;font-weight:600}
+.create-page-form input{height:42px;border:1px solid #dfe6ed;border-radius:8px;padding:0 12px;font:13px 'DM Sans';outline-color:#d9a34c}
+.form-actions{display:flex;gap:9px;margin-top:8px}
+@media(max-width:620px){.heading-actions{align-items:flex-end;flex-direction:column}.create-page-form{grid-template-columns:1fr}}
