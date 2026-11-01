@@ -16,7 +16,7 @@ class AuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        $user = \App\Models\User::with('role.permissions')
+        $user = \App\Models\Akses\User::with('role.permissions')
             ->where('username', $credentials['username'])
             ->where('is_active', true)
             ->first();
