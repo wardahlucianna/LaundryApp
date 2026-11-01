@@ -11,7 +11,7 @@ class PermissionController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Permission::query()->withCount('roles')->orderBy('name');
+        $query = Permission::query()->with(['feature.group'])->withCount('roles')->orderBy('name');
 
         if ($search = $request->string('search')->toString()) {
             $query->where(fn ($q) => $q->where('name', 'ilike', "%{$search}%")
@@ -32,6 +32,8 @@ class PermissionController extends Controller
             'name' => ['required', 'string', 'max:120'],
             'code' => ['required', 'string', 'max:80', 'alpha_dash', 'unique:permissions,code'],
             'path' => ['nullable', 'string', 'max:255'],
+            'permission_feature_id' => ['nullable', 'uuid', 'exists:permission_features,id'],
+            'action_name' => ['nullable', 'string', 'max:80'],
             'is_active' => ['sometimes', 'boolean'],
         ]);
 
