@@ -1,0 +1,62 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Models\PermissionFeature;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+
+class PermissionFeatureController extends Controller
+{
+    public function index(Request $request)
+    {
+        $query = PermissionFeature::query()->with('group')->withCount('actions')->orderBy('name');
+        if ($search = $request->string('search')->toString()) {
+            $query->where(fn ($q) => $q->where('name', 'ilike', "%{$search}%")
+                ->orWhere('code', 'ilike', "%{$search}%")
+                ->orWhereHas('group', fn ($g) => $g->where('name', 'ilike', "%{$search}%")));
+        }
+        if ($request->filled('permission_group_id')) {
+            $query->where('permission_group_id', $request->input('permission_group_id'));
+        }
+        if ($request->has('is_active')) $query->where('is_active', $request->boolean('is_active'));
+        return response()->json($query->paginate(min(max($request->integer('per_page', 100), 1), 100)));
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'permission_group_id' => ['required', 'uuid', 'exists:permission_groups,id'],
+            'name' => ['required', 'string', 'max:120'],
+            'code' => ['required', 'string', 'max:80', 'alpha_dash', 'unique:permission_features,code'],
+            'path' => ['nullable', 'string', 'max:255'],
+            'menu_type' => ['required', Rule::in(['sidebar', 'topbar'])],
+            'is_active' => ['sometimes', 'boolean'],
+        ]);
+        return response()->json(['data' => PermissionFeature::create($data)], 201);
+    }
+
+    public function update(Request $request, PermissionFeature $permissionFeature)
+    {
+        $data = $request->validate([
+            'permission_group_id' => ['sometimes', 'required', 'uuid', 'exists:permission_groups,id'],
+            'name' => ['sometimes', 'required', 'string', 'max:120'],
+            'code' => ['sometimes', 'required', 'string', 'max:80', 'alpha_dash', Rule::unique('permission_features', 'code')->ignore($permissionFeature->id)],
+            'path' => ['nullable', 'string', 'max:255'],
+            'menu_type' => ['sometimes', 'required', Rule::in(['sidebar', 'topbar'])],
+            'is_active' => ['sometimes', 'boolean'],
+        ]);
+        $permissionFeature->update($data);
+        return response()->json(['data' => $permissionFeature->fresh('group')]);
+    }
+
+    public function destroy(PermissionFeature $permissionFeature)
+    {
+        if ($permissionFeature->actions()->exists()) {
+            return response()->json(['message' => 'Fitur masih memiliki aksi. Hapus atau pindahkan aksi terlebih dahulu.'], 422);
+        }
+        $permissionFeature->delete();
+        return response()->json(['message' => 'Fitur berhasil dihapus.']);
+    }
+}
