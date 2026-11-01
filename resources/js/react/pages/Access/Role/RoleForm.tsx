@@ -85,7 +85,7 @@ export default function RoleForm({
         <div className="access-panel">
             <div className="panel-heading">
                 <div>
-                    <h2>{role ? "Ubah Role" : "Tambah Role"}</h2>
+                    <h2 className="role-panel-title">{role ? "Ubah Role" : "Tambah Role"}</h2>
                 </div>
             </div>
 
