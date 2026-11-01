@@ -70,7 +70,7 @@ import { AppHeaderDropdown } from './header/index'
  */
 const AppHeader = () => {
   const headerRef = useRef()
-  const { colorMode, setColorMode } = useColorModes('coreui-free-react-admin-template-theme')
+  const { colorMode, setColorMode } = useColorModes('sunrise-laundry-theme')
   const [searchVisible, setSearchVisible] = useState(false)
 
   const dispatch = useDispatch()
