@@ -12,7 +12,9 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "strict": true,
-    "types": ["vite/client"]
+    "types": ["vite/client"],
+    "allowJs": true,
+    "checkJs": false
   },
-  "include": ["resources/js/**/*.ts", "resources/js/**/*.tsx"]
+  "include": ["resources/js/**/*.ts", "resources/js/**/*.tsx", "resources/js/**/*.js", "resources/js/**/*.jsx"]
 }
