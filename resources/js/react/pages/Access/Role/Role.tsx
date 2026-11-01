@@ -40,13 +40,10 @@ export default function RolePage({ token, canManage }: Props) {
         <>
             <div className="access-heading">
                 <div>
-                    <h1>
-                        {formVisible
-                            ? editing
-                                ? "Ubah Role"
-                                : "Tambah Role"
-                            : "Manajemen Role"}
-                    </h1>
+                    <h1>Manajemen Role</h1>
+                    {formVisible && (
+                        <p>{editing ? "Ubah Role" : "Tambah Role"}</p>
+                    )}
                 </div>
             </div>
 
