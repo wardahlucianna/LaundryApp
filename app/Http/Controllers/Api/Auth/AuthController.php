@@ -44,6 +44,50 @@ class AuthController extends Controller
         ]);
     }
 
+    public function menus(Request $request)
+    {
+        $user = $request->user()->load('role.permissions');
+        $isSuperAdmin = $user->role?->code === 'SUPERADMIN';
+        $allowedCodes = $user->role?->permissions
+            ->where('is_active', true)
+            ->pluck('code')
+            ->all() ?? [];
+
+        $groups = \\App\\Models\\Akses\\PermissionGroup::query()
+            ->where('is_active', true)
+            ->with(['features' => function ($query) {
+                $query->where('is_active', true)
+                    ->where('menu_type', 'sidebar')
+                    ->whereNotNull('path')
+                    ->where('path', '<>', '')
+                    ->with(['actions' => fn ($actions) => $actions->where('is_active', true)]);
+            }])
+            ->orderBy('name')
+            ->get()
+            ->map(function ($group) use ($isSuperAdmin, $allowedCodes) {
+                $items = $group->features
+                    ->filter(function ($feature) use ($isSuperAdmin, $allowedCodes) {
+                        $viewPermission = $feature->actions->first(
+                            fn ($action) => strtolower((string) $action->action_name) === 'view'
+                        );
+                        return $viewPermission && ($isSuperAdmin || in_array($viewPermission->code, $allowedCodes, true));
+                    })
+                    ->map(fn ($feature) => [
+                        'id' => $feature->id,
+                        'name' => $feature->name,
+                        'code' => $feature->code,
+                        'path' => $feature->path,
+                    ])
+                    ->values();
+
+                return ['id' => $group->id, 'name' => $group->name, 'code' => $group->code, 'items' => $items];
+            })
+            ->filter(fn ($group) => $group['items']->isNotEmpty())
+            ->values();
+
+        return response()->json(['data' => $groups]);
+    }
+
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()?->delete();
