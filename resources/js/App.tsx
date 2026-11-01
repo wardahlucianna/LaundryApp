@@ -30,7 +30,7 @@ export default function App() {
     const [token, setToken] = useState<string | null>(() => localStorage.getItem("sunrise_token"));
     const [user, setUser] = useState<User | null>(null);
     const [permissionCodes, setPermissionCodes] = useState<string[]>([]);
-    const [page, setPage] = useState<"roles" | "features" | "access">("roles");
+    const [page, setPage] = useState<"roles" | "features" | "access" | "role-create" | "feature-create">("roles");
     const [roles, setRoles] = useState<Page<Role> | null>(null);
     const [features, setFeatures] = useState<Page<Permission> | null>(null);
     const [allFeatures, setAllFeatures] = useState<Permission[]>([]);
@@ -217,18 +217,18 @@ export default function App() {
         <main className="access-main">
             <header className="access-topbar"><span>Pengaturan / <b>{currentTitle}</b></span><span>Sunrise Laundry</span></header>
             <section className="access-content">
-                <div className="access-heading"><div><small>ADMINISTRASI</small><h1>{currentTitle}</h1><p>Kelola role, daftar fitur, dan hak akses pengguna.</p></div></div>
+                <div className="access-heading"><div><small>ADMINISTRASI</small><h1>{page === "role-create" ? (roleEditingId ? "Ubah Role" : "Tambah Role") : page === "feature-create" ? (featureEditingId ? "Ubah Fitur" : "Tambah Fitur") : currentTitle}</h1><p>{page === "role-create" ? "Lengkapi informasi role." : page === "feature-create" ? "Lengkapi informasi fitur." : "Kelola role, daftar fitur, dan hak akses pengguna."}</p></div></div>
                 {error && <div className="alert error">{error}<button onClick={() => setError("")}>×</button></div>}
                 {notice && <div className="alert success">{notice}<button onClick={() => setNotice("")}>×</button></div>}
 
                 {page === "roles" && can("ROLE_VIEW") && <div className="access-panel">
-                    <div className="panel-heading"><div><h2>Daftar Role</h2><p>Role menentukan kelompok hak akses pengguna.</p></div><span>{roles?.total ?? 0} role</span></div>
+                    <div className="panel-heading"><div><h2>Daftar Role</h2><p>Role menentukan kelompok hak akses pengguna.</p></div><div className="heading-actions"><span>{roles?.total ?? 0} role</span>{can("ROLE_MANAGE") && <button className="btn-primary" onClick={() => { setRoleEditingId(null); setRoleForm({ name: "", code: "" }); setPage("role-create"); }}><Plus size={15}/> Tambah Role</button>}</div></div>
                     {<div className="list-toolbar access-toolbar">
                         <input value={roleSearch} onChange={e => setRoleSearch(e.target.value)} placeholder="Cari nama atau kode role..." />
                         <select value={roleStatus} onChange={e => setRoleStatus(e.target.value)}><option value="">Semua Status</option><option value="1">Aktif</option><option value="0">Nonaktif</option></select>
                         <button className="btn-primary" onClick={() => { setRolePage(1); loadRoles(); }}><Search size={15}/> Cari</button>
                         <button className="btn-secondary" onClick={() => { setRoleSearch(""); setRoleStatus(""); setRolePage(1); }}><RotateCcw size={15}/> Atur Ulang</button>
-                        {can("ROLE_MANAGE") && <button className="btn-primary" onClick={() => { setRoleEditingId(null); setRoleForm({ name: "", code: "" }); setShowRoleForm(v => !v); }}><Plus size={15}/> Tambah Role</button>}
+                        {can("ROLE_MANAGE") && }
                     </div>}
                     {showRoleForm && can("ROLE_MANAGE") && <form className="inline-form" onSubmit={saveRole}>
                         <input value={roleForm.name} onChange={e => setRoleForm({ ...roleForm, name: e.target.value })} placeholder="Nama role" required />
@@ -237,20 +237,20 @@ export default function App() {
                         <button type="button" className="btn-secondary" onClick={() => { setShowRoleForm(false); setRoleEditingId(null); }}>Batal</button>
                     </form>}
                     <div className="table-wrap"><table className="access-table"><thead><tr><th>NO</th><th>NAMA ROLE</th><th>KODE</th><th>JUMLAH FITUR</th><th>STATUS</th><th>AKSI</th></tr></thead><tbody>
-                        {roles?.data.map((role,index) => <tr key={role.id}><td>{(rolePage-1)*perPage+index+1}</td><td><b>{role.name}</b></td><td>{role.code}</td><td>{role.permissions_count ?? 0}</td><td><span className={role.is_active ? "pill active" : "pill"}>{role.is_active ? "Aktif" : "Nonaktif"}</span></td><td><div className="row-actions"><button className="icon-action" title="Edit" onClick={() => editRole(role)}><Pencil size={16}/></button><button className="icon-action danger" title="Hapus" disabled={role.code === "SUPERADMIN" || busy} onClick={() => deleteRole(role)}><Trash2 size={16}/></button></div></td></tr>)}
+                        {roles?.data.map((role,index) => <tr key={role.id}><td>{(rolePage-1)*perPage+index+1}</td><td><b>{role.name}</b></td><td>{role.code}</td><td>{role.permissions_count ?? 0}</td><td><span className={role.is_active ? "pill active" : "pill"}>{role.is_active ? "Aktif" : "Nonaktif"}</span></td><td><div className="row-actions"><button className="icon-action" title="Edit" onClick={() => { editRole(role); setPage("role-create"); }}><Pencil size={16}/></button><button className="icon-action danger" title="Hapus" disabled={role.code === "SUPERADMIN" || busy} onClick={() => deleteRole(role)}><Trash2 size={16}/></button></div></td></tr>)}
                         {!roles?.data.length && <tr><td colSpan={6} className="empty-cell">Belum ada data role.</td></tr>}
                     </tbody></table></div>
                     <Pagination data={roles} page={rolePage} setPage={setRolePage} perPage={perPage} setPerPage={setPerPage} />
                 </div>}
 
                 {page === "features" && can("FEATURE_VIEW") && <div className="access-panel">
-                    <div className="panel-heading"><div><h2>Daftar Fitur</h2><p>Fitur yang dapat diberikan kepada setiap role.</p></div><span>{features?.total ?? 0} fitur</span></div>
+                    <div className="panel-heading"><div><h2>Daftar Fitur</h2><p>Fitur yang dapat diberikan kepada setiap role.</p></div><div className="heading-actions"><span>{features?.total ?? 0} fitur</span>{can("FEATURE_MANAGE") && <button className="btn-primary" onClick={() => { setFeatureEditingId(null); setFeatureForm({ name: "", code: "", path: "" }); setPage("feature-create"); }}><Plus size={15}/> Tambah Fitur</button>}</div></div>
                     {<div className="list-toolbar access-toolbar">
                         <input value={featureSearch} onChange={e => setFeatureSearch(e.target.value)} placeholder="Cari nama, kode, atau path fitur..." />
                         <select value={featureStatus} onChange={e => setFeatureStatus(e.target.value)}><option value="">Semua Status</option><option value="1">Aktif</option><option value="0">Nonaktif</option></select>
                         <button className="btn-primary" onClick={() => { setFeaturePage(1); loadFeatures(); }}><Search size={15}/> Cari</button>
                         <button className="btn-secondary" onClick={() => { setFeatureSearch(""); setFeatureStatus(""); setFeaturePage(1); }}><RotateCcw size={15}/> Atur Ulang</button>
-                        {can("FEATURE_MANAGE") && <button className="btn-primary" onClick={() => { setFeatureEditingId(null); setFeatureForm({ name: "", code: "", path: "" }); setShowFeatureForm(v => !v); }}><Plus size={15}/> Tambah Fitur</button>}
+                        {can("FEATURE_MANAGE") && }
                     </div>}
                     {showFeatureForm && can("FEATURE_MANAGE") && <form className="inline-form feature-form" onSubmit={saveFeature}>
                         <input value={featureForm.name} onChange={e => setFeatureForm({ ...featureForm, name: e.target.value })} placeholder="Nama fitur" required />
@@ -260,12 +260,29 @@ export default function App() {
                         <button type="button" className="btn-secondary" onClick={() => { setShowFeatureForm(false); setFeatureEditingId(null); }}>Batal</button>
                     </form>}
                     <div className="table-wrap"><table className="access-table"><thead><tr><th>NO</th><th>NAMA FITUR</th><th>KODE</th><th>PATH MENU</th><th>STATUS</th><th>AKSI</th></tr></thead><tbody>
-                        {features?.data.map((feature,index) => <tr key={feature.id}><td>{(featurePage-1)*perPage+index+1}</td><td><b>{feature.name}</b></td><td>{feature.code}</td><td>{feature.path || "—"}</td><td><span className={feature.is_active ? "pill active" : "pill"}>{feature.is_active ? "Aktif" : "Nonaktif"}</span></td><td><div className="row-actions"><button className="icon-action" title="Edit" onClick={() => editFeature(feature)}><Pencil size={16}/></button><button className="icon-action danger" title="Hapus" disabled={busy} onClick={() => deleteFeature(feature)}><Trash2 size={16}/></button></div></td></tr>)}
+                        {features?.data.map((feature,index) => <tr key={feature.id}><td>{(featurePage-1)*perPage+index+1}</td><td><b>{feature.name}</b></td><td>{feature.code}</td><td>{feature.path || "—"}</td><td><span className={feature.is_active ? "pill active" : "pill"}>{feature.is_active ? "Aktif" : "Nonaktif"}</span></td><td><div className="row-actions"><button className="icon-action" title="Edit" onClick={() => { editFeature(feature); setPage("feature-create"); }}><Pencil size={16}/></button><button className="icon-action danger" title="Hapus" disabled={busy} onClick={() => deleteFeature(feature)}><Trash2 size={16}/></button></div></td></tr>)}
                         {!features?.data.length && <tr><td colSpan={6} className="empty-cell">Belum ada data fitur.</td></tr>}
                     </tbody></table></div>
                     <Pagination data={features} page={featurePage} setPage={setFeaturePage} perPage={perPage} setPerPage={setPerPage} />
                 </div>}
 
+                {page === "role-create" && can("ROLE_MANAGE") && <div className="access-panel">
+                    <div className="panel-heading"><div><h2>{roleEditingId ? "Ubah Role" : "Form Tambah Role"}</h2><p>Masukkan nama dan kode role.</p></div></div>
+                    <form className="create-page-form" onSubmit={saveRole}>
+                        <label>Nama Role<input value={roleForm.name} onChange={e => setRoleForm({ ...roleForm, name: e.target.value })} placeholder="Contoh: Administrator" required /></label>
+                        <label>Kode Role<input value={roleForm.code} onChange={e => setRoleForm({ ...roleForm, code: e.target.value.toUpperCase().replace(/[^A-Z0-9_-]/g, "_") })} placeholder="CONTOH_ROLE" required /></label>
+                        <div className="form-actions"><button className="btn-primary" disabled={busy}>Simpan Role</button><button type="button" className="btn-secondary" onClick={() => setPage("roles")}>Batal</button></div>
+                    </form>
+                </div>}
+                {page === "feature-create" && can("FEATURE_MANAGE") && <div className="access-panel">
+                    <div className="panel-heading"><div><h2>{featureEditingId ? "Ubah Fitur" : "Form Tambah Fitur"}</h2><p>Masukkan nama, kode, dan path menu fitur.</p></div></div>
+                    <form className="create-page-form" onSubmit={saveFeature}>
+                        <label>Nama Fitur<input value={featureForm.name} onChange={e => setFeatureForm({ ...featureForm, name: e.target.value })} placeholder="Contoh: Manajemen Pelanggan" required /></label>
+                        <label>Kode Fitur<input value={featureForm.code} onChange={e => setFeatureForm({ ...featureForm, code: e.target.value.toUpperCase().replace(/[^A-Z0-9_-]/g, "_") })} placeholder="CUSTOMER_VIEW" required /></label>
+                        <label>Path Menu<input value={featureForm.path} onChange={e => setFeatureForm({ ...featureForm, path: e.target.value })} placeholder="/customers" /></label>
+                        <div className="form-actions"><button className="btn-primary" disabled={busy}>Simpan Fitur</button><button type="button" className="btn-secondary" onClick={() => setPage("features")}>Batal</button></div>
+                    </form>
+                </div>}
                 {page === "access" && can("ACCESS_MANAGE") && <div className="access-panel">
                     <div className="panel-heading"><div><h2>Pengaturan Hak Akses</h2><p>Pilih role, lalu tentukan fitur yang boleh diakses.</p></div></div>
                     <label className="role-picker">Pilih Role
