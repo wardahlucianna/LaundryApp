@@ -223,6 +223,7 @@ export default function App() {
             activePage={page}
             onNavigate={value => setPage(value as PageId)}
             userName={user.full_name}
+            username={user.username}
             roleName={user.role?.name || "Pengguna"}
             onLogout={handleLogout}
             pageTitle={currentTitle}
