@@ -15,16 +15,16 @@ class FeatureSeeder extends Seeder
     public function run(): void
     {
         $groups = [
-            'DASHBOARD' => ['Beranda', 'Dashboard'],
-            'TRANSACTIONS' => ['Transaksi', 'Transactions'],
-            'OPERATIONS' => ['Operasional', 'Operations'],
-            'MASTER_DATA' => ['Master Data', 'MasterData'],
-            'SETTINGS' => ['Pengaturan', 'Settings'],
-            'REPORTS' => ['Laporan', 'Reports'],
+            'DASHBOARD' => 'Dashboard',
+            'TRANSACTIONS' => 'Transaksi',
+            'OPERATIONS' => 'Operasional',
+            'MASTER_DATA' => 'Master Data',
+            'SETTINGS' => 'Pengaturan',
+            'REPORTS' => 'Laporan',
         ];
 
         $groupModels = [];
-        foreach ($groups as $code => [$name]) {
+        foreach ($groups as $code => $name) {
             $groupModels[$code] = PermissionGroup::updateOrCreate(
                 ['code' => $code],
                 ['name' => $name, 'is_active' => true],
@@ -32,21 +32,22 @@ class FeatureSeeder extends Seeder
         }
 
         $features = [
-            ['DASHBOARD', 'Dashboard', 'DASHBOARD', '/dashboard', 'DASHBOARD_VIEW'],
-            ['TRANSACTIONS', 'Manajemen Transaksi', 'TRANSACTIONS', '/transactions', 'TRANSACTION_VIEW'],
-            ['OPERATIONS', 'Pesanan', 'ORDERS', '/orders', 'ORDERS_VIEW'],
-            ['OPERATIONS', 'Proses Laundry', 'LAUNDRY_PROCESS', '/process', 'LAUNDRY_PROCESS_VIEW'],
-            ['MASTER_DATA', 'Manajemen Pelanggan', 'CUSTOMERS', '/customers', 'CUSTOMER_VIEW'],
-            ['TRANSACTIONS', 'Pembayaran', 'PAYMENTS', '/payments', 'PAYMENT_VIEW'],
-            ['OPERATIONS', 'Antar Jemput', 'DELIVERIES', '/deliveries', 'DELIVERY_VIEW'],
-            ['REPORTS', 'Laporan', 'REPORTS', '/reports', 'REPORT_VIEW'],
-            ['SETTINGS', 'Manajemen Role', 'ROLES', '/roles', 'ROLE_VIEW'],
-            ['SETTINGS', 'Manajemen Fitur', 'FEATURES', '/permissions', 'FEATURE_VIEW'],
-            ['SETTINGS', 'Hak Akses', 'ACCESS', '/access', 'ACCESS_MANAGE'],
+            ['DASHBOARD', 'Dashboard', 'DASHBOARD', '/dashboard'],
+            ['TRANSACTIONS', 'Transaksi', 'TRANSACTIONS', '/transactions'],
+            ['OPERATIONS', 'Pesanan', 'ORDERS', '/orders'],
+            ['OPERATIONS', 'Proses Laundry', 'LAUNDRY_PROCESS', '/process'],
+            ['MASTER_DATA', 'Pelanggan', 'CUSTOMERS', '/customers'],
+            ['MASTER_DATA', 'Layanan Laundry', 'SERVICES', '/services'],
+            ['TRANSACTIONS', 'Pembayaran', 'PAYMENTS', '/payments'],
+            ['OPERATIONS', 'Antar Jemput', 'DELIVERIES', '/deliveries'],
+            ['REPORTS', 'Laporan', 'REPORTS', '/reports'],
+            ['SETTINGS', 'Manajemen Role', 'ROLES', '/roles'],
+            ['SETTINGS', 'Manajemen Fitur', 'FEATURES', '/permissions'],
+            ['SETTINGS', 'Hak Akses', 'ACCESS', '/access'],
         ];
 
         $featureModels = [];
-        foreach ($features as [$groupCode, $name, $code, $path, $viewCode]) {
+        foreach ($features as [$groupCode, $name, $code, $path]) {
             $featureModels[$code] = PermissionFeature::updateOrCreate(
                 ['code' => $code],
                 [
@@ -64,7 +65,7 @@ class FeatureSeeder extends Seeder
             'TRANSACTIONS' => [
                 'view' => ['Lihat', 'TRANSACTION_VIEW'],
                 'create' => ['Tambah', 'TRANSACTION_CREATE'],
-                'update' => ['Edit', 'TRANSACTION_UPDATE'],
+                'update' => ['Ubah', 'TRANSACTION_UPDATE'],
                 'delete' => ['Hapus', 'TRANSACTION_DELETE'],
             ],
             'ORDERS' => ['view' => ['Lihat', 'ORDERS_VIEW']],
@@ -72,8 +73,14 @@ class FeatureSeeder extends Seeder
             'CUSTOMERS' => [
                 'view' => ['Lihat', 'CUSTOMER_VIEW'],
                 'create' => ['Tambah', 'CUSTOMER_CREATE'],
-                'update' => ['Edit', 'CUSTOMER_UPDATE'],
+                'update' => ['Ubah', 'CUSTOMER_UPDATE'],
                 'delete' => ['Hapus', 'CUSTOMER_DELETE'],
+            ],
+            'SERVICES' => [
+                'view' => ['Lihat', 'SERVICE_VIEW'],
+                'create' => ['Tambah', 'SERVICE_CREATE'],
+                'update' => ['Ubah', 'SERVICE_UPDATE'],
+                'delete' => ['Hapus', 'SERVICE_DELETE'],
             ],
             'PAYMENTS' => ['view' => ['Lihat', 'PAYMENT_VIEW']],
             'DELIVERIES' => ['view' => ['Lihat', 'DELIVERY_VIEW']],
@@ -85,7 +92,7 @@ class FeatureSeeder extends Seeder
             'FEATURES' => [
                 'view' => ['Lihat', 'FEATURE_VIEW'],
                 'create' => ['Tambah', 'FEATURE_CREATE'],
-                'update' => ['Edit', 'FEATURE_UPDATE'],
+                'update' => ['Ubah', 'FEATURE_UPDATE'],
                 'delete' => ['Hapus', 'FEATURE_DELETE'],
             ],
             'ACCESS' => ['manage' => ['Kelola Hak Akses', 'ACCESS_MANAGE']],
@@ -108,37 +115,40 @@ class FeatureSeeder extends Seeder
             }
         }
 
-        // Migrate legacy OWNER role to SUPERADMIN without losing its user assignments.
-        $superAdmin = Role::where('code', 'OWNER')->first();
-        if ($superAdmin) {
-            $superAdmin->update(['code' => 'SUPERADMIN', 'name' => 'Super Admin', 'is_active' => true]);
-        } else {
-            $superAdmin = Role::updateOrCreate(
-                ['code' => 'SUPERADMIN'],
-                ['name' => 'Super Admin', 'is_active' => true],
-            );
-        }
+        // Keep the three business roles distinct. Existing OWNER assignments remain OWNER.
+        $superAdmin = Role::updateOrCreate(
+            ['code' => 'SUPERADMIN'],
+            ['name' => 'Super Admin', 'is_active' => true],
+        );
+        $admin = Role::updateOrCreate(
+            ['code' => 'ADMIN'],
+            ['name' => 'Admin', 'is_active' => true],
+        );
+        $owner = Role::updateOrCreate(
+            ['code' => 'OWNER'],
+            ['name' => 'Owner', 'is_active' => true],
+        );
+
         $superAdmin->permissions()->sync($permissions->pluck('id'));
 
-        User::where('role_id', $superAdmin->id)->where('username', 'owner')->update([
-            'username' => 'superadmin',
-            'full_name' => 'Super Admin',
-            'email' => env('INITIAL_SUPERADMIN_EMAIL', 'superadmin@sunrise.local'),
-        ]);
+        // Admin manages day-to-day modules, but cannot administer roles or access policies.
+        $adminPermissions = $permissions->reject(fn ($permission) => in_array(
+            $permission->code,
+            ['ROLE_VIEW', 'ROLE_MANAGE', 'ACCESS_MANAGE'],
+            true,
+        ));
+        $admin->permissions()->sync($adminPermissions->pluck('id'));
 
-        $admin = Role::updateOrCreate(['code' => 'ADMIN'], ['name' => 'Administrator', 'is_active' => true]);
-        $admin->permissions()->sync($permissions->reject(fn ($permission) => $permission->code === 'ACCESS_MANAGE')->pluck('id'));
-
-        $cashier = Role::updateOrCreate(['code' => 'KASIR'], ['name' => 'Kasir', 'is_active' => true]);
-        $cashier->permissions()->sync($permissions->whereIn('code', [
-            'DASHBOARD_VIEW', 'TRANSACTION_VIEW', 'TRANSACTION_CREATE', 'TRANSACTION_UPDATE',
-            'ORDERS_VIEW', 'CUSTOMER_VIEW', 'PAYMENT_VIEW',
-        ])->pluck('id'));
-
-        $operator = Role::updateOrCreate(['code' => 'OPERATOR'], ['name' => 'Operator Laundry', 'is_active' => true]);
-        $operator->permissions()->sync($permissions->whereIn('code', [
-            'DASHBOARD_VIEW', 'ORDERS_VIEW', 'LAUNDRY_PROCESS_VIEW',
-        ])->pluck('id'));
+        // Owner can operate and monitor the laundry business without changing system access.
+        $ownerCodes = [
+            'DASHBOARD_VIEW',
+            'TRANSACTION_VIEW', 'TRANSACTION_CREATE', 'TRANSACTION_UPDATE',
+            'ORDERS_VIEW', 'LAUNDRY_PROCESS_VIEW',
+            'CUSTOMER_VIEW', 'CUSTOMER_CREATE', 'CUSTOMER_UPDATE',
+            'SERVICE_VIEW',
+            'PAYMENT_VIEW', 'DELIVERY_VIEW', 'REPORT_VIEW',
+        ];
+        $owner->permissions()->sync($permissions->whereIn('code', $ownerCodes)->pluck('id'));
 
         if (!User::query()->exists()) {
             $username = env('INITIAL_SUPERADMIN_USERNAME', 'superadmin');
