@@ -987,3 +987,10 @@
  .access-action-list{display:grid;grid-template-columns:1fr 1fr}
  .access-action-option{white-space:normal;align-items:flex-start}
 }
+
+
+/* Role page section titles */
+.role-panel-title {
+    font: 750 20px "Manrope", sans-serif;
+    letter-spacing: -.3px;
+}
