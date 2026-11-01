@@ -25,6 +25,36 @@ import CIcon from '@coreui/icons-react'
 import avatar8 from './../../assets/images/avatars/8.jpg'
 
 const AppHeaderDropdown = () => {
+  const handleLogout = async () => {
+    const token =
+      localStorage.getItem('auth_token') ||
+      localStorage.getItem('access_token') ||
+      localStorage.getItem('token') ||
+      ''
+
+    const configuredBase = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
+    const apiBase = configuredBase
+      ? (configuredBase.endsWith('/api') ? configuredBase : `${configuredBase}/api`)
+      : '/api'
+
+    try {
+      await fetch(`${apiBase}/auth/logout`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+      })
+    } catch (error) {
+      // Clear the local session even if the API is unavailable.
+    } finally {
+      localStorage.removeItem('auth_token')
+      localStorage.removeItem('access_token')
+      localStorage.removeItem('token')
+      window.location.reload()
+    }
+  }
+
   return (
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0 pe-0" caret={false}>
@@ -84,9 +114,9 @@ const AppHeaderDropdown = () => {
           </CBadge>
         </CDropdownItem>
         <CDropdownDivider />
-        <CDropdownItem href="#">
+        <CDropdownItem as="button" type="button" onClick={handleLogout}>
           <CIcon icon={cilLockLocked} className="me-2" />
-          Lock Account
+          Logout
         </CDropdownItem>
       </CDropdownMenu>
     </CDropdown>
