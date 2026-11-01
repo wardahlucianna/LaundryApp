@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Master\Akses;
+namespace App\Http\Requests\Master\Akses\Role;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
