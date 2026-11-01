@@ -1,10 +1,5 @@
 import React from "react";
-
-export type PermissionFormValue = {
-    name: string;
-    code: string;
-    path: string;
-};
+import type { PermissionFormValue } from "../types/permission";
 
 type PermissionFormModalProps = {
     open: boolean;
