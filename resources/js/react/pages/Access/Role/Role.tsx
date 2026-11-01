@@ -40,12 +40,13 @@ export default function RolePage({ token, canManage }: Props) {
         <>
             <div className="access-heading">
                 <div>
-                    <h1>{formVisible ? (editing ? "Ubah Role" : "Tambah Role") : "Manajemen Role"}</h1>
-                    <p>
+                    <h1>
                         {formVisible
-                            ? "Lengkapi informasi role."
-                            : "Kelola kelompok pengguna dan perannya."}
-                    </p>
+                            ? editing
+                                ? "Ubah Role"
+                                : "Tambah Role"
+                            : "Manajemen Role"}
+                    </h1>
                 </div>
             </div>
 
