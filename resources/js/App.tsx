@@ -223,12 +223,12 @@ export default function App() {
 
                 {page === "roles" && can("ROLE_VIEW") && <div className="access-panel">
                     <div className="panel-heading"><div><h2>Daftar Role</h2><p>Role menentukan kelompok hak akses pengguna.</p></div><span>{roles?.total ?? 0} role</span></div>
-                    {can("ROLE_MANAGE") && <div className="list-toolbar access-toolbar">
+                    {<div className="list-toolbar access-toolbar">
                         <input value={roleSearch} onChange={e => setRoleSearch(e.target.value)} placeholder="Cari nama atau kode role..." />
                         <select value={roleStatus} onChange={e => setRoleStatus(e.target.value)}><option value="">Semua Status</option><option value="1">Aktif</option><option value="0">Nonaktif</option></select>
                         <button className="btn-primary" onClick={() => { setRolePage(1); loadRoles(); }}><Search size={15}/> Cari</button>
                         <button className="btn-secondary" onClick={() => { setRoleSearch(""); setRoleStatus(""); setRolePage(1); }}><RotateCcw size={15}/> Atur Ulang</button>
-                        <button className="btn-primary" onClick={() => { setRoleEditingId(null); setRoleForm({ name: "", code: "" }); setShowRoleForm(v => !v); }}><Plus size={15}/> Tambah Role</button>
+                        {can("ROLE_MANAGE") && <button className="btn-primary" onClick={() => { setRoleEditingId(null); setRoleForm({ name: "", code: "" }); setShowRoleForm(v => !v); }}><Plus size={15}/> Tambah Role</button>}
                     </div>}
                     {showRoleForm && can("ROLE_MANAGE") && <form className="inline-form" onSubmit={saveRole}>
                         <input value={roleForm.name} onChange={e => setRoleForm({ ...roleForm, name: e.target.value })} placeholder="Nama role" required />
@@ -245,12 +245,12 @@ export default function App() {
 
                 {page === "features" && can("FEATURE_VIEW") && <div className="access-panel">
                     <div className="panel-heading"><div><h2>Daftar Fitur</h2><p>Fitur yang dapat diberikan kepada setiap role.</p></div><span>{features?.total ?? 0} fitur</span></div>
-                    {can("FEATURE_MANAGE") && <div className="list-toolbar access-toolbar">
+                    {<div className="list-toolbar access-toolbar">
                         <input value={featureSearch} onChange={e => setFeatureSearch(e.target.value)} placeholder="Cari nama, kode, atau path fitur..." />
                         <select value={featureStatus} onChange={e => setFeatureStatus(e.target.value)}><option value="">Semua Status</option><option value="1">Aktif</option><option value="0">Nonaktif</option></select>
                         <button className="btn-primary" onClick={() => { setFeaturePage(1); loadFeatures(); }}><Search size={15}/> Cari</button>
                         <button className="btn-secondary" onClick={() => { setFeatureSearch(""); setFeatureStatus(""); setFeaturePage(1); }}><RotateCcw size={15}/> Atur Ulang</button>
-                        <button className="btn-primary" onClick={() => { setFeatureEditingId(null); setFeatureForm({ name: "", code: "", path: "" }); setShowFeatureForm(v => !v); }}><Plus size={15}/> Tambah Fitur</button>
+                        {can("FEATURE_MANAGE") && <button className="btn-primary" onClick={() => { setFeatureEditingId(null); setFeatureForm({ name: "", code: "", path: "" }); setShowFeatureForm(v => !v); }}><Plus size={15}/> Tambah Fitur</button>}
                     </div>}
                     {showFeatureForm && can("FEATURE_MANAGE") && <form className="inline-form feature-form" onSubmit={saveFeature}>
                         <input value={featureForm.name} onChange={e => setFeatureForm({ ...featureForm, name: e.target.value })} placeholder="Nama fitur" required />
