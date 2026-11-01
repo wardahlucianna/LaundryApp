@@ -25,7 +25,7 @@ const Login = () => {
     setError('')
     setLoading(true)
 
-    const configuredBase = (import.meta.env.VITE_API_URL || '').replace(/\\/$/, '')
+    const configuredBase = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
     const apiBase = configuredBase
       ? (configuredBase.endsWith('/api') ? configuredBase : `${configuredBase}/api`)
       : '/api'
