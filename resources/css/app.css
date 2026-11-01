@@ -56,3 +56,36 @@
 .permission-card small{font-size:9px}
 .alert{font-size:11px}
 @media(max-width:620px){.access-nav{display:inline-flex;width:auto;margin:3px 5px 3px 0}.access-nav-title{padding-top:8px}}
+
+/* Master list layout aligned with SecurityApp conventions */
+.access-heading h1{font-size:30px}
+.access-heading p{font-size:14px}
+.access-nav{font-size:14px;min-height:46px}
+.access-nav-title{font-size:11px}
+.access-topbar{font-size:13px}
+.panel-heading h2{font-size:19px}
+.panel-heading p{font-size:13px}
+.panel-heading>span{font-size:12px}
+.access-toolbar{display:flex;align-items:center;justify-content:flex-start;flex-wrap:wrap;gap:9px;margin:0 0 16px}
+.access-toolbar input{flex:1 1 250px;min-width:200px;height:40px;border:1px solid #dfe6ed;border-radius:8px;padding:0 12px;font:13px 'DM Sans'}
+.access-toolbar select{height:40px;border:1px solid #dfe6ed;border-radius:8px;padding:0 11px;background:#fff;color:#526a80;font:13px 'DM Sans'}
+.access-toolbar .btn-primary,.access-toolbar .btn-secondary{height:40px;padding:0 13px;font-size:12px}
+.btn-secondary{border:1px solid #dfe6ed;background:#fff;color:#526a80;border-radius:8px;padding:10px 13px;display:inline-flex;align-items:center;justify-content:center;gap:7px;font:600 12px 'DM Sans';cursor:pointer;white-space:nowrap}
+.row-actions{display:flex;align-items:center;gap:7px}
+.icon-action{width:34px;height:34px;border:1px solid #e3e9ef;background:#fff;color:#466783;border-radius:7px;display:grid;place-items:center;cursor:pointer}
+.icon-action:hover{background:#f3f7fb;border-color:#cbd8e4}
+.icon-action.danger{color:#c65c55}
+.icon-action.danger:hover{background:#fff1f0;border-color:#f1cecb}
+.icon-action:disabled{opacity:.35;cursor:not-allowed}
+.access-table th{font-size:11px;padding:13px 10px}
+.access-table td{font-size:13px;padding:14px 10px}
+.access-table td b{font-size:13px}
+.pill{font-size:11px}
+.empty-cell{font-size:13px}
+.inline-form input{height:42px;font-size:13px}
+.inline-form .btn-primary,.inline-form .btn-secondary{font-size:12px}
+.pagination-bar{font-size:12px}
+.pagination-actions select,.pagination-actions button{height:34px;font-size:12px}
+.permission-card b{font-size:13px}
+.permission-card small{font-size:11px}
+@media(max-width:760px){.access-toolbar{align-items:stretch}.access-toolbar input{flex-basis:100%;min-width:100%}.access-toolbar select{flex:1}.access-toolbar button{flex:1}}
