@@ -8,4 +8,5 @@ export const routes = [
   { path: '/transactions', name: 'Transaksi', element: () => <Placeholder title="Transaksi" /> },
   { path: '/reports', name: 'Laporan', element: () => <Placeholder title="Laporan" /> },
   { path: '/settings', name: 'Pengaturan', element: () => <Placeholder title="Pengaturan" /> },
+  { path: '/roles', name: 'Manajemen Role', element: () => <Placeholder title="Manajemen Role" /> },
 ]
