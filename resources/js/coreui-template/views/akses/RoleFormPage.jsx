@@ -41,8 +41,8 @@ const RoleFormPage = () => {
   }
 
   return (
-    <div style={{ fontSize: '0.9rem' }}>
-      <h2 className="fs-4 mb-3">Manajemen Role</h2>
+    <div className="role-form-page">
+      <div className="role-page-heading mb-3"><div className="role-heading-icon"><span>✎</span></div><div><h2 className="fs-4 mb-1">Manajemen Role</h2><div className="text-body-secondary small">{id ? 'Perbarui informasi role yang dipilih.' : 'Tambahkan peran baru untuk mengatur akses aplikasi.'}</div></div></div>
       {error && <CAlert color="danger" dismissible onClose={() => setError('')}>{error}</CAlert>}
       {loading ? <div className="d-flex align-items-center gap-2 py-4 text-body-secondary"><CSpinner color="primary" size="sm" /> <span>Memuat data role...</span></div> : <RoleForm role={role} saving={saving} onSave={save} onCancel={() => navigate('/roles/list')} />}
     </div>
