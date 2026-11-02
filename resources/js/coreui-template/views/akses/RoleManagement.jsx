@@ -120,8 +120,8 @@ const RoleManagement = () => {
         </CCardHeader>
         <CCardBody>
           <CRow className="mb-3">
-            <CCol xs={12} md={6} lg={4}>
-              <div className="d-flex gap-2">
+            <CCol xs={12} md={8} lg={6}>
+              <div className="d-flex gap-2 w-100">
                 <CFormInput
                   placeholder="Cari nama atau kode role..."
                   value={searchInput}
@@ -135,16 +135,17 @@ const RoleManagement = () => {
                     }
                   }}
                   aria-label="Cari role"
+                  className="flex-grow-1"
                 />
-                <CButton color="primary" aria-label="Cari" title="Cari" onClick={() => {
+                <CButton color="primary" aria-label="Cari" title="Cari" className="px-3" onClick={() => {
                   const nextSearch = searchInput.trim()
                   setPage(1)
                   if (nextSearch === search) loadRoles()
                   else { setRoles([]); setLoading(true); setSearch(nextSearch) }
                 }}>
-                  <CIcon icon={cilSearch} size="lg" className="me-1" />Cari
+                  <CIcon icon={cilSearch} size="lg" />
                 </CButton>
-                <CButton color="secondary" aria-label="Reset filter" title="Reset filter" onClick={() => {
+                <CButton color="secondary" aria-label="Reset filter" title="Reset filter" className="px-3" onClick={() => {
                   setSearchInput('')
                   if (search === '' && page === 1) {
                     loadRoles()
@@ -155,7 +156,7 @@ const RoleManagement = () => {
                     setPage(1)
                   }
                 }}>
-                  <CIcon icon={cilReload} size="lg" className="me-2" />Reset Filter
+                  <CIcon icon={cilReload} size="lg" />
                 </CButton>
               </div>
             </CCol>
