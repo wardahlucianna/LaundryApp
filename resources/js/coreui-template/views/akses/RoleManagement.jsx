@@ -193,10 +193,10 @@ const RoleManagement = () => {
                   <CTableDataCell className="text-center">
                     <div className="d-inline-flex gap-2">
                       <CButton color="primary" variant="outline" size="sm" onClick={() => openEdit(role)} title="Edit role" aria-label={`Edit ${role.name}`}>
-                        <CIcon icon={cilPencil} size="lg" />
+                        <CIcon icon={cilPencil} size="sm" />
                       </CButton>
                       <CButton color="danger" variant="outline" size="sm" disabled={role.code === 'SUPERADMIN'} onClick={() => handleDelete(role)} title="Hapus role" aria-label={`Hapus ${role.name}`}>
-                        <CIcon icon={cilTrash} size="lg" />
+                        <CIcon icon={cilTrash} size="sm" />
                       </CButton>
                     </div>
                   </CTableDataCell>
