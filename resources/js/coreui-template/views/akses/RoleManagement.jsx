@@ -156,7 +156,6 @@ const RoleManagement = () => {
                   }
                 }}>
                   <CIcon icon={cilReload} className="me-2" />
-                  Reset Filter
                 </CButton>
               </div>
             </CCol>
