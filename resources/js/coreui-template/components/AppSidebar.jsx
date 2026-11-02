@@ -56,8 +56,27 @@ const AppSidebar = () => {
   const dispatch = useDispatch()
   const unfoldable = useSelector((state) => state.sidebarUnfoldable)
   const sidebarShow = useSelector((state) => state.sidebarShow)
-  const [navigation, setNavigation] = useState([])
-  const [menuLoading, setMenuLoading] = useState(true)
+  const menuCacheKey = 'sunrise_laundry_sidebar_menus'
+  const buildNavigation = (groups) => {
+    const groupIcons = { DASHBOARD: cilSpeedometer, TRANSACTIONS: cilCash, OPERATIONS: cilBasket, MASTER_DATA: cilPeople, SETTINGS: cilSettings, REPORTS: cilChartLine }
+    const items = []
+    ;(groups || []).forEach((group) => {
+      const icon = <CIcon icon={groupIcons[group.code] || cilSettings} customClassName="nav-icon" />
+      const children = (group.items || []).map((feature) => ({ component: CNavItem, name: feature.name, to: feature.path }))
+      if (group.code === 'DASHBOARD' && children.length === 1) items.push({ ...children[0], icon })
+      else if (children.length) items.push({ component: CNavGroup, name: group.name, icon, items: children })
+    })
+    return items
+  }
+
+  const [navigation, setNavigation] = useState(() => {
+    try {
+      return buildNavigation(JSON.parse(localStorage.getItem(menuCacheKey) || '[]'))
+    } catch {
+      return []
+    }
+  })
+  const [menuLoading, setMenuLoading] = useState(() => !localStorage.getItem(menuCacheKey))
 
   useEffect(() => {
     let cancelled = false
@@ -76,17 +95,11 @@ const AppSidebar = () => {
         if (!response.ok) throw new Error('Gagal memuat menu.')
         const payload = await response.json()
         if (cancelled) return
-        const groupIcons = { DASHBOARD: cilSpeedometer, TRANSACTIONS: cilCash, OPERATIONS: cilBasket, MASTER_DATA: cilPeople, SETTINGS: cilSettings, REPORTS: cilChartLine }
-        const items = []
-        ;(payload.data || []).forEach((group) => {
-          const icon = <CIcon icon={groupIcons[group.code] || cilSettings} customClassName="nav-icon" />
-          const children = (group.items || []).map((feature) => ({ component: CNavItem, name: feature.name, to: feature.path }))
-          if (group.code === 'DASHBOARD' && children.length === 1) items.push({ ...children[0], icon })
-          else if (children.length) items.push({ component: CNavGroup, name: group.name, icon, items: children })
-        })
-        setNavigation(items)
+        const groups = payload.data || []
+        localStorage.setItem(menuCacheKey, JSON.stringify(groups))
+        setNavigation(buildNavigation(groups))
       } catch (error) {
-        if (!cancelled) setNavigation([])
+        // Keep cached menus visible when the API is slow or temporarily unavailable.
       } finally {
         if (!cancelled) setMenuLoading(false)
       }
@@ -117,7 +130,7 @@ const AppSidebar = () => {
           onClick={() => dispatch({ type: 'set', sidebarShow: false })}
         />
       </CSidebarHeader>
-      {!menuLoading && <AppSidebarNav items={navigation} />}
+      <AppSidebarNav items={navigation} />
       <CSidebarFooter className="border-top d-none d-lg-flex">
         <CSidebarToggler
           onClick={() => dispatch({ type: 'set', sidebarUnfoldable: !unfoldable })}
