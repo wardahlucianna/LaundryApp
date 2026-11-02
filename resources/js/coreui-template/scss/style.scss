@@ -212,3 +212,70 @@ body {
   padding: .4rem .8rem;
   border-radius: .55rem;
 }
+
+
+/* App-wide CoreUI control scale: consistent button and form typography/sizing */
+:root {
+  --app-control-font-size: .875rem;
+  --app-control-line-height: 1.5;
+  --app-control-height: 2.375rem;
+  --app-control-padding-y: .375rem;
+  --app-control-padding-x: .75rem;
+  --app-control-radius: .375rem;
+}
+
+body,
+button,
+input,
+select,
+textarea,
+.btn,
+.form-control,
+.form-select,
+.form-check-label,
+.form-label {
+  font-size: var(--app-control-font-size);
+  line-height: var(--app-control-line-height);
+}
+
+.btn,
+.btn-sm,
+.btn-lg {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .375rem;
+  min-height: var(--app-control-height);
+  padding: var(--app-control-padding-y) var(--app-control-padding-x);
+  font-size: var(--app-control-font-size);
+  line-height: var(--app-control-line-height);
+  font-weight: 600;
+  border-radius: var(--app-control-radius);
+  white-space: nowrap;
+}
+
+.btn svg,
+.btn .icon {
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 1rem;
+}
+
+.form-control,
+.form-select {
+  min-height: var(--app-control-height);
+  padding: var(--app-control-padding-y) var(--app-control-padding-x);
+  border-radius: var(--app-control-radius);
+}
+
+.form-label {
+  margin-bottom: .375rem;
+  font-weight: 600;
+}
+
+.form-text,
+.form-check,
+.small,
+small {
+  font-size: .8125rem;
+}
