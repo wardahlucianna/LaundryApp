@@ -114,8 +114,8 @@ const RoleManagement = () => {
       <CCard className="role-panel role-list-panel mb-4">
         <CCardHeader className="d-flex flex-wrap justify-content-between align-items-center gap-2">
           <div><strong>Daftar Role</strong><div className="small text-body-secondary mt-1">Cari dan kelola role beserta hak aksesnya.</div></div>
-          <CButton color="primary" onClick={openCreate}>
-            <CIcon icon={cilPlus} size="lg" className="me-2" />Tambah Role
+          <CButton color="primary" size="sm" className="role-compact-button" onClick={openCreate}>
+            <CIcon icon={cilPlus} size="sm" className="me-1" />Tambah Role
           </CButton>
         </CCardHeader>
         <CCardBody>
@@ -137,15 +137,15 @@ const RoleManagement = () => {
                   aria-label="Cari role"
                   className="flex-grow-1"
                 />
-                <CButton color="primary" aria-label="Cari" title="Cari" className="px-3" onClick={() => {
+                <CButton color="primary" size="sm" aria-label="Cari" title="Cari" className="px-2 role-compact-button" onClick={() => {
                   const nextSearch = searchInput.trim()
                   setPage(1)
                   if (nextSearch === search) loadRoles()
                   else { setRoles([]); setLoading(true); setSearch(nextSearch) }
                 }}>
-                  <CIcon icon={cilSearch} size="lg" />
+                  <CIcon icon={cilSearch} size="sm" />
                 </CButton>
-                <CButton color="secondary" aria-label="Reset filter" title="Reset filter" className="px-3" onClick={() => {
+                <CButton color="secondary" size="sm" aria-label="Reset filter" title="Reset filter" className="px-2 role-compact-button" onClick={() => {
                   setSearchInput('')
                   if (search === '' && page === 1) {
                     loadRoles()
@@ -156,7 +156,7 @@ const RoleManagement = () => {
                     setPage(1)
                   }
                 }}>
-                  <CIcon icon={cilReload} size="lg" />
+                  <CIcon icon={cilReload} size="sm" />
                 </CButton>
               </div>
             </CCol>
