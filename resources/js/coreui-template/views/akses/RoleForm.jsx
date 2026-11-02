@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { CAlert, CButton, CCard, CCardBody, CCardHeader, CCol, CForm, CFormCheck, CFormInput, CRow, CSpinner } from '@coreui/react'
+import { CAlert, CButton, CCard, CCardBody, CCardHeader, CCol, CForm, CFormInput, CFormSwitch, CRow, CSpinner } from '@coreui/react'
 
 const RoleForm = ({ role, saving, onSave, onCancel }) => {
   const [values, setValues] = useState({ name: '', code: '', is_active: true })
@@ -23,7 +23,7 @@ const RoleForm = ({ role, saving, onSave, onCancel }) => {
           <CRow className="g-3">
             <CCol xs={12} md={6}><CFormInput label="Nama Role" placeholder="Contoh: Administrator" value={values.name} onChange={(e) => setValues((v) => ({ ...v, name: e.target.value }))} required maxLength={100} /></CCol>
             <CCol xs={12} md={6}><CFormInput label="Kode Role" placeholder="Contoh: ADMIN" value={values.code} onChange={(e) => setValues((v) => ({ ...v, code: e.target.value.toUpperCase().replace(/\s+/g, '_') }))} required maxLength={60} pattern="[A-Za-z0-9_-]+" /><div className="form-text">Gunakan huruf, angka, tanda minus, atau underscore.</div></CCol>
-            <CCol xs={12} md={6}><div className="border rounded p-3 h-100"><CFormCheck label="Aktif" checked={values.is_active} onChange={(e) => setValues((v) => ({ ...v, is_active: e.target.checked }))} /></div></CCol>
+            <CCol xs={12} md={6}><div className="d-flex align-items-center justify-content-between border rounded p-3 h-100"><div className="fw-semibold">Status</div><CFormSwitch size="lg" label={values.is_active ? 'Aktif' : 'Nonaktif'} checked={values.is_active} onChange={(e) => setValues((v) => ({ ...v, is_active: e.target.checked }))} /></div></CCol>
           </CRow>
           <div className="d-flex justify-content-end gap-2 mt-4"><CButton color="secondary" variant="outline" type="button" disabled={saving} onClick={onCancel}>Batal</CButton><CButton color="primary" type="submit" disabled={saving}>{saving ? <><CSpinner size="sm" className="me-2" />Menyimpan...</> : 'Simpan'}</CButton></div>
         </CForm>
