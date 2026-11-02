@@ -187,3 +187,28 @@ body {
   .role-page-heading { align-items: flex-start; }
   .role-home-tile .card-body { padding: 1rem; }
 }
+
+
+/* Compact Role actions: avoid oversized controls */
+.role-list-page .btn {
+  font-size: .8rem;
+  line-height: 1.25;
+  padding: .38rem .65rem;
+  border-radius: .55rem;
+}
+.role-list-page .btn.btn-sm {
+  font-size: .75rem;
+  padding: .3rem .5rem;
+}
+.role-list-page .role-table .btn {
+  min-width: 1.9rem;
+  min-height: 1.8rem;
+  padding: .25rem .4rem;
+}
+.role-list-page .role-table .btn svg { width: .9rem; height: .9rem; }
+.role-form-page .role-form-card .btn {
+  font-size: .8rem;
+  line-height: 1.25;
+  padding: .4rem .8rem;
+  border-radius: .55rem;
+}
