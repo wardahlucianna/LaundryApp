@@ -136,15 +136,15 @@ const RoleManagement = () => {
                   }}
                   aria-label="Cari role"
                 />
-                <CButton color="dark" variant="outline" aria-label="Cari" title="Cari" onClick={() => {
+                <CButton color="primary" aria-label="Cari" title="Cari" onClick={() => {
                   const nextSearch = searchInput.trim()
                   setPage(1)
                   if (nextSearch === search) loadRoles()
                   else { setRoles([]); setLoading(true); setSearch(nextSearch) }
                 }}>
-                  <CIcon icon={cilSearch} />
+                  <CIcon icon={cilSearch} size="lg" className="me-1" />Cari
                 </CButton>
-                <CButton color="dark" variant="outline" aria-label="Reset filter" title="Reset filter" onClick={() => {
+                <CButton color="secondary" aria-label="Reset filter" title="Reset filter" onClick={() => {
                   setSearchInput('')
                   if (search === '' && page === 1) {
                     loadRoles()
@@ -155,7 +155,7 @@ const RoleManagement = () => {
                     setPage(1)
                   }
                 }}>
-                  <CIcon icon={cilReload} className="me-2" />
+                  <CIcon icon={cilReload} size="lg" className="me-2" />Reset Filter
                 </CButton>
               </div>
             </CCol>
@@ -191,10 +191,10 @@ const RoleManagement = () => {
                   </CTableDataCell>
                   <CTableDataCell className="text-center">
                     <div className="d-inline-flex gap-2">
-                      <CButton color="warning" variant="outline" size="sm" onClick={() => openEdit(role)} title="Edit role" aria-label={`Edit ${role.name}`}>
+                      <CButton color="warning" size="sm" onClick={() => openEdit(role)} title="Edit role" aria-label={`Edit ${role.name}`}>
                         <CIcon icon={cilPencil} size="lg" />
                       </CButton>
-                      <CButton color="danger" variant="outline" size="sm" disabled={role.code === 'SUPERADMIN'} onClick={() => handleDelete(role)} title="Hapus role" aria-label={`Hapus ${role.name}`}>
+                      <CButton color="danger" size="sm" disabled={role.code === 'SUPERADMIN'} onClick={() => handleDelete(role)} title="Hapus role" aria-label={`Hapus ${role.name}`}>
                         <CIcon icon={cilTrash} size="lg" />
                       </CButton>
                     </div>
@@ -207,8 +207,8 @@ const RoleManagement = () => {
           <div className="d-flex flex-wrap justify-content-between align-items-center gap-2">
             <small className="text-body-secondary">Halaman {pagination.current_page} dari {pagination.last_page}</small>
             <div className="d-flex gap-2">
-              <CButton color="dark" variant="outline" size="sm" disabled={page <= 1 || loading} onClick={() => setPage((current) => current - 1)}>Sebelumnya</CButton>
-              <CButton color="dark" variant="outline" size="sm" disabled={page >= pagination.last_page || loading} onClick={() => setPage((current) => current + 1)}>Berikutnya</CButton>
+              <CButton color="secondary" size="sm" disabled={page <= 1 || loading} onClick={() => setPage((current) => current - 1)}>Sebelumnya</CButton>
+              <CButton color="secondary" size="sm" disabled={page >= pagination.last_page || loading} onClick={() => setPage((current) => current + 1)}>Berikutnya</CButton>
             </div>
           </div>
         </CCardBody>
