@@ -72,6 +72,10 @@ const RoleManagement = () => {
 
   useEffect(() => { loadRoles() }, [loadRoles])
 
+  const perPage = 10
+  const showingStart = pagination.total === 0 ? 0 : (pagination.current_page - 1) * perPage + 1
+  const showingEnd = Math.min(pagination.current_page * perPage, pagination.total)
+
   const openCreate = () => navigate('/roles/form')
   const openEdit = (role) => navigate(`/roles/form/${role.id}`)
 
@@ -206,6 +210,7 @@ const RoleManagement = () => {
           </CTable>
 
           <div className="d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <small className="text-body-secondary">Showing {showingStart}–{showingEnd} of {pagination.total} entries</small>
             <small className="text-body-secondary">Halaman {pagination.current_page} dari {pagination.last_page}</small>
             <div className="d-flex gap-2">
               <CButton color="secondary" variant="outline" size="sm" disabled={page <= 1 || loading} onClick={() => setPage((current) => current - 1)}>Sebelumnya</CButton>
