@@ -7,7 +7,7 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import ConfirmModal from '../../components/ConfirmModal'
-import { cilPencil, cilPlus, cilSearch, cilTrash } from '@coreui/icons'
+import { cilPencil, cilPlus, cilSearch, cilTrash, cilReload } from '@coreui/icons'
 
 const apiBase = (() => {
   const configuredBase = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
@@ -143,6 +143,19 @@ const RoleManagement = () => {
                   else { setRoles([]); setLoading(true); setSearch(nextSearch) }
                 }}>
                   <CIcon icon={cilSearch} />
+                </CButton>
+                <CButton color="secondary" variant="outline" aria-label="Reset filter" title="Reset filter" onClick={() => {
+                  setSearchInput('')
+                  if (search === '' && page === 1) {
+                    loadRoles()
+                  } else {
+                    setRoles([])
+                    setLoading(true)
+                    setSearch('')
+                    setPage(1)
+                  }
+                }}>
+                  <CIcon icon={cilReload} />
                 </CButton>
               </div>
             </CCol>
