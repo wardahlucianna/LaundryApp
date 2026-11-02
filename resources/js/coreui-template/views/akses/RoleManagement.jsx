@@ -101,7 +101,7 @@ const RoleManagement = () => {
   }
 
   return (
-    <div style={{ fontSize: '0.9rem' }}>
+    <div className="role-list-page">
       <CRow className="mb-3">
         <CCol>
           <h2 className="fs-4 mb-1">Manajemen Role</h2>
@@ -111,9 +111,9 @@ const RoleManagement = () => {
       {notice && <CAlert color="success" dismissible onClose={() => setNotice('')}>{notice}</CAlert>}
       {error && <CAlert color="danger" dismissible onClose={() => setError('')}>{error}</CAlert>}
 
-      <CCard className="mb-4">
+      <CCard className="role-panel role-list-panel mb-4">
         <CCardHeader className="d-flex flex-wrap justify-content-between align-items-center gap-2">
-          <strong>Daftar Role</strong>
+          <div><strong>Daftar Role</strong><div className="small text-body-secondary mt-1">Cari dan kelola role beserta hak aksesnya.</div></div>
           <CButton color="primary" onClick={openCreate}>
             <CIcon icon={cilPlus} size="lg" className="me-2" />Tambah Role
           </CButton>
@@ -165,7 +165,7 @@ const RoleManagement = () => {
             </CCol>
           </CRow>
 
-          <CTable hover responsive align="middle">
+          <CTable hover responsive align="middle" className="role-table">
             <CTableHead>
               <CTableRow>
                 <CTableHeaderCell style={{ width: '60px' }}>No.</CTableHeaderCell>
