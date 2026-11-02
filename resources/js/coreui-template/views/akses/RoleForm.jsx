@@ -55,7 +55,7 @@ const RoleForm = ({ role, permissions = [], saving, onSave, onCancel }) => {
           <hr className="my-4" />
 
           <div className="mt-4">
-            <style>{`.role-permission-checkbox .form-check-input { width: 1.35rem; height: 1.35rem; margin-top: 0.15rem; } .role-permission-checkbox .form-check-label { padding-left: 0.25rem; }`}</style>
+            <style>{`.role-permission-checkbox .form-check-input { width: 1.15rem; height: 1.15rem; margin-top: 0.15rem; } .role-permission-checkbox .form-check-label { padding-left: 0.25rem; }`}</style>
             <div className="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
               <div><h5 className="mb-1">Checklist Hak Akses</h5></div>
               <span className="badge bg-primary">{selectedPermissionIds.length} dipilih</span>
