@@ -141,3 +141,49 @@ body {
 .sidebar .nav-group-toggle {
   font-size: 0.88rem;
 }
+
+
+/* Role pages — refined, calm, and consistent with Sunrise Laundry */
+.role-home-page, .role-list-page, .role-form-page {
+  font-size: .875rem;
+  color: var(--cui-body-color);
+}
+.role-page-heading {
+  display: flex; align-items: center; gap: .85rem; margin-bottom: 1.25rem;
+}
+.role-heading-icon {
+  display: grid; place-items: center; flex: 0 0 2.75rem; height: 2.75rem;
+  border-radius: .9rem; background: rgba(232, 201, 106, .22); color: #263B5A;
+  font-size: 1.2rem;
+}
+.role-page-heading h2 { font-weight: 700; letter-spacing: -.025em; color: #172A45; }
+.role-panel {
+  border: 1px solid #E6EAF0; border-radius: 1rem; overflow: hidden;
+  box-shadow: 0 5px 20px rgba(23, 42, 69, .045); background: var(--cui-card-bg, #fff);
+}
+.role-panel > .card-header {
+  display: flex; align-items: center; gap: .75rem; padding: 1rem 1.25rem;
+  background: #fff; border-bottom: 1px solid #EDF0F4; color: #172A45;
+}
+.role-panel > .card-body { padding: 1.25rem; }
+.role-home-tile {
+  border: 1px solid #E7EBF1; border-radius: .9rem; transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+}
+.role-home-tile:hover { transform: translateY(-2px); border-color: #DCC36F; box-shadow: 0 8px 22px rgba(23, 42, 69, .08); }
+.role-home-tile .card-body { padding: 1.25rem; }
+.role-list-page .form-control { min-height: 2.55rem; border-radius: .7rem; }
+.role-list-page .btn { border-radius: .65rem; }
+.role-table { margin-bottom: 1rem; }
+.role-table thead th { background: #F7F8FA; color: #53647A; font-size: .78rem; font-weight: 700; letter-spacing: .025em; white-space: nowrap; border-bottom: 1px solid #E5E9EF; }
+.role-table tbody td { padding-top: .8rem; padding-bottom: .8rem; border-color: #EDF0F4; }
+.role-table tbody tr:hover > * { --cui-table-bg-state: rgba(232, 201, 106, .075); }
+.role-form-card .form-control { min-height: 2.65rem; border-radius: .7rem; }
+.role-form-card .form-label { color: #344861; font-weight: 600; margin-bottom: .45rem; }
+.role-status-box { background: #F8F9FB; border: 1px solid #E7EBF1; }
+.role-form-page .btn { border-radius: .7rem; padding-inline: 1rem; }
+@media (max-width: 576px) {
+  .role-panel > .card-body { padding: .9rem; }
+  .role-panel > .card-header { padding: .9rem; }
+  .role-page-heading { align-items: flex-start; }
+  .role-home-tile .card-body { padding: 1rem; }
+}
