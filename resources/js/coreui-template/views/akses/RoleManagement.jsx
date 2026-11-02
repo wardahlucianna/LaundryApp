@@ -123,7 +123,7 @@ const RoleManagement = () => {
             <CCol xs={12} md={8} lg={6}>
               <div className="d-flex gap-2 w-100">
                 <CFormInput
-                  placeholder="Cari nama atau kode role..."
+                  placeholder="Cari nama atau kode"
                   value={searchInput}
                   onChange={(event) => setSearchInput(event.target.value)}
                   onKeyDown={(event) => {
