@@ -431,3 +431,15 @@ small {
 .role-status-switch.is-inactive .form-check-label {
   color: #64748B;
 }
+
+/* Slightly larger Role active/inactive toggle for easier visibility */
+.role-status-switch .form-check-input {
+  width: 2.8rem;
+  height: 1.45rem;
+  margin-top: .1rem;
+  background-size: 1.05rem 1.05rem;
+}
+.role-status-switch .form-check-label {
+  padding-left: .35rem;
+  font-size: .875rem;
+}
