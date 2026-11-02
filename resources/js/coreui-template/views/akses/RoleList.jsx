@@ -22,6 +22,9 @@ const RoleList = ({ roles = [], loading, onAdd, onEdit, onDelete }) => {
               : filtered.map((role, i) => <CTableRow key={role.id}><CTableDataCell>{i + 1}</CTableDataCell><CTableDataCell className="fw-semibold">{role.name}</CTableDataCell><CTableDataCell><code>{role.code}</code></CTableDataCell><CTableDataCell className="text-center">{role.permissions_count ?? 0}</CTableDataCell><CTableDataCell><CBadge color={role.is_active ? 'success' : 'secondary'}>{role.is_active ? 'Aktif' : 'Nonaktif'}</CBadge></CTableDataCell><CTableDataCell className="text-center"><div className="d-inline-flex gap-2"><CButton color="warning" variant="outline" size="sm" onClick={() => onEdit(role)} title="Edit"><CIcon icon={cilPencil} /></CButton><CButton color="danger" variant="outline" size="sm" disabled={role.code === 'SUPERADMIN'} onClick={() => onDelete(role)} title="Hapus"><CIcon icon={cilTrash} /></CButton></div></CTableDataCell></CTableRow>)}
           </CTableBody>
         </CTable>
+        <div className="d-flex justify-content-between align-items-center mt-2">
+          <small className="text-body-secondary">Menampilkan {filtered.length === 0 ? 0 : 1}–{filtered.length} dari {filtered.length} data</small>
+        </div>
       </CCardBody>
     </CCard>
   )
