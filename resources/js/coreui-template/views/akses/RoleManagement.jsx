@@ -6,6 +6,7 @@ import {
   CTableHead, CTableHeaderCell, CTableRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
+import ConfirmModal from '../../components/ConfirmModal'
 import { cilPencil, cilPlus, cilTrash } from '@coreui/icons'
 
 const apiBase = (() => {
@@ -21,6 +22,8 @@ const RoleManagement = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
+  const [roleToDelete, setRoleToDelete] = useState(null)
+  const [deleting, setDeleting] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
   useEffect(() => {
@@ -76,15 +79,23 @@ const RoleManagement = () => {
       setError('Role SUPERADMIN tidak dapat dihapus.')
       return
     }
-    if (!window.confirm(`Yakin ingin menghapus role "${role.name}"?`)) return
+    setRoleToDelete(role)
+  }
+
+  const confirmDelete = async () => {
+    if (!roleToDelete) return
+    setDeleting(true)
     setError('')
     setNotice('')
     try {
-      await request(`/roles/${role.id}`, { method: 'DELETE' })
+      await request(`/roles/${roleToDelete.id}`, { method: 'DELETE' })
       setNotice('Role berhasil dihapus.')
+      setRoleToDelete(null)
       await loadRoles()
     } catch (deleteError) {
       setError(deleteError.message || 'Gagal menghapus role.')
+    } finally {
+      setDeleting(false)
     }
   }
 
@@ -171,6 +182,17 @@ const RoleManagement = () => {
         </CCardBody>
       </CCard>
 
+      <ConfirmModal
+        visible={Boolean(roleToDelete)}
+        title="Konfirmasi Hapus Role"
+        message={roleToDelete ? `Yakin ingin menghapus role "${roleToDelete.name}"?` : ''}
+        confirmText="Hapus"
+        cancelText="Batal"
+        color="danger"
+        loading={deleting}
+        onConfirm={confirmDelete}
+        onCancel={() => setRoleToDelete(null)}
+      />
     </div>
   )
 }
