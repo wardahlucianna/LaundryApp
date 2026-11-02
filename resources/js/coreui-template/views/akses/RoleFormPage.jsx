@@ -42,7 +42,7 @@ const RoleFormPage = () => {
 
   return (
     <div style={{ fontSize: '0.9rem' }}>
-      <h2 className="fs-4 mb-1">Manajemen Role</h2>
+      <h2 className="fs-4 mb-3">Manajemen Role</h2>
       {error && <CAlert color="danger" dismissible onClose={() => setError('')}>{error}</CAlert>}
       {loading ? <div className="d-flex align-items-center gap-2 py-4 text-body-secondary"><CSpinner color="primary" size="sm" /> <span>Memuat data role...</span></div> : <RoleForm role={role} saving={saving} onSave={save} onCancel={() => navigate('/roles/list')} />}
     </div>
