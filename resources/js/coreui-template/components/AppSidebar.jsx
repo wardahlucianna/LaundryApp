@@ -56,7 +56,6 @@ const AppSidebar = () => {
   const dispatch = useDispatch()
   const unfoldable = useSelector((state) => state.sidebarUnfoldable)
   const sidebarShow = useSelector((state) => state.sidebarShow)
-  const menuCacheKey = 'sunrise_laundry_sidebar_menus'
   const buildNavigation = (groups) => {
     const groupIcons = { DASHBOARD: cilSpeedometer, TRANSACTIONS: cilCash, OPERATIONS: cilBasket, MASTER_DATA: cilPeople, SETTINGS: cilSettings, REPORTS: cilChartLine }
     const items = []
@@ -69,43 +68,37 @@ const AppSidebar = () => {
     return items
   }
 
-  const [navigation, setNavigation] = useState(() => {
-    try {
-      return buildNavigation(JSON.parse(localStorage.getItem(menuCacheKey) || '[]'))
-    } catch {
-      return []
-    }
-  })
-  const [menuLoading, setMenuLoading] = useState(() => !localStorage.getItem(menuCacheKey))
+  const [navigation, setNavigation] = useState([])
 
   useEffect(() => {
     let cancelled = false
     const loadMenus = async () => {
       const token = localStorage.getItem('auth_token') || localStorage.getItem('access_token') || localStorage.getItem('token') || ''
       if (!token) {
-        if (!cancelled) { setNavigation([]); setMenuLoading(false) }
+        if (!cancelled) setNavigation([])
         return
       }
       try {
-        const configuredBase = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
+        const configuredBase = (import.meta.env.VITE_API_URL || '').replace(/\\/$/, '')
         const apiBase = configuredBase ? (configuredBase.endsWith('/api') ? configuredBase : `${configuredBase}/api`) : '/api'
         const response = await fetch(`${apiBase}/auth/me/menus`, {
           headers: { Accept: 'application/json', Authorization: `Bearer ${token}` },
         })
         if (!response.ok) throw new Error('Gagal memuat menu.')
         const payload = await response.json()
-        if (cancelled) return
-        const groups = payload.data || []
-        localStorage.setItem(menuCacheKey, JSON.stringify(groups))
-        setNavigation(buildNavigation(groups))
+        if (!cancelled) setNavigation(buildNavigation(payload.data || []))
       } catch (error) {
-        // Keep cached menus visible when the API is slow or temporarily unavailable.
-      } finally {
-        if (!cancelled) setMenuLoading(false)
+        // Do not keep displaying stale menus if the latest permissions cannot be loaded.
+        if (!cancelled) setNavigation([])
       }
     }
+
     loadMenus()
-    return () => { cancelled = true }
+    window.addEventListener('focus', loadMenus)
+    return () => {
+      cancelled = true
+      window.removeEventListener('focus', loadMenus)
+    }
   }, [])
 
   return (
