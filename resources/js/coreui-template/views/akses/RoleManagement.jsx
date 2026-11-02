@@ -112,7 +112,7 @@ const RoleManagement = () => {
               <CFormInput
                 placeholder="Cari nama atau kode role..."
                 value={search}
-                onChange={(event) => { setSearch(event.target.value); setPage(1) }}
+                onChange={(event) => { setSearch(event.target.value); setPage(1); setRoles([]); setLoading(true) }}
                 aria-label="Cari role"
               />
             </CCol>
