@@ -6,7 +6,7 @@ import {
   CTableHead, CTableHeaderCell, CTableRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilPencil, cilPlus, cilSearch, cilTrash } from '@coreui/icons'
+import { cilPencil, cilPlus, cilTrash } from '@coreui/icons'
 
 const apiBase = (() => {
   const configuredBase = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
@@ -109,17 +109,12 @@ const RoleManagement = () => {
         <CCardBody>
           <CRow className="mb-3">
             <CCol xs={12} md={6} lg={4}>
-              <div className="d-flex gap-2">
-                <CFormInput
-                  placeholder="Cari nama atau kode role..."
-                  value={search}
-                  onChange={(event) => { setSearch(event.target.value); setPage(1) }}
-                  aria-label="Cari role"
-                />
-                <CButton color="secondary" variant="outline" onClick={loadRoles} aria-label="Cari">
-                  <CIcon icon={cilSearch} />
-                </CButton>
-              </div>
+              <CFormInput
+                placeholder="Cari nama atau kode role..."
+                value={search}
+                onChange={(event) => { setSearch(event.target.value); setPage(1) }}
+                aria-label="Cari role"
+              />
             </CCol>
             <CCol className="d-flex justify-content-md-end align-items-center mt-2 mt-md-0">
               <small className="text-body-secondary">Total: {pagination.total} role</small>
