@@ -7,7 +7,7 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import ConfirmModal from '../../components/ConfirmModal'
-import { cilPencil, cilPlus, cilTrash } from '@coreui/icons'
+import { cilPencil, cilPlus, cilSearch, cilTrash } from '@coreui/icons'
 
 const apiBase = (() => {
   const configuredBase = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
@@ -17,6 +17,7 @@ const apiBase = (() => {
 const RoleManagement = () => {
   const [roles, setRoles] = useState([])
   const [search, setSearch] = useState('')
+  const [searchInput, setSearchInput] = useState('')
   const [page, setPage] = useState(1)
   const [pagination, setPagination] = useState({ current_page: 1, last_page: 1, total: 0 })
   const [loading, setLoading] = useState(false)
@@ -120,12 +121,30 @@ const RoleManagement = () => {
         <CCardBody>
           <CRow className="mb-3">
             <CCol xs={12} md={6} lg={4}>
-              <CFormInput
-                placeholder="Cari nama atau kode role..."
-                value={search}
-                onChange={(event) => { setSearch(event.target.value); setPage(1); setRoles([]); setLoading(true) }}
-                aria-label="Cari role"
-              />
+              <div className="d-flex gap-2">
+                <CFormInput
+                  placeholder="Cari nama atau kode role..."
+                  value={searchInput}
+                  onChange={(event) => setSearchInput(event.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      const nextSearch = searchInput.trim()
+                      setPage(1)
+                      if (nextSearch === search) loadRoles()
+                      else { setRoles([]); setLoading(true); setSearch(nextSearch) }
+                    }
+                  }}
+                  aria-label="Cari role"
+                />
+                <CButton color="secondary" variant="outline" aria-label="Cari" onClick={() => {
+                  const nextSearch = searchInput.trim()
+                  setPage(1)
+                  if (nextSearch === search) loadRoles()
+                  else { setRoles([]); setLoading(true); setSearch(nextSearch) }
+                }}>
+                  <CIcon icon={cilSearch} />
+                </CButton>
+              </div>
             </CCol>
             <CCol className="d-flex justify-content-md-end align-items-center mt-2 mt-md-0">
               <small className="text-body-secondary">Total: {pagination.total} role</small>
