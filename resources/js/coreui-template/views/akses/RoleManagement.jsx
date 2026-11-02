@@ -122,10 +122,10 @@ const RoleManagement = () => {
   }
 
   return (
-    <>
+    <div style={{ fontSize: '0.9rem' }}>
       <CRow className="mb-3">
         <CCol>
-          <h2 className="mb-1">Manajemen Role</h2>
+          <h2 className="fs-4 mb-1">Manajemen Role</h2>
           <div className="text-body-secondary">Kelola role dan status aktif pengguna Sunrise Laundry.</div>
         </CCol>
       </CRow>
@@ -239,7 +239,7 @@ const RoleManagement = () => {
           </CModalFooter>
         </CForm>
       </CModal>
-    </>
+    </div>
   )
 }
 
