@@ -373,3 +373,17 @@ small {
   width: .95rem;
   height: .95rem;
 }
+
+/* Compact icon-only edit/delete actions in Role table */
+.role-list-page .role-table .d-inline-flex.gap-2 .btn {
+  width: 2rem;
+  min-width: 2rem;
+  height: 2rem;
+  min-height: 2rem;
+  padding: 0;
+  border-radius: .375rem;
+}
+.role-list-page .role-table .d-inline-flex.gap-2 .btn svg {
+  width: .8rem;
+  height: .8rem;
+}
