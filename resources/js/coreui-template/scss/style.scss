@@ -293,3 +293,83 @@ small {
   border-radius: var(--app-control-radius);
 }
 .role-list-page .role-table .btn svg { width: 1rem; height: 1rem; }
+
+/* Refined Sunrise Laundry action colors: navy primary, restrained neutral secondary */
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active {
+  --cui-btn-color: #FFFFFF;
+  --cui-btn-bg: #263B5A;
+  --cui-btn-border-color: #263B5A;
+  --cui-btn-hover-color: #FFFFFF;
+  --cui-btn-hover-bg: #1B2D46;
+  --cui-btn-hover-border-color: #1B2D46;
+  --cui-btn-active-color: #FFFFFF;
+  --cui-btn-active-bg: #172A45;
+  --cui-btn-active-border-color: #172A45;
+  --cui-btn-focus-shadow-rgb: 38, 59, 90;
+  font-weight: 600;
+}
+
+.btn-secondary,
+.btn-secondary:hover,
+.btn-secondary:focus,
+.btn-secondary:active {
+  --cui-btn-color: #475569;
+  --cui-btn-bg: #F1F3F6;
+  --cui-btn-border-color: #DCE2EA;
+  --cui-btn-hover-color: #26364B;
+  --cui-btn-hover-bg: #E5E9EF;
+  --cui-btn-hover-border-color: #CBD5E1;
+  --cui-btn-active-color: #26364B;
+  --cui-btn-active-bg: #DCE2EA;
+  --cui-btn-active-border-color: #CBD5E1;
+}
+
+.btn-outline-secondary,
+.btn-outline-secondary:hover,
+.btn-outline-secondary:focus,
+.btn-outline-secondary:active {
+  --cui-btn-color: #53647A;
+  --cui-btn-bg: transparent;
+  --cui-btn-border-color: #CBD5E1;
+  --cui-btn-hover-color: #26364B;
+  --cui-btn-hover-bg: #F1F3F6;
+  --cui-btn-hover-border-color: #AEBBCB;
+  --cui-btn-active-color: #26364B;
+  --cui-btn-active-bg: #E5E9EF;
+  --cui-btn-active-border-color: #AEBBCB;
+}
+
+/* Search and Reset controls: balanced compact size and clear hierarchy */
+.role-list-page .role-search-button {
+  min-width: 5.25rem;
+  padding-inline: .8rem;
+  background: #263B5A;
+  border-color: #263B5A;
+  color: #FFFFFF;
+}
+.role-list-page .role-search-button:hover {
+  background: #1B2D46;
+  border-color: #1B2D46;
+  color: #FFFFFF;
+}
+.role-list-page .role-reset-button {
+  min-width: 5rem;
+  padding-inline: .75rem;
+  background: transparent;
+  border-color: #CBD5E1;
+  color: #53647A;
+}
+.role-list-page .role-reset-button:hover {
+  background: #F1F3F6;
+  border-color: #AEBBCB;
+  color: #26364B;
+}
+.role-list-page .role-search-button svg,
+.role-list-page .role-reset-button svg {
+  width: .95rem;
+  height: .95rem;
+}
