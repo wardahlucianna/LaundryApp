@@ -210,8 +210,7 @@ const RoleManagement = () => {
           </CTable>
 
           <div className="d-flex flex-wrap justify-content-between align-items-center gap-2">
-            <small className="text-body-secondary">Showing {showingStart}–{showingEnd} of {pagination.total} entries</small>
-            <small className="text-body-secondary">Halaman {pagination.current_page} dari {pagination.last_page}</small>
+            <small className="text-body-secondary">Menampilkan {showingStart}–{showingEnd} dari {pagination.total} data</small>
             <div className="d-flex gap-2">
               <CButton color="secondary" variant="outline" size="sm" disabled={page <= 1 || loading} onClick={() => setPage((current) => current - 1)}>Sebelumnya</CButton>
               <CButton color="secondary" variant="outline" size="sm" disabled={page >= pagination.last_page || loading} onClick={() => setPage((current) => current + 1)}>Berikutnya</CButton>
