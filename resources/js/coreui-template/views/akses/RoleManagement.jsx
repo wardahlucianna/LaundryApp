@@ -10,7 +10,7 @@ import ConfirmModal from '../../components/ConfirmModal'
 import { cilPencil, cilPlus, cilSearch, cilTrash, cilReload } from '@coreui/icons'
 
 const apiBase = (() => {
-  const configuredBase = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
+  const configuredBase = (import.meta.env.VITE_API_URL || '').replace(/\\/$/, '')
   return configuredBase ? (configuredBase.endsWith('/api') ? configuredBase : `${configuredBase}/api`) : '/api'
 })()
 
@@ -117,7 +117,7 @@ const RoleManagement = () => {
 
       <CCard className="role-panel role-list-panel mb-4">
         <CCardHeader className="d-flex flex-wrap justify-content-between align-items-center gap-2">
-          <div><strong>Daftar Role</strong></div>
+          <div><strong className="fs-5">Daftar Role</strong></div>
           <CButton color="primary" size="sm" className="role-compact-button" onClick={openCreate}>
             <CIcon icon={cilPlus} size="sm" className="me-1" />Tambah Role
           </CButton>
