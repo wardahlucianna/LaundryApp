@@ -11,7 +11,7 @@ export const routes = [
   { path: '/transactions', name: 'Transaksi', element: () => <Placeholder title="Transaksi" /> },
   { path: '/reports', name: 'Laporan', element: () => <Placeholder title="Laporan" /> },
   { path: '/settings', name: 'Pengaturan', element: () => <Placeholder title="Pengaturan" /> },
-  { path: '/roles', name: 'Manajemen Role', element: Role },
+  { path: '/roles', name: 'Manajemen Role', element: RoleManagement },
   { path: '/roles/list', name: 'List Role', element: RoleManagement },
   { path: '/roles/form', name: 'Form Role', element: RoleFormPage },
   { path: '/roles/form/:id', name: 'Edit Role', element: RoleFormPage },
