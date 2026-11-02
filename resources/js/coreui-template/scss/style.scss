@@ -135,3 +135,9 @@ body {
   border-color: #E8C96A;
 }
 
+
+/* Slightly smaller sidebar menu typography */
+.sidebar .nav-link,
+.sidebar .nav-group-toggle {
+  font-size: 0.82rem;
+}
