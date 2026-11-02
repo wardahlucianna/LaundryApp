@@ -45,7 +45,7 @@ const RoleFormPage = () => {
       <h2 className="fs-4 mb-1">Manajemen Role</h2>
       <div className="text-body-secondary mb-3">{id ? 'Perbarui data role.' : 'Tambah role baru.'}</div>
       {error && <CAlert color="danger" dismissible onClose={() => setError('')}>{error}</CAlert>}
-      {loading ? <CSpinner color="primary" /> : <RoleForm role={role} saving={saving} onSave={save} onCancel={() => navigate('/roles/list')} />}
+      {loading ? <div className="d-flex align-items-center gap-2 py-4 text-body-secondary"><CSpinner color="primary" size="sm" /> <span>Memuat data role...</span></div> : <RoleForm role={role} saving={saving} onSave={save} onCancel={() => navigate('/roles/list')} />}
     </div>
   )
 }
