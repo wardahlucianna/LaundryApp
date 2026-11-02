@@ -79,7 +79,7 @@ const AppSidebar = () => {
         return
       }
       try {
-        const configuredBase = (import.meta.env.VITE_API_URL || '').replace(/\\/$/, '')
+        const configuredBase = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
         const apiBase = configuredBase ? (configuredBase.endsWith('/api') ? configuredBase : `${configuredBase}/api`) : '/api'
         const response = await fetch(`${apiBase}/auth/me/menus`, {
           headers: { Accept: 'application/json', Authorization: `Bearer ${token}` },
