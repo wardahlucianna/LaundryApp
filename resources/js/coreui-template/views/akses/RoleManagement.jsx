@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import {
-  CAlert, CBadge, CButton, CCard, CCardBody, CCardHeader, CCol, CForm,
-  CFormInput, CFormSelect, CModal, CModalBody, CModalFooter, CModalHeader,
-  CModalTitle, CRow, CSpinner, CTable, CTableBody, CTableDataCell,
+  CAlert, CBadge, CButton, CCard, CCardBody, CCardHeader, CCol,
+  CFormInput, CRow, CSpinner, CTable, CTableBody, CTableDataCell,
   CTableHead, CTableHeaderCell, CTableRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
@@ -21,10 +21,11 @@ const RoleManagement = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
-  const [modalVisible, setModalVisible] = useState(false)
-  const [saving, setSaving] = useState(false)
-  const [editingRole, setEditingRole] = useState(null)
-  const [form, setForm] = useState({ name: '', code: '', is_active: true })
+  const navigate = useNavigate()
+  const location = useLocation()
+  useEffect(() => {
+    if (location.state?.notice) { setNotice(location.state.notice); navigate(location.pathname, { replace: true, state: {} }) }
+  }, [location, navigate])
 
   const request = useCallback(async (path, options = {}) => {
     const token = localStorage.getItem('auth_token') || localStorage.getItem('access_token') || localStorage.getItem('token') || ''
@@ -67,42 +68,8 @@ const RoleManagement = () => {
 
   useEffect(() => { loadRoles() }, [loadRoles])
 
-  const openCreate = () => {
-    setEditingRole(null)
-    setForm({ name: '', code: '', is_active: true })
-    setError('')
-    setModalVisible(true)
-  }
-
-  const openEdit = (role) => {
-    setEditingRole(role)
-    setForm({ name: role.name || '', code: role.code || '', is_active: Boolean(role.is_active) })
-    setError('')
-    setModalVisible(true)
-  }
-
-  const handleSave = async (event) => {
-    event.preventDefault()
-    setSaving(true)
-    setError('')
-    try {
-      const payload = { name: form.name.trim(), code: form.code.trim(), is_active: form.is_active }
-      if (editingRole) {
-        await request(`/roles/${editingRole.id}`, { method: 'PUT', body: JSON.stringify(payload) })
-        setNotice('Role berhasil diperbarui.')
-      } else {
-        await request('/roles', { method: 'POST', body: JSON.stringify(payload) })
-        setNotice('Role berhasil ditambahkan.')
-        setPage(1)
-      }
-      setModalVisible(false)
-      await loadRoles()
-    } catch (saveError) {
-      setError(saveError.message || 'Gagal menyimpan role.')
-    } finally {
-      setSaving(false)
-    }
-  }
+  const openCreate = () => navigate('/roles/form')
+  const openEdit = (role) => navigate(`/roles/form/${role.id}`)
 
   const handleDelete = async (role) => {
     if (role.code === 'SUPERADMIN') {
@@ -131,7 +98,7 @@ const RoleManagement = () => {
       </CRow>
 
       {notice && <CAlert color="success" dismissible onClose={() => setNotice('')}>{notice}</CAlert>}
-      {error && !modalVisible && <CAlert color="danger" dismissible onClose={() => setError('')}>{error}</CAlert>}
+      {error && <CAlert color="danger" dismissible onClose={() => setError('')}>{error}</CAlert>}
 
       <CCard className="mb-4">
         <CCardHeader className="d-flex flex-wrap justify-content-between align-items-center gap-2">
@@ -210,35 +177,6 @@ const RoleManagement = () => {
         </CCardBody>
       </CCard>
 
-      <CModal visible={modalVisible} onClose={() => !saving && setModalVisible(false)} backdrop="static">
-        <CForm onSubmit={handleSave}>
-          <CModalHeader>
-            <CModalTitle>{editingRole ? 'Edit Role' : 'Tambah Role'}</CModalTitle>
-          </CModalHeader>
-          <CModalBody>
-            {error && <CAlert color="danger">{error}</CAlert>}
-            <div className="mb-3">
-              <CFormInput label="Nama Role" placeholder="Contoh: Administrator" value={form.name} onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))} required maxLength={100} />
-            </div>
-            <div className="mb-3">
-              <CFormInput label="Kode Role" placeholder="Contoh: ADMIN" value={form.code} onChange={(event) => setForm((current) => ({ ...current, code: event.target.value.toUpperCase().replace(/\s+/g, '_') }))} required maxLength={60} pattern="[A-Za-z0-9_-]+" />
-              <div className="form-text">Gunakan huruf, angka, tanda minus, atau underscore.</div>
-            </div>
-            <div className="mb-2">
-              <CFormSelect label="Status" value={form.is_active ? '1' : '0'} onChange={(event) => setForm((current) => ({ ...current, is_active: event.target.value === '1' }))}>
-                <option value="1">Aktif</option>
-                <option value="0">Nonaktif</option>
-              </CFormSelect>
-            </div>
-          </CModalBody>
-          <CModalFooter>
-            <CButton color="secondary" variant="outline" type="button" disabled={saving} onClick={() => setModalVisible(false)}>Batal</CButton>
-            <CButton color="primary" type="submit" disabled={saving}>
-              {saving ? <><CSpinner size="sm" className="me-2" />Menyimpan...</> : 'Simpan'}
-            </CButton>
-          </CModalFooter>
-        </CForm>
-      </CModal>
     </div>
   )
 }
