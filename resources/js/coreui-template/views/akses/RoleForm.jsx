@@ -52,10 +52,11 @@ const RoleForm = ({ role, permissions = [], saving, onSave, onCancel }) => {
             <CCol xs={12} md={6}><CFormInput label="Kode Role" placeholder="Contoh: ADMIN" value={values.code} onChange={(e) => setValues((v) => ({ ...v, code: e.target.value.toUpperCase().replace(/\s+/g, '_') }))} required maxLength={60} pattern="[A-Za-z0-9_-]+" /><div className="form-text">Gunakan huruf, angka, tanda minus, atau underscore.</div></CCol>
             <CCol xs={12} md={6}><div className="role-status-box d-flex align-items-center justify-content-between rounded p-3 h-100"><div className="role-status-copy"><div className="fw-semibold mb-1">Status</div><div className="role-status-note">Aktifkan role agar dapat digunakan.</div></div><CFormSwitch className={`role-status-switch ${values.is_active ? 'is-active' : 'is-inactive'}`} label={values.is_active ? 'Aktif' : 'Nonaktif'} checked={values.is_active} onChange={(e) => setValues((v) => ({ ...v, is_active: e.target.checked }))} /></div></CCol>
           </CRow>
+          <hr className="my-4" />
 
           <div className="mt-4">
             <div className="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
-              <div><h5 className="mb-1">Checklist Permission</h5><div className="small text-body-secondary">Pilih hak akses yang diberikan ke role ini.</div></div>
+              <div><h5 className="mb-1">Checklist Permission</h5></div>
               <span className="badge bg-primary">{selectedPermissionIds.length} dipilih</span>
             </div>
             {permissions.length === 0 ? <CAlert color="info">Belum ada permission aktif yang tersedia.</CAlert> : (
@@ -71,6 +72,7 @@ const RoleForm = ({ role, permissions = [], saving, onSave, onCancel }) => {
                             {feature.items.map((permission) => (
                               <CCol xs={12} sm={6} md={4} key={permission.id}>
                                 <CFormCheck
+                                  className="fs-6"
                                   id={`role-permission-${permission.id}`}
                                   label={permission.action_name ? `${permission.name} (${permission.action_name})` : permission.name}
                                   checked={selectedPermissionIds.includes(permission.id)}
