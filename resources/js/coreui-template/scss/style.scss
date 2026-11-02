@@ -387,3 +387,47 @@ small {
   width: .8rem;
   height: .8rem;
 }
+
+/* Role status switch: calm green for active, slate gray for inactive */
+.role-status-box {
+  gap: 1rem;
+}
+.role-status-copy {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.role-status-note {
+  max-width: 22rem;
+  color: #64748B;
+  font-size: .78rem;
+  line-height: 1.45;
+}
+.role-status-switch {
+  flex: 0 0 auto;
+  margin-left: .75rem;
+}
+.role-status-switch .form-check-input {
+  cursor: pointer;
+  background-color: #CBD5E1;
+  border-color: #B8C4D2;
+  box-shadow: none;
+}
+.role-status-switch .form-check-input:checked {
+  background-color: #2E8B57;
+  border-color: #2E8B57;
+}
+.role-status-switch .form-check-input:focus {
+  border-color: #79B894;
+  box-shadow: 0 0 0 .2rem rgba(46, 139, 87, .16);
+}
+.role-status-switch .form-check-label {
+  font-size: .82rem;
+  font-weight: 600;
+  color: #64748B;
+}
+.role-status-switch.is-active .form-check-label {
+  color: #2E8B57;
+}
+.role-status-switch.is-inactive .form-check-label {
+  color: #64748B;
+}
