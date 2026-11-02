@@ -12,7 +12,6 @@ const RoleList = ({ roles = [], loading, onAdd, onEdit, onDelete }) => {
       <CCardBody>
         <div className="d-flex flex-wrap justify-content-between gap-2 mb-3">
           <div className="d-flex gap-2"><CFormInput size="sm" style={{ minWidth: '240px' }} placeholder="Cari nama atau kode role..." value={search} onChange={(e) => setSearch(e.target.value)} aria-label="Cari role" /><CButton size="sm" color="secondary" variant="outline" aria-label="Cari"><CIcon icon={cilSearch} /></CButton></div>
-          <small className="text-body-secondary align-self-center">Total: {filtered.length} role</small>
         </div>
         <CTable hover responsive align="middle" small>
           <CTableHead><CTableRow><CTableHeaderCell>No.</CTableHeaderCell><CTableHeaderCell>Nama Role</CTableHeaderCell><CTableHeaderCell>Kode</CTableHeaderCell><CTableHeaderCell className="text-center">Jumlah Hak Akses</CTableHeaderCell><CTableHeaderCell>Status</CTableHeaderCell><CTableHeaderCell className="text-center">Aksi</CTableHeaderCell></CTableRow></CTableHead>

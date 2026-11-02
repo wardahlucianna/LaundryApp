@@ -117,7 +117,7 @@ const RoleManagement = () => {
 
       <CCard className="role-panel role-list-panel mb-4">
         <CCardHeader className="d-flex flex-wrap justify-content-between align-items-center gap-2">
-          <div><strong>Daftar Role</strong><div className="small text-body-secondary mt-1">Cari dan kelola role beserta hak aksesnya.</div></div>
+          <div><strong>Daftar Role</strong></div>
           <CButton color="primary" size="sm" className="role-compact-button" onClick={openCreate}>
             <CIcon icon={cilPlus} size="sm" className="me-1" />Tambah Role
           </CButton>
@@ -163,9 +163,6 @@ const RoleManagement = () => {
                   <CIcon icon={cilReload} size="sm" />Reset
                 </CButton>
               </div>
-            </CCol>
-            <CCol className="d-flex justify-content-md-end align-items-center mt-2 mt-md-0">
-              <small className="text-body-secondary">Total: {pagination.total} role</small>
             </CCol>
           </CRow>
 

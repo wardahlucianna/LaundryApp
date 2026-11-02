@@ -16,7 +16,7 @@ const RoleForm = ({ role, saving, onSave, onCancel }) => {
   }
   return (
     <CCard className="role-panel role-form-card mb-4">
-      <CCardHeader><div><strong>{role ? 'Edit Role' : 'Tambah Role'}</strong><div className="small text-body-secondary mt-1">Lengkapi informasi peran dan statusnya.</div></div></CCardHeader>
+      <CCardHeader><div><strong>{role ? 'Edit Role' : 'Tambah Role'}</strong></div></CCardHeader>
       <CCardBody>
         {validation && <CAlert color="warning">{validation}</CAlert>}
         <CForm onSubmit={submit}>
