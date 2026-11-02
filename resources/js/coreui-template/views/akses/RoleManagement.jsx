@@ -10,7 +10,7 @@ import ConfirmModal from '../../components/ConfirmModal'
 import { cilPencil, cilPlus, cilSearch, cilTrash, cilReload } from '@coreui/icons'
 
 const apiBase = (() => {
-  const configuredBase = (import.meta.env.VITE_API_URL || '').replace(/\\/$/, '')
+  const configuredBase = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
   return configuredBase ? (configuredBase.endsWith('/api') ? configuredBase : `${configuredBase}/api`) : '/api'
 })()
 
