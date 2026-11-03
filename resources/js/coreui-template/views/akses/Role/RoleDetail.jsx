@@ -78,7 +78,7 @@ const RoleDetailPage = () => {
             <CCardBody>
               <CRow className="g-3">
                 <CCol xs={12} md={6}><div className="small text-body-secondary mb-1">Nama Role</div><div className="fw-semibold">{role.name || '-'}</div></CCol>
-                <CCol xs={12} md={6}><div className="small text-body-secondary mb-1">Kode Role</div><code>{role.code || '-'}</code></CCol>
+                <CCol xs={12} md={6}><div className="small text-body-secondary mb-1">Kode Role</div><span className="fw-semibold text-body">{role.code || '-'}</span></CCol>
                 <CCol xs={12} md={6}><div className="small text-body-secondary mb-1">Status</div><CBadge color={role.is_active ? 'success' : 'secondary'}>{role.is_active ? 'Aktif' : 'Nonaktif'}</CBadge></CCol>
                 <CCol xs={12} md={6}><div className="small text-body-secondary mb-1">Jumlah Pengguna</div><div className="fw-semibold">{role.users_count ?? 0}</div></CCol>
               </CRow>
