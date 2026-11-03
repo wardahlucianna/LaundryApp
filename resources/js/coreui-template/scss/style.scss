@@ -443,3 +443,70 @@ small {
   padding-left: .35rem;
   font-size: .875rem;
 }
+
+
+/* Final button sizing pass: consistent proportions across LaundryApp forms and tables */
+:root {
+  --app-control-height: 2.25rem; /* 36px */
+  --app-control-font-size: .8125rem;
+  --app-control-padding-y: .375rem;
+  --app-control-padding-x: .75rem;
+  --app-control-radius: .45rem;
+}
+
+.btn,
+.btn-sm,
+.btn-lg {
+  min-height: var(--app-control-height);
+  height: var(--app-control-height);
+  padding: var(--app-control-padding-y) var(--app-control-padding-x);
+  font-size: var(--app-control-font-size);
+  line-height: 1.25;
+  font-weight: 600;
+  border-radius: var(--app-control-radius);
+}
+
+/* Buttons marked small remain subtly more compact, not dramatically smaller */
+.btn.btn-sm {
+  min-height: 2rem;
+  height: 2rem;
+  padding: .25rem .625rem;
+  font-size: .75rem;
+  border-radius: .375rem;
+}
+
+/* Buttons marked large are only one step larger */
+.btn.btn-lg {
+  min-height: 2.5rem;
+  height: 2.5rem;
+  padding: .5rem 1rem;
+  font-size: .875rem;
+  border-radius: .5rem;
+}
+
+/* Page-specific button rules must follow the same standard height */
+.role-list-page .btn,
+.role-list-page .btn.btn-sm,
+.role-form-page .btn,
+.role-form-page .role-form-card .btn {
+  min-height: var(--app-control-height);
+  height: var(--app-control-height);
+  padding: var(--app-control-padding-y) var(--app-control-padding-x);
+  font-size: var(--app-control-font-size);
+  line-height: 1.25;
+  border-radius: var(--app-control-radius);
+}
+
+/* Keep table edit/delete icon buttons square and aligned */
+.role-list-page .role-table .d-inline-flex.gap-2 .btn {
+  width: 2rem;
+  min-width: 2rem;
+  height: 2rem;
+  min-height: 2rem;
+  padding: 0;
+  border-radius: .375rem;
+}
+.role-list-page .role-table .d-inline-flex.gap-2 .btn svg {
+  width: .8rem;
+  height: .8rem;
+}
