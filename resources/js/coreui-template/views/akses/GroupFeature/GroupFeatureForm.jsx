@@ -37,6 +37,8 @@ const GroupFeatureForm = () => {
     try {
       const body = { name: values.name.trim(), description: values.description.trim() || null, icon: values.icon, is_active: values.is_active }
       await request(id ? '/permission-groups/' + id : '/permission-groups', { method: id ? 'PUT' : 'POST', body: JSON.stringify(body) })
+      // Immediately refresh the sidebar menu so the selected group icon is reflected.
+      window.dispatchEvent(new Event('sunrise:permissions-updated'))
       navigate('/permission-groups', { state: { notice: id ? 'Group feature berhasil diperbarui.' : 'Group feature berhasil ditambahkan.' } })
     } catch (e) { setError(e.message || 'Gagal menyimpan group feature.') }
     finally { setSaving(false) }
