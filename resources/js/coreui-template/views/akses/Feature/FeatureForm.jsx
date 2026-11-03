@@ -12,7 +12,7 @@ const FeatureFormPage = () => {
   const { id } = useParams()
   const [feature, setFeature] = useState(null)
   const [groups, setGroups] = useState([])
-  const [values, setValues] = useState({ group_name: '', name: '', code: '', path: '', menu_type: 'sidebar', is_active: true })
+  const [values, setValues] = useState({ group_name: '', name: '', code: '', path: '', ordering: 0, menu_type: 'sidebar', is_active: true })
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
@@ -51,6 +51,7 @@ const FeatureFormPage = () => {
           name: loadedFeature?.name || '',
           code: loadedFeature?.code || '',
           path: loadedFeature?.path || '',
+          ordering: loadedFeature?.ordering ?? 0,
           menu_type: loadedFeature?.menu_type || 'sidebar',
           is_active: loadedFeature ? Boolean(loadedFeature.is_active) : true,
         })
@@ -98,6 +99,7 @@ const FeatureFormPage = () => {
         name: values.name.trim(),
         code: values.code.trim().toUpperCase().replace(/\s+/g, '_'),
         path: values.path.trim() || null,
+        ordering: Number(values.ordering),
         menu_type: values.menu_type,
         is_active: values.is_active,
       }
@@ -130,6 +132,7 @@ const FeatureFormPage = () => {
                   <CCol xs={12} md={6}><CFormInput label="Nama Fitur" placeholder="Contoh: Manajemen Fitur" value={values.name} onChange={(e) => setValues((v) => ({ ...v, name: e.target.value }))} required maxLength={120} /></CCol>
                   <CCol xs={12} md={6}><CFormInput label="Kode Fitur" placeholder="Contoh: FEATURES" value={values.code} onChange={(e) => setValues((v) => ({ ...v, code: e.target.value.toUpperCase().replace(/\\s+/g, '_') }))} required maxLength={80} pattern="[A-Za-z0-9_-]+" /><div className="form-text">Gunakan huruf, angka, tanda minus, atau underscore.</div></CCol>
                   <CCol xs={12} md={6}><CFormInput label="Path Menu" placeholder="Contoh: /permissions" value={values.path} onChange={(e) => setValues((v) => ({ ...v, path: e.target.value }))} maxLength={255} /></CCol>
+                  <CCol xs={12} md={6}><CFormInput label="Ordering / Urutan" type="number" min={0} step={1} value={values.ordering} onChange={(e) => setValues((v) => ({ ...v, ordering: e.target.value }))} required /></CCol>
                   <CCol xs={12} md={6}><CFormSelect label="Jenis Menu" value={values.menu_type} onChange={(e) => setValues((v) => ({ ...v, menu_type: e.target.value }))} required><option value="sidebar">Sidebar</option><option value="topbar">Topbar</option></CFormSelect></CCol>
                   <CCol xs={12} md={6}><div className="role-status-box d-flex align-items-center justify-content-between rounded p-3 h-100"><div className="role-status-copy"><div className="fw-semibold mb-1">Status</div><div className="role-status-note">Aktifkan fitur agar ditampilkan sesuai hak akses role.</div></div><CFormSwitch className={`role-status-switch ${values.is_active ? 'is-active' : 'is-inactive'}`} label={values.is_active ? 'Aktif' : 'Nonaktif'} checked={values.is_active} onChange={(e) => setValues((v) => ({ ...v, is_active: e.target.checked }))} /></div></CCol>
                 </CRow>
