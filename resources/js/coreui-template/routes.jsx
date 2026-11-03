@@ -3,6 +3,7 @@ const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const RoleManagement = React.lazy(() => import('./views/akses/Role/RoleManagement'))
 const RoleFormPage = React.lazy(() => import('./views/akses/Role/RoleForm'))
 const RoleDetailPage = React.lazy(() => import('./views/akses/Role/RoleDetail'))
+const FeatureManagement = React.lazy(() => import('./views/akses/Feature/FeatureManagement'))
 const Placeholder = ({ title }) => <div className="pt-4"><h2>{title}</h2><p>Halaman ini akan diintegrasikan dengan fitur Sunrise Laundry.</p></div>
 export const routes = [
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
@@ -11,6 +12,7 @@ export const routes = [
   { path: '/transactions', name: 'Transaksi', element: () => <Placeholder title="Transaksi" /> },
   { path: '/reports', name: 'Laporan', element: () => <Placeholder title="Laporan" /> },
   { path: '/settings', name: 'Pengaturan', element: () => <Placeholder title="Pengaturan" /> },
+  { path: '/permissions', name: 'Management Fitur', element: FeatureManagement },
   { path: '/roles', name: 'Manajemen Role', element: RoleManagement },
   { path: '/roles/list', name: 'List Role', element: RoleManagement },
   { path: '/roles/form', name: 'Form Role', element: RoleFormPage },
