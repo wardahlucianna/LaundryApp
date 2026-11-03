@@ -24,7 +24,7 @@ const FeatureList = ({ features, groups, searchInput, setSearchInput, applySearc
         </div></CCol></CRow>
         <CTable hover responsive align="middle" className="role-table">
           <CTableHead><CTableRow>
-            <CTableHeaderCell style={{ width: '60px' }}>No.</CTableHeaderCell><CTableHeaderCell>Nama Fitur</CTableHeaderCell><CTableHeaderCell>Kelompok</CTableHeaderCell><CTableHeaderCell>Kode</CTableHeaderCell><CTableHeaderCell>Path</CTableTableHeaderCell><CTableHeaderCell>Jenis Menu</CTableHeaderCell><CTableHeaderCell className="text-center">Jumlah Aksi</CTableHeaderCell><CTableHeaderCell>Status</CTableHeaderCell><CTableHeaderCell className="text-center" style={{ width: '120px' }}>Aksi</CTableHeaderCell>
+            <CTableHeaderCell style={{ width: '60px' }}>No.</CTableHeaderCell><CTableHeaderCell>Nama Fitur</CTableHeaderCell><CTableHeaderCell>Kelompok</CTableHeaderCell><CTableHeaderCell>Kode</CTableHeaderCell><CTableHeaderCell>Path</CTableHeaderCell><CTableHeaderCell>Jenis Menu</CTableHeaderCell><CTableHeaderCell className="text-center">Jumlah Aksi</CTableHeaderCell><CTableHeaderCell>Status</CTableHeaderCell><CTableHeaderCell className="text-center" style={{ width: '120px' }}>Aksi</CTableHeaderCell>
           </CTableRow></CTableHead>
           <CTableBody>
             {loading ? <CTableRow><CTableDataCell colSpan={9} className="text-center py-4"><CSpinner size="sm" className="me-2" />Memuat data...</CTableDataCell></CTableRow>
