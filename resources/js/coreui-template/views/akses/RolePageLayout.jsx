@@ -1,5 +1,5 @@
 import React from 'react'
-import { CAlert, CCard, CCardBody } from '@coreui/react'
+import { CAlert } from '@coreui/react'
 
 const RolePageLayout = ({ title, description, successMessage, errorMessage, onDismissSuccess, onDismissError, children }) => (
   <div className="role-page-layout mb-4">
@@ -9,9 +9,7 @@ const RolePageLayout = ({ title, description, successMessage, errorMessage, onDi
     </div>
     {successMessage && <CAlert color="success" dismissible onClose={onDismissSuccess}>{successMessage}</CAlert>}
     {errorMessage && <CAlert color="danger" dismissible onClose={onDismissError}>{errorMessage}</CAlert>}
-    <CCard className="role-page-shell">
-      <CCardBody>{children}</CCardBody>
-    </CCard>
+    {children}
   </div>
 )
 export default RolePageLayout
