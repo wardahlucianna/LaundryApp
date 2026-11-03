@@ -51,7 +51,22 @@ const Login = () => {
         throw new Error(validationMessage || payload.message || 'Username atau password salah.')
       }
 
-      // Session cookie is managed by Laravel; no bearer token is stored.
+      // Preload authorized sidebar menus before entering the dashboard.
+      try {
+        const menuResponse = await fetch(`${apiBase}/auth/me/menus`, {
+          headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+          credentials: 'include',
+        })
+        if (menuResponse.ok) {
+          const menuPayload = await menuResponse.json()
+          sessionStorage.setItem('sunriseLaundryMenus', JSON.stringify(menuPayload.data || []))
+        } else {
+          sessionStorage.removeItem('sunriseLaundryMenus')
+        }
+      } catch {
+        sessionStorage.removeItem('sunriseLaundryMenus')
+      }
+
       navigate('/dashboard', { replace: true })
     } catch (requestError) {
       setError(requestError.message || 'Tidak dapat menghubungi server.')
@@ -94,7 +109,7 @@ const Login = () => {
                     />
                   </div>
                   <CButton color="primary" type="submit" className="w-100" disabled={loading}>
-                    {loading ? <><CSpinner size="sm" className="me-2" />Memproses...</> : 'Masuk'}
+                    {loading ? <><CSpinner size="sm" className="me-2" />Memuat menu...</> : 'Masuk'}
                   </CButton>
                 </CForm>
               </CCardBody>
