@@ -57,10 +57,31 @@ const RoleFormPage = () => {
         ])
         if (!active) return
         const loadedRole = rolePayload ? (rolePayload.data || rolePayload) : null
-        setPermissions(permissionsPayload.data || [])
+        const availablePermissions = (permissionsPayload.data || []).filter((permission) => {
+          const featureCode = String(permission.feature?.code || '').toUpperCase()
+          const permissionCode = String(permission.code || '').toUpperCase()
+          const actionName = String(permission.action_name || '').toLowerCase()
+          const permissionName = String(permission.name || '').toLowerCase()
+          const isFeatureManagement = featureCode === 'FEATURES' || permissionCode.startsWith('FEATURE_')
+          const isViewCreateEdit = ['view', 'create', 'update'].includes(actionName) ||
+            /^(FEATURE_VIEW|FEATURE_CREATE|FEATURE_UPDATE)$/.test(permissionCode) ||
+            /^(lihat|tambah|edit)$/.test(permissionName)
+          return !(isFeatureManagement && isViewCreateEdit)
+        })
+        setPermissions(availablePermissions)
         setRole(loadedRole)
         setValues({ name: loadedRole?.name || '', code: loadedRole?.code || '', is_active: loadedRole ? Boolean(loadedRole.is_active) : true })
-        setSelectedPermissionIds(loadedRole?.permissions?.map((permission) => permission.id) || [])
+        setSelectedPermissionIds((loadedRole?.permissions || []).filter((permission) => {
+          const featureCode = String(permission.feature?.code || '').toUpperCase()
+          const permissionCode = String(permission.code || '').toUpperCase()
+          const actionName = String(permission.action_name || '').toLowerCase()
+          const permissionName = String(permission.name || '').toLowerCase()
+          const isFeatureManagement = featureCode === 'FEATURES' || permissionCode.startsWith('FEATURE_')
+          const isViewCreateEdit = ['view', 'create', 'update'].includes(actionName) ||
+            /^(FEATURE_VIEW|FEATURE_CREATE|FEATURE_UPDATE)$/.test(permissionCode) ||
+            /^(lihat|tambah|edit)$/.test(permissionName)
+          return !(isFeatureManagement && isViewCreateEdit)
+        }).map((permission) => permission.id))
       } catch (e) {
         if (active) setError(e.message || 'Gagal memuat data role dan permission.')
       } finally {
