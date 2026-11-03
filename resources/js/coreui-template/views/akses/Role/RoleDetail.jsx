@@ -36,7 +36,7 @@ const RoleDetailPage = () => {
   const request = useCallback(async (path) => {
     const token = localStorage.getItem('auth_token') || localStorage.getItem('access_token') || localStorage.getItem('token') || ''
     const response = await fetch(`${apiBase}${path}`, {
-      headers: { Accept: 'application/json', Authorization: `Bearer ${token}` },
+      headers: { Accept: 'application/json' }, credentials: 'include',
     })
     const payload = await response.json().catch(() => ({}))
     if (!response.ok) throw new Error(payload.message || 'Gagal memuat detail role.')
@@ -46,7 +46,7 @@ const RoleDetailPage = () => {
   useEffect(() => {
     let active = true
     setLoading(true)
-    Promise.all([request(`/roles/${id}`), request('/permissions?is_active=1&per_page=100')])
+    Promise.all([request(`/roles/${id}`), request('/permission-features?is_active=1&per_page=100')])
       .then(([rolePayload, permissionsPayload]) => {
         if (active) {
           setRole(rolePayload.data || rolePayload)
@@ -61,8 +61,8 @@ const RoleDetailPage = () => {
   const groupedPermissions = useMemo(() => {
     const groups = new Map()
     ;permissions.forEach((permission) => {
-      const groupName = permission.feature?.group?.name || 'Lainnya'
-      const featureName = permission.feature?.name || permission.name || 'Fitur tidak terdefinisi'
+      const groupName = permission.group?.name || 'Lainnya'
+      const featureName = permission.name || 'Fitur tidak terdefinisi'
       if (!groups.has(groupName)) groups.set(groupName, new Map())
       const features = groups.get(groupName)
       if (!features.has(featureName)) features.set(featureName, [])
@@ -70,7 +70,7 @@ const RoleDetailPage = () => {
     })
     return Array.from(groups.entries()).sort(([a], [b]) => a.localeCompare(b)).map(([groupName, features]) => ({
       name: groupName,
-      features: Array.from(features.entries()).sort(([a], [b]) => a.localeCompare(b)).map(([featureName, items]) => ({ name: featureName, items: [...items].sort((a, b) => permissionActionOrder(a) - permissionActionOrder(b) || (a.action_name || a.name || '').localeCompare(b.action_name || b.name || '')) })),
+      features: Array.from(features.entries()).sort(([a], [b]) => a.localeCompare(b)).map(([featureName, items]) => ({ name: featureName, items: [...items].sort((a, b) => a.name.localeCompare(b.name)) })),
     }))
   }, [permissions])
 
@@ -101,7 +101,7 @@ const RoleDetailPage = () => {
           <CCard className="mb-4">
             <CCardHeader className="d-flex justify-content-between align-items-center flex-wrap gap-2">
               <strong>Rincian Hak Akses</strong>
-              <span className="text-body fw-semibold">{role.permissions?.length ?? 0} akses diberikan dari {permissions.length} tersedia</span>
+              <span className="text-body fw-semibold">{role.features?.length ?? 0} akses diberikan dari {permissions.length} tersedia</span>
             </CCardHeader>
             <CCardBody>
               {groupedPermissions.length === 0 ? <div className="text-body-secondary text-center py-3">Role ini belum memiliki hak akses.</div> : (
@@ -157,8 +157,8 @@ const RoleDetailPage = () => {
                                   <CFormCheck
                                     className="fs-6 role-permission-checkbox"
                                     id={`role-permission-${permission.id}`}
-                                    label={permission.action_name ? `${permission.name} (${permission.action_name})` : permission.name}
-                                    checked={(role.permissions || []).some((assigned) => String(assigned.id) === String(permission.id))}
+                                    label={permission.name}
+                                    checked={(role.features || []).some((assigned) => String(assigned.id) === String(permission.id))}
                                     disabled
                                   />
                                 </CCol>

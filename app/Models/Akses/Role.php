@@ -19,9 +19,9 @@ class Role extends Model
         });
     }
 
-    public function permissions()
+    public function features()
     {
-        return $this->belongsToMany(Permission::class, 'role_permissions');
+        return $this->belongsToMany(PermissionFeature::class, 'role_permission_features', 'role_id', 'permission_feature_id');
     }
 
     public function users()

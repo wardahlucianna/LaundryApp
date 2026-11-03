@@ -31,7 +31,7 @@ const Login = () => {
       : '/api'
 
     try {
-      const response = await fetch(`${apiBase}/auth/login`, {
+      const configuredOrigin = configuredBase.replace(/\\/api$/, '')\n      await fetch(`${configuredOrigin}/sanctum/csrf-cookie`, { credentials: 'include' })\n      const response = await fetch(`${apiBase}/auth/login`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -48,7 +48,7 @@ const Login = () => {
         throw new Error(validationMessage || payload.message || 'Username atau password salah.')
       }
 
-      localStorage.setItem('auth_token', payload.token)
+      // Session cookie is managed by Laravel; no bearer token is stored.
       navigate('/dashboard', { replace: true })
     } catch (requestError) {
       setError(requestError.message || 'Tidak dapat menghubungi server.')
