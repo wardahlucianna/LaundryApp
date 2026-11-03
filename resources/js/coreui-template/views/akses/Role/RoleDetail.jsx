@@ -2,8 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import {
   CAlert, CBadge, CButton, CCard, CCardBody, CCardHeader, CCol,
-  CRow, CSpinner, CTable, CTableBody, CTableDataCell, CTableHead,
-  CTableHeaderCell, CTableRow,
+  CRow, CSpinner,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilArrowLeft, cilPencil } from '@coreui/icons'
@@ -79,22 +78,38 @@ const RoleDetailPage = () => {
             </CCardBody>
           </CCard>
           <CCard className="mb-4">
-            <CCardHeader className="d-flex justify-content-between align-items-center flex-wrap gap-2"><strong>Rincian Hak Akses</strong><CBadge color="warning">{role.permissions?.length ?? 0} hak akses</CBadge></CCardHeader>
+            <CCardHeader className="d-flex justify-content-between align-items-center flex-wrap gap-2">
+              <strong>Rincian Hak Akses</strong>
+              <CBadge color="primary">{role.permissions?.length ?? 0} akses diberikan</CBadge>
+            </CCardHeader>
             <CCardBody>
               {groupedPermissions.length === 0 ? <div className="text-body-secondary text-center py-3">Role ini belum memiliki hak akses.</div> : (
-                <CTable responsive hover align="middle">
-                  <CTableHead><CTableRow><CTableHeaderCell>Grup</CTableHeaderCell><CTableHeaderCell>Fitur</CTableHeaderCell><CTableHeaderCell>Aksi / Permission</CTableHeaderCell><CTableHeaderCell>Kode Permission</CTableHeaderCell></CTableRow></CTableHead>
-                  <CTableBody>
-                    {groupedPermissions.map((feature) => feature.actions.map((permission, index) => (
-                      <CTableRow key={permission.id}>
-                        {index === 0 && <CTableDataCell rowSpan={feature.actions.length}>{feature.groupName}</CTableDataCell>}
-                        {index === 0 && <CTableDataCell rowSpan={feature.actions.length} className="fw-semibold">{feature.featureName}</CTableDataCell>}
-                        <CTableDataCell>{permission.action_name || permission.name || '-'}</CTableDataCell>
-                        <CTableDataCell><code>{permission.code || '-'}</code></CTableDataCell>
-                      </CTableRow>
-                    )))}
-                  </CTableBody>
-                </CTable>
+                <div className="d-flex flex-column gap-3">
+                  {groupedPermissions.map((feature) => (
+                    <CCard key={`${feature.groupName}-${feature.featureName}`} className="border">
+                      <CCardHeader className="py-2 d-flex flex-wrap align-items-center justify-content-between gap-2">
+                        <div>
+                          <div className="small text-body-secondary">{feature.groupName}</div>
+                          <strong>{feature.featureName}</strong>
+                        </div>
+                        <CBadge color="secondary">{feature.actions.length} akses</CBadge>
+                      </CCardHeader>
+                      <CCardBody>
+                        <CRow className="g-2">
+                          {feature.actions.map((permission) => (
+                            <CCol xs={12} sm={6} md={4} key={permission.id}>
+                              <div className="rounded border p-3 h-100">
+                                <div className="fw-semibold mb-2">{permission.action_name || permission.name || '-'}</div>
+                                <CBadge color="success" className="mb-2">Diizinkan</CBadge>
+                                <div className="small text-body-secondary"><code>{permission.code || '-'}</code></div>
+                              </div>
+                            </CCol>
+                          ))}
+                        </CRow>
+                      </CCardBody>
+                    </CCard>
+                  ))}
+                </div>
               )}
             </CCardBody>
           </CCard>
