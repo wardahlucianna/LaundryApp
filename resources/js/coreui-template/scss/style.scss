@@ -510,3 +510,54 @@ small {
   width: .8rem;
   height: .8rem;
 }
+
+
+/* Standardize action buttons inside data tables across all modules */
+.table .table-actions,
+.table .d-flex.gap-1,
+.table .d-flex.gap-2,
+.table .d-inline-flex.gap-1,
+.table .d-inline-flex.gap-2 {
+  align-items: center;
+  justify-content: center;
+  gap: .375rem !important;
+}
+
+/* Icon-only table actions (view/edit/delete/status) use a consistent square size */
+.table .table-actions .btn,
+.table .d-flex.gap-1 .btn,
+.table .d-flex.gap-2 .btn,
+.table .d-inline-flex.gap-1 .btn,
+.table .d-inline-flex.gap-2 .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  min-width: 2rem;
+  height: 2rem;
+  min-height: 2rem;
+  padding: 0;
+  font-size: .75rem;
+  line-height: 1;
+  border-radius: .375rem;
+}
+
+.table .table-actions .btn svg,
+.table .d-flex.gap-1 .btn svg,
+.table .d-flex.gap-2 .btn svg,
+.table .d-inline-flex.gap-1 .btn svg,
+.table .d-inline-flex.gap-2 .btn svg {
+  width: .875rem;
+  height: .875rem;
+  flex: 0 0 .875rem;
+}
+
+/* Labeled actions in tables keep compact height and natural width */
+.table .btn:not(.table-actions .btn):not(.d-flex.gap-1 .btn):not(.d-flex.gap-2 .btn):not(.d-inline-flex.gap-1 .btn):not(.d-inline-flex.gap-2 .btn) {
+  min-height: 2rem;
+  height: 2rem;
+  padding: .25rem .625rem;
+  font-size: .75rem;
+  line-height: 1.25;
+  border-radius: .375rem;
+}
