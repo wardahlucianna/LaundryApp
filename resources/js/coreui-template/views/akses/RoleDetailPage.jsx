@@ -7,6 +7,7 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilArrowLeft, cilPencil } from '@coreui/icons'
+import RolePageLayout from './RolePageLayout'
 
 const apiBase = (() => {
   const base = (import.meta.env.VITE_API_URL || '').replace(/\\/$/, '')
@@ -53,15 +54,15 @@ const RoleDetailPage = () => {
   }, [role])
 
   return (
-    <div className="role-detail-page">
+    <RolePageLayout title="Detail Role" description="Informasi role dan hak akses yang diberikan." errorMessage={error} onDismissError={() => setError('')}>
+      <div className="role-detail-page">
       <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-        <div><h2 className="fs-4 mb-1">Detail Role</h2><div className="small text-body-secondary">Informasi role dan hak akses yang diberikan.</div></div>
+        <div>
         <div className="d-flex gap-2">
           <CButton color="secondary" variant="outline" size="sm" onClick={() => navigate('/roles/list')}><CIcon icon={cilArrowLeft} className="me-1" />Kembali</CButton>
           {role && <CButton color="primary" size="sm" onClick={() => navigate(`/roles/form/${role.id}`)}><CIcon icon={cilPencil} className="me-1" />Edit Role</CButton>}
         </div>
       </div>
-      {error && <CAlert color="danger" dismissible onClose={() => setError('')}>{error}</CAlert>}
       {loading ? <div className="d-flex align-items-center gap-2 py-4 text-body-secondary"><CSpinner size="sm" />Memuat detail role...</div> : role && (
         <>
           <CCard className="mb-4">
@@ -97,7 +98,8 @@ const RoleDetailPage = () => {
           </CCard>
         </>
       )}
-    </div>
+      </div>
+    </RolePageLayout>
   )
 }
 
