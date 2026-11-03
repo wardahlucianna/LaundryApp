@@ -1,10 +1,10 @@
 <?php
 
-namespace App\\Http\\Controllers\\Api\\Master\\Akses;
+namespace App\Http\Controllers\Api\Master\Akses;
 
-use App\\Http\\Controllers\\Controller;
-use App\\Models\\Akses\\PermissionGroup;
-use Illuminate\\Http\\Request;
+use App\Http\Controllers\Controller;
+use App\Models\Akses\PermissionGroup;
+use Illuminate\Http\Request;
 
 class PermissionGroupController extends Controller
 {
