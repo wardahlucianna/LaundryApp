@@ -21,7 +21,16 @@ const AppContent = () => {
             )
           ))}
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          <Route
+            path="*"
+            element={(
+              <div className="pt-4">
+                <h2 className="fs-4 mb-2">Halaman tidak ditemukan</h2>
+                <p className="text-body-secondary">Path menu belum terdaftar pada aplikasi.</p>
+                <a href="/dashboard">Kembali ke Dashboard</a>
+              </div>
+            )}
+          />
         </Routes>
       </Suspense>
     </CContainer>
