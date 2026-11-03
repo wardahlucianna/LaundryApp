@@ -5,7 +5,7 @@ import {
   CRow, CSpinner,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilArrowLeft, cilPencil } from '@coreui/icons'
+import { cilArrowLeft, cilPencil, cilChevronBottom, cilChevronRight } from '@coreui/icons'
 
 const apiBase = (() => {
   const base = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
@@ -17,6 +17,7 @@ const RoleDetailPage = () => {
   const navigate = useNavigate()
   const [role, setRole] = useState(null)
   const [permissions, setPermissions] = useState([])
+  const [collapsedGroups, setCollapsedGroups] = useState({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -98,8 +99,18 @@ const RoleDetailPage = () => {
                   <style>{" .role-permission-checkbox .form-check-input { width: 1.15rem; height: 1.15rem; margin-top: 0.15rem; } .role-permission-checkbox .form-check-input:disabled { opacity: 1; } .role-permission-checkbox .form-check-input:checked, .role-permission-checkbox .form-check-input:checked:disabled { background-color: #0d6efd; border-color: #0d6efd; } .role-permission-checkbox .form-check-label, .role-permission-checkbox .form-check-input:disabled ~ .form-check-label { padding-left: 0.25rem; color: var(--cui-body-color) !important; opacity: 1 !important; } "}</style>
                   {groupedPermissions.map((group) => (
                     <CCard key={group.name} className="border">
-                      <CCardHeader className="py-2"><strong>{group.name}</strong></CCardHeader>
-                      <CCardBody className="d-flex flex-column gap-3">
+                      <CCardHeader className="py-2">
+                        <CButton
+                          color="link"
+                          className="d-flex align-items-center justify-content-between w-100 p-0 text-decoration-none text-body fw-semibold"
+                          onClick={() => setCollapsedGroups((current) => ({ ...current, [group.name]: !current[group.name] }))}
+                          aria-expanded={!collapsedGroups[group.name]}
+                        >
+                          <span>{group.name}</span>
+                          <CIcon icon={collapsedGroups[group.name] ? cilChevronRight : cilChevronBottom} />
+                        </CButton>
+                      </CCardHeader>
+                      {!collapsedGroups[group.name] && <CCardBody className="d-flex flex-column gap-3">
                         {group.features.map((feature) => (
                           <div key={feature.name}>
                             <div className="fw-semibold mb-2">{feature.name}</div>
@@ -118,7 +129,7 @@ const RoleDetailPage = () => {
                             </CRow>
                           </div>
                         ))}
-                      </CCardBody>
+                      </CCardBody>}
                     </CCard>
                   ))}
                 </div>
