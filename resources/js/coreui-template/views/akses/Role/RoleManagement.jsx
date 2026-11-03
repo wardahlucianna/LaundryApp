@@ -71,6 +71,7 @@ const RoleManagement = () => {
 
   const openCreate = () => navigate('/roles/form')
   const openEdit = (role) => navigate(`/roles/form/${role.id}`)
+  const openDetail = (role) => navigate(`/roles/detail/${role.id}`)
 
   const handleDelete = (role) => {
     if (role.code === 'SUPERADMIN') {
@@ -122,6 +123,7 @@ const RoleManagement = () => {
           loading={loading}
           loadRoles={loadRoles}
           onCreate={openCreate}
+          onDetail={openDetail}
           onEdit={openEdit}
           onDelete={handleDelete}
           roleToDelete={roleToDelete}
