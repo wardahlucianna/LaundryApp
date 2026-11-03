@@ -70,6 +70,8 @@ const RoleFormPage = () => {
       const payload = await request(id ? `/roles/${id}` : '/roles', { method: id ? 'PUT' : 'POST', body: JSON.stringify({ name: values.name.trim(), is_active: values.is_active }) })
       const saved = payload.data || payload
       if (values.name.trim().toUpperCase() !== 'SUPER ADMIN') await request(`/roles/${saved.id || id}/features`, { method: 'PUT', body: JSON.stringify({ feature_ids: selectedFeatureIds }) })
+      sessionStorage.removeItem('sunriseLaundryMenus')
+      window.dispatchEvent(new Event('sunrise:permissions-updated'))
       navigate('/roles/list', { state: { notice: id ? 'Role berhasil diperbarui.' : 'Role berhasil ditambahkan.' } })
     } catch (e) { setError(e.message || 'Gagal menyimpan role dan hak akses.') }
     finally { setSaving(false) }
