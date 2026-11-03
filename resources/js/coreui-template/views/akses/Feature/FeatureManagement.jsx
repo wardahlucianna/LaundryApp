@@ -77,7 +77,7 @@ const FeatureManagement = () => {
   const openEdit = (feature) => navigate(`/permissions/form/${feature.id}`)
 
   const deleteFeature = async (feature) => {
-    if (!window.confirm(`Yakin ingin menghapus fitur "${feature.name}"?\nFitur yang masih memiliki permission aksi tidak dapat dihapus.`)) return
+    if (!window.confirm(`Yakin ingin menghapus fitur "${feature.name}"?\nData fitur akan dihapus dari daftar.`)) return
     setError('')
     setNotice('')
     try {

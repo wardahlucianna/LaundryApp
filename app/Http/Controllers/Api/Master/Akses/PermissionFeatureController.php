@@ -11,7 +11,7 @@ class PermissionFeatureController extends Controller
 {
     public function index(Request $request)
     {
-        $query = PermissionFeature::query()->with('group')->withCount('actions')->orderBy('ordering')->orderBy('name');
+        $query = PermissionFeature::query()->with('group')->orderBy('ordering')->orderBy('name');
         if ($search = $request->string('search')->toString()) {
             $query->where(fn ($q) => $q->where('name', 'ilike', "%{$search}%")
                 ->orWhereHas('group', fn ($g) => $g->where('name', 'ilike', "%{$search}%")));
@@ -25,7 +25,7 @@ class PermissionFeatureController extends Controller
 
     public function show(PermissionFeature $permissionFeature)
     {
-        return response()->json(['data' => $permissionFeature->load('group')->loadCount('actions')]);
+        return response()->json(['data' => $permissionFeature->load('group')]);
     }
 
     public function store(Request $request)
@@ -57,9 +57,6 @@ class PermissionFeatureController extends Controller
 
     public function destroy(PermissionFeature $permissionFeature)
     {
-        if ($permissionFeature->actions()->exists()) {
-            return response()->json(['message' => 'Fitur masih memiliki aksi. Hapus atau pindahkan aksi terlebih dahulu.'], 422);
-        }
         $permissionFeature->delete();
         return response()->json(['message' => 'Fitur berhasil dihapus.']);
     }

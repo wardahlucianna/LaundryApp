@@ -21,9 +21,4 @@ class PermissionFeature extends Model
     {
         return $this->belongsTo(PermissionGroup::class, 'permission_group_id');
     }
-
-    public function actions()
-    {
-        return $this->hasMany(Permission::class, 'permission_feature_id');
-    }
 }
