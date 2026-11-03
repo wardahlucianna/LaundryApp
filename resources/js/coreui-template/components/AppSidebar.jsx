@@ -57,11 +57,22 @@ const AppSidebar = () => {
   const unfoldable = useSelector((state) => state.sidebarUnfoldable)
   const sidebarShow = useSelector((state) => state.sidebarShow)
   const buildNavigation = (groups) => {
+    const normalizeMenuPath = (feature) => {
+      // Keep Management Fitur connected to its registered route even if its DB path is stale.
+      if (String(feature.code || '').toUpperCase() === 'FEATURES') return '/permissions'
+      const path = String(feature.path || '').trim()
+      if (!path) return null
+      return path.startsWith('/') ? path : `/${path}`
+    }
     const groupIcons = { DASHBOARD: cilSpeedometer, TRANSACTIONS: cilCash, OPERATIONS: cilBasket, MASTER_DATA: cilPeople, SETTINGS: cilSettings, REPORTS: cilChartLine }
     const items = []
     ;(groups || []).forEach((group) => {
       const icon = <CIcon icon={groupIcons[group.code] || cilSettings} customClassName="nav-icon" />
-      const children = (group.items || []).map((feature) => ({ component: CNavItem, name: feature.name, to: feature.path }))
+      const children = (group.items || []).map((feature) => ({
+        component: CNavItem,
+        name: feature.name,
+        to: normalizeMenuPath(feature),
+      })).filter((item) => Boolean(item.to))
       if (group.code === 'DASHBOARD' && children.length === 1) items.push({ ...children[0], icon })
       else if (children.length) items.push({ component: CNavGroup, name: group.name, icon, items: children })
     })
