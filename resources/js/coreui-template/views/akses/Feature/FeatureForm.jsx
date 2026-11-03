@@ -12,7 +12,7 @@ const FeatureFormPage = () => {
   const { id } = useParams()
   const [feature, setFeature] = useState(null)
   const [groups, setGroups] = useState([])
-  const [values, setValues] = useState({ group_name: '', name: '', code: '', path: '', ordering: 0, menu_type: 'sidebar', is_active: true })
+  const [values, setValues] = useState({ group_name: '', name: '', path: '', ordering: 0, menu_type: 'sidebar', is_active: true })
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
@@ -49,7 +49,6 @@ const FeatureFormPage = () => {
         setValues({
           group_name: loadedFeature?.group?.name || availableGroups.find((group) => group.id === loadedFeature?.permission_group_id)?.name || '',
           name: loadedFeature?.name || '',
-          code: loadedFeature?.code || '',
           path: loadedFeature?.path || '',
           ordering: loadedFeature?.ordering ?? 0,
           menu_type: loadedFeature?.menu_type || 'sidebar',
@@ -79,8 +78,8 @@ const FeatureFormPage = () => {
   const save = async (event) => {
     event.preventDefault()
     setError('')
-    if (!values.group_name.trim() || !values.name.trim() || !values.code.trim()) {
-      setError('Kelompok fitur, nama fitur, dan kode fitur wajib diisi.')
+    if (!values.group_name.trim() || !values.name.trim()) {
+      setError('Kelompok fitur dan nama fitur wajib diisi.')
       return
     }
     setSaving(true)
@@ -89,7 +88,6 @@ const FeatureFormPage = () => {
       const body = {
         permission_group_id,
         name: values.name.trim(),
-        code: values.code.trim().toUpperCase().replace(/\s+/g, '_'),
         path: values.path.trim() || null,
         ordering: Number(values.ordering),
         menu_type: values.menu_type,

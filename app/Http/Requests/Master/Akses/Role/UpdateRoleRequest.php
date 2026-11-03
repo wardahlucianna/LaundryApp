@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Master\Akses\Role;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class UpdateRoleRequest extends FormRequest
 {
@@ -18,14 +17,6 @@ class UpdateRoleRequest extends FormRequest
 
         return [
             'name' => ['sometimes', 'required', 'string', 'max:100'],
-            'code' => [
-                'sometimes',
-                'required',
-                'string',
-                'max:60',
-                'alpha_dash',
-                Rule::unique('roles', 'code')->ignore($role?->id),
-            ],
             'is_active' => ['sometimes', 'boolean'],
         ];
     }

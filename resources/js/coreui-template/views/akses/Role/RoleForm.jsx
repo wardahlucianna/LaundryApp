@@ -6,7 +6,7 @@ const apiBase = (() => { const base = (import.meta.env.VITE_API_URL || '').repla
 const RoleFormPage = () => {
   const navigate = useNavigate(); const { id } = useParams()
   const [role, setRole] = useState(null); const [features, setFeatures] = useState([])
-  const [values, setValues] = useState({ name: '', code: '', is_active: true })
+  const [values, setValues] = useState({ name: '', is_active: true })
   const [selectedFeatureIds, setSelectedFeatureIds] = useState([])
   const [loading, setLoading] = useState(true); const [saving, setSaving] = useState(false); const [error, setError] = useState(''); const [validation, setValidation] = useState('')
   const request = useCallback(async (path, options = {}) => {
@@ -24,7 +24,7 @@ const RoleFormPage = () => {
         const loadedRole = rolePayload?.data || rolePayload
         const available = featuresPayload.data || []
         setFeatures(available); setRole(loadedRole || null)
-        setValues({ name: loadedRole?.name || '', code: loadedRole?.code || '', is_active: loadedRole ? Boolean(loadedRole.is_active) : true })
+        setValues({ name: loadedRole?.name || '', is_active: loadedRole ? Boolean(loadedRole.is_active) : true })
         setSelectedFeatureIds((loadedRole?.features || []).map((feature) => feature.id))
       } catch (e) { if (active) setError(e.message || 'Gagal memuat data role dan fitur.') }
       finally { if (active) setLoading(false) }
@@ -39,12 +39,12 @@ const RoleFormPage = () => {
   const toggleFeature = (featureId, checked) => setSelectedFeatureIds((current) => checked ? [...new Set([...current, featureId])] : current.filter((item) => item !== featureId))
   const save = async (event) => {
     event.preventDefault(); setValidation(''); setError('')
-    if (!values.name.trim() || !values.code.trim()) { setValidation('Nama dan kode role wajib diisi.'); return }
+    if (!values.name.trim()) { setValidation('Nama role wajib diisi.'); return }
     setSaving(true)
     try {
-      const payload = await request(id ? `/roles/${id}` : '/roles', { method: id ? 'PUT' : 'POST', body: JSON.stringify({ name: values.name.trim(), code: values.code.trim(), is_active: values.is_active }) })
+      const payload = await request(id ? `/roles/${id}` : '/roles', { method: id ? 'PUT' : 'POST', body: JSON.stringify({ name: values.name.trim(), is_active: values.is_active }) })
       const saved = payload.data || payload
-      if (values.code.trim().toUpperCase() !== 'SUPERADMIN') await request(`/roles/${saved.id || id}/features`, { method: 'PUT', body: JSON.stringify({ feature_ids: selectedFeatureIds }) })
+      if (values.name.trim().toUpperCase() !== 'SUPER ADMIN') await request(`/roles/${saved.id || id}/features`, { method: 'PUT', body: JSON.stringify({ feature_ids: selectedFeatureIds }) })
       navigate('/roles/list', { state: { notice: id ? 'Role berhasil diperbarui.' : 'Role berhasil ditambahkan.' } })
     } catch (e) { setError(e.message || 'Gagal menyimpan role dan hak akses.') }
     finally { setSaving(false) }

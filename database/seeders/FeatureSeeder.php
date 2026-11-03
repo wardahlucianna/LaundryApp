@@ -49,7 +49,7 @@ class FeatureSeeder extends Seeder
         $featureModels = [];
         foreach ($features as [$groupCode, $name, $code, $path, $viewCode]) {
             $featureModels[$code] = PermissionFeature::updateOrCreate(
-                ['code' => $code],
+                ['path' => $path],
                 [
                     'permission_group_id' => $groupModels[$groupCode]->id,
                     'name' => $name,
@@ -86,9 +86,9 @@ class FeatureSeeder extends Seeder
             }
         }
 
-        $superAdmin = Role::where('code', 'OWNER')->first();
-        if ($superAdmin) $superAdmin->update(['code' => 'SUPERADMIN', 'name' => 'Super Admin', 'is_active' => true]);
-        else $superAdmin = Role::updateOrCreate(['code' => 'SUPERADMIN'], ['name' => 'Super Admin', 'is_active' => true]);
+        $superAdmin = Role::where('name', 'Owner')->first();
+        if ($superAdmin) $superAdmin->update(['name' => 'Super Admin', 'is_active' => true]);
+        else $superAdmin = Role::updateOrCreate(['name' => 'Super Admin'], ['is_active' => true]);
         $superAdmin->permissions()->sync($permissions->pluck('id'));
 
         User::where('role_id', $superAdmin->id)->where('username', 'owner')->update([
@@ -96,11 +96,11 @@ class FeatureSeeder extends Seeder
             'email' => env('INITIAL_SUPERADMIN_EMAIL', 'superadmin@sunrise.local'),
         ]);
 
-        $admin = Role::updateOrCreate(['code' => 'ADMIN'], ['name' => 'Administrator', 'is_active' => true]);
+        $admin = Role::updateOrCreate(['name' => 'Administrator'], ['is_active' => true]);
         $admin->permissions()->sync($permissions->reject(fn ($permission) => $permission->code === 'ACCESS_MANAGE')->pluck('id'));
-        $cashier = Role::updateOrCreate(['code' => 'KASIR'], ['name' => 'Kasir', 'is_active' => true]);
+        $cashier = Role::updateOrCreate(['name' => 'Kasir'], ['is_active' => true]);
         $cashier->permissions()->sync($permissions->whereIn('code', ['DASHBOARD_VIEW', 'TRANSACTION_VIEW', 'TRANSACTION_CREATE', 'TRANSACTION_UPDATE', 'ORDERS_VIEW', 'CUSTOMER_VIEW', 'PAYMENT_VIEW'])->pluck('id'));
-        $operator = Role::updateOrCreate(['code' => 'OPERATOR'], ['name' => 'Operator Laundry', 'is_active' => true]);
+        $operator = Role::updateOrCreate(['name' => 'Operator Laundry'], ['is_active' => true]);
         $operator->permissions()->sync($permissions->whereIn('code', ['DASHBOARD_VIEW', 'ORDERS_VIEW', 'LAUNDRY_PROCESS_VIEW'])->pluck('id'));
 
         if (!User::query()->exists()) {

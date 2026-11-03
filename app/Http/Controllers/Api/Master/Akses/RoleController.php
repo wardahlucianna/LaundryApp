@@ -16,7 +16,7 @@ class RoleController extends Controller
     {
         $query = Role::query()->withCount('features')->orderBy('name');
         if ($search = $request->string('search')->toString()) {
-            $query->where(fn ($q) => $q->where('name', 'ilike', "%{$search}%")->orWhere('code', 'ilike', "%{$search}%"));
+            $query->where(fn ($q) => $q->where('name', 'ilike', "%{$search}%"));
         }
         if ($request->has('is_active')) $query->where('is_active', $request->boolean('is_active'));
         return response()->json($query->paginate(min(max($request->integer('per_page', 10), 1), 100)));
@@ -40,7 +40,7 @@ class RoleController extends Controller
 
     public function destroy(Role $role)
     {
-        if ($role->code === 'SUPERADMIN') throw ValidationException::withMessages(['role' => 'Role SUPERADMIN tidak dapat dihapus.']);
+        if (strtoupper(trim($role->name)) === 'SUPER ADMIN') throw ValidationException::withMessages(['role' => 'Role SUPERADMIN tidak dapat dihapus.']);
         if ($role->users()->exists()) throw ValidationException::withMessages(['role' => 'Role masih digunakan oleh pengguna.']);
         $role->delete();
         return response()->json(['message' => 'Role berhasil dihapus.']);

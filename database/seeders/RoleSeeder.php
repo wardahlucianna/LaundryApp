@@ -10,16 +10,16 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         $roles = [
-            ['code' => 'SUPERADMIN', 'name' => 'Super Admin'],
-            ['code' => 'ADMIN', 'name' => 'Administrator'],
-            ['code' => 'KASIR', 'name' => 'Kasir'],
-            ['code' => 'OPERATOR', 'name' => 'Operator Laundry'],
+            ['name' => 'Super Admin'],
+            ['name' => 'Administrator'],
+            ['name' => 'Kasir'],
+            ['name' => 'Operator Laundry'],
         ];
 
         foreach ($roles as $role) {
             Role::updateOrCreate(
-                ['code' => $role['code']],
-                ['name' => $role['name'], 'is_active' => true],
+                ['name' => $role['name']],
+                ['is_active' => true],
             );
         }
 

@@ -76,8 +76,8 @@ const RoleManagement = () => {
   const openDetail = (role) => navigate(`/roles/detail/${role.id}`)
 
   const handleDelete = (role) => {
-    if (role.code === 'SUPERADMIN') {
-      setError('Role SUPERADMIN tidak dapat dihapus.')
+    if (String(role.name || '').trim().toUpperCase() === 'SUPER ADMIN') {
+      setError('Role Super Admin tidak dapat dihapus.')
       return
     }
     setRoleToDelete(role)
