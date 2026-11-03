@@ -4,7 +4,9 @@ const RoleManagement = React.lazy(() => import('./views/akses/Role/RoleManagemen
 const RoleFormPage = React.lazy(() => import('./views/akses/Role/RoleForm'))
 const RoleDetailPage = React.lazy(() => import('./views/akses/Role/RoleDetail'))
 const FeatureManagement = React.lazy(() => import('./views/akses/Feature/FeatureManagement'))
-const GroupManagement = React.lazy(() => import('./views/akses/Group/GroupManagement'))
+const GroupFeatureManagement = React.lazy(() => import('./views/akses/GroupFeature/GroupFeatureManagement'))
+const GroupFeatureFormPage = React.lazy(() => import('./views/akses/GroupFeature/GroupFeatureForm'))
+const GroupFeatureDetailPage = React.lazy(() => import('./views/akses/GroupFeature/GroupFeatureDetail'))
 const FeatureFormPage = React.lazy(() => import('./views/akses/Feature/FeatureForm'))
 const Placeholder = ({ title }) => <div className="pt-4"><h2>{title}</h2><p>Halaman ini akan diintegrasikan dengan fitur Sunrise Laundry.</p></div>
 export const routes = [
@@ -15,7 +17,10 @@ export const routes = [
   { path: '/reports', name: 'Laporan', element: () => <Placeholder title="Laporan" /> },
   { path: '/settings', name: 'Pengaturan', element: () => <Placeholder title="Pengaturan" /> },
   { path: '/permissions', name: 'Management Fitur', element: FeatureManagement },
-  { path: '/permission-groups', name: 'Management Group', element: GroupManagement },
+  { path: '/permission-groups', name: 'Management Group Feature', element: GroupFeatureManagement },
+  { path: '/permission-groups/form', name: 'Form Group Feature', element: GroupFeatureFormPage },
+  { path: '/permission-groups/form/:id', name: 'Edit Group Feature', element: GroupFeatureFormPage },
+  { path: '/permission-groups/detail/:id', name: 'Detail Group Feature', element: GroupFeatureDetailPage },
   { path: '/permissions/form', name: 'Form Fitur', element: FeatureFormPage },
   { path: '/permissions/form/:id', name: 'Edit Fitur', element: FeatureFormPage },
   { path: '/roles', name: 'Manajemen Role', element: RoleManagement },
