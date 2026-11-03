@@ -12,6 +12,8 @@ const FeatureFormPage = () => {
   const { id } = useParams()
   const [feature, setFeature] = useState(null)
   const [groups, setGroups] = useState([])
+  const [groupSearch, setGroupSearch] = useState('')
+  const [groupDropdownOpen, setGroupDropdownOpen] = useState(false)
   const [values, setValues] = useState({ permission_group_id: '', name: '', path: '', ordering: 0, menu_type: 'sidebar', is_active: true })
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -46,8 +48,11 @@ const FeatureFormPage = () => {
         const loadedFeature = featurePayload ? (featurePayload.data || featurePayload) : null
         setGroups(availableGroups)
         setFeature(loadedFeature)
+        const selectedGroupId = String(loadedFeature?.permission_group_id || loadedFeature?.group?.id || '')
+        const selectedGroup = availableGroups.find((group) => String(group.id) === selectedGroupId)
+        setGroupSearch(selectedGroup?.name || loadedFeature?.group?.name || '')
         setValues({
-          permission_group_id: String(loadedFeature?.permission_group_id || loadedFeature?.group?.id || ''),
+          permission_group_id: selectedGroupId,
           name: loadedFeature?.name || '',
           path: loadedFeature?.path || '',
           ordering: loadedFeature?.ordering ?? 0,
@@ -106,7 +111,42 @@ const FeatureFormPage = () => {
             <CCardBody>
               <CForm onSubmit={save}>
                 <CRow className="g-3">
-                  <CCol xs={12} md={6}><CFormSelect label="Kelompok Fitur" value={values.permission_group_id} onChange={(e) => setValues((v) => ({ ...v, permission_group_id: e.target.value }))} required><option value="">Pilih Kelompok Fitur</option>{groups.filter((group) => Boolean(group.is_active) || String(group.id) === String(values.permission_group_id)).map((group) => <option key={group.id} value={group.id}>{group.name}{!group.is_active ? ' (Nonaktif)' : ''}</option>)}</CFormSelect></CCol>
+                  <CCol xs={12} md={6}>
+                    <label className="form-label">Kelompok Fitur <span className="text-danger">*</span></label>
+                    <div className="position-relative">
+                      <CFormInput
+                        value={groupSearch}
+                        placeholder="Ketik untuk mencari kelompok fitur..."
+                        autoComplete="off"
+                        required={!values.permission_group_id}
+                        onFocus={() => setGroupDropdownOpen(true)}
+                        onChange={(e) => {
+                          setGroupSearch(e.target.value)
+                          setGroupDropdownOpen(true)
+                          setValues((v) => ({ ...v, permission_group_id: '' }))
+                        }}
+                        onBlur={() => setTimeout(() => setGroupDropdownOpen(false), 150)}
+                      />
+                      {groupDropdownOpen && (
+                        <div className="position-absolute top-100 start-0 w-100 bg-white border rounded shadow-sm mt-1" style={{ zIndex: 1050, maxHeight: 220, overflowY: 'auto' }}>
+                          {groups.filter((group) => (Boolean(group.is_active) || String(group.id) === String(values.permission_group_id)) && group.name.toLowerCase().includes(groupSearch.trim().toLowerCase())).map((group) => (
+                            <button
+                              key={group.id}
+                              type="button"
+                              className="dropdown-item text-start px-3 py-2"
+                              onMouseDown={(e) => e.preventDefault()}
+                              onClick={() => {
+                                setValues((v) => ({ ...v, permission_group_id: String(group.id) }))
+                                setGroupSearch(group.name)
+                                setGroupDropdownOpen(false)
+                              }}
+                            >{group.name}{!group.is_active ? ' (Nonaktif)' : ''}</button>
+                          ))}
+                          {groups.filter((group) => (Boolean(group.is_active) || String(group.id) === String(values.permission_group_id)) && group.name.toLowerCase().includes(groupSearch.trim().toLowerCase())).length === 0 && <div className="px-3 py-2 text-body-secondary small">Kelompok fitur tidak ditemukan.</div>}
+                        </div>
+                      )}
+                    </div>
+                  </CCol>
                   <CCol xs={12} md={6}><CFormInput label="Nama Fitur" placeholder="Contoh: Manajemen Fitur" value={values.name} onChange={(e) => setValues((v) => ({ ...v, name: e.target.value }))} required maxLength={120} /></CCol>
                   <CCol xs={12} md={6}><CFormInput label="Path Menu" placeholder="Contoh: /permissions" value={values.path} onChange={(e) => setValues((v) => ({ ...v, path: e.target.value }))} maxLength={255} /></CCol>
                   <CCol xs={12} md={6}><CFormInput label="Ordering / Urutan" type="number" min={0} step={1} value={values.ordering} onChange={(e) => setValues((v) => ({ ...v, ordering: e.target.value }))} required /></CCol>
