@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/roles', [RoleController::class, 'index'])->middleware('permission:ROLE_VIEW');
     Route::post('/roles', [RoleController::class, 'store'])->middleware('permission:ROLE_MANAGE');
+    Route::get('/roles/features/options', [RoleController::class, 'featureOptions'])->middleware('permission:ROLE_VIEW');
     Route::get('/roles/{role}', [RoleController::class, 'show'])->middleware('permission:ROLE_VIEW');
     Route::put('/roles/{role}', [RoleController::class, 'update'])->middleware('permission:ROLE_MANAGE');
     Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->middleware('permission:ROLE_MANAGE');
