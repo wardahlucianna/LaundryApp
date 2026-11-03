@@ -18,8 +18,8 @@ const FeatureList = ({ features, groups, searchInput, setSearchInput, statusFilt
       </CCardHeader>
       <CCardBody>
         <CRow className="mb-3"><CCol xs={12} md={8} lg={6}><div className="d-flex flex-wrap gap-2 w-100">
-          <CFormInput placeholder="Cari nama, kode, atau kelompok fitur" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') applySearch() }} aria-label="Cari fitur" className="flex-grow-1" />
-          <CButton color="primary" size="sm" className="role-compact-button role-search-button" onClick={applySearch}><CIcon icon={cilSearch} size="sm" className="me-1" />Cari</CButton><CFormSelect aria-label="Filter status fitur" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} style={{ maxWidth: "160px" }} options={[{ label: "Semua Status", value: "" }, { label: "Aktif", value: "1" }, { label: "Nonaktif", value: "0" }]} />
+          <CFormInput placeholder="Cari nama, kode, atau kelompok fitur" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') applySearch() }} aria-label="Cari fitur" className="flex-grow-1" /><CFormSelect aria-label="Filter status fitur" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} style={{ maxWidth: "160px" }} options={[{ label: "Semua Status", value: "" }, { label: "Aktif", value: "1" }, { label: "Nonaktif", value: "0" }]} />
+          <CButton color="primary" size="sm" className="role-compact-button role-search-button" onClick={applySearch}><CIcon icon={cilSearch} size="sm" className="me-1" />Cari</CButton>
           <CButton color="secondary" variant="outline" size="sm" className="role-compact-button role-reset-button" onClick={resetSearch}><CIcon icon={cilReload} size="sm" className="me-1" />Reset</CButton>
         </div></CCol></CRow>
         <CTable hover responsive align="middle" className="role-table">
