@@ -83,10 +83,15 @@ const AppSidebar = () => {
     }
 
     loadMenus()
+    // Keep sidebar permissions in sync when an administrator changes a role.
+    const refreshInterval = window.setInterval(loadMenus, 15000)
     window.addEventListener('focus', loadMenus)
+    window.addEventListener('sunrise:permissions-updated', loadMenus)
     return () => {
       cancelled = true
+      window.clearInterval(refreshInterval)
       window.removeEventListener('focus', loadMenus)
+      window.removeEventListener('sunrise:permissions-updated', loadMenus)
     }
   }, [])
 
