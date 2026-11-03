@@ -7,7 +7,7 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import ConfirmModal from '../../components/ConfirmModal'
-import { cilPencil, cilPlus, cilSearch, cilTrash, cilReload } from '@coreui/icons'
+import { cilPencil, cilPlus, cilSearch, cilTrash, cilReload, cilInfo } from '@coreui/icons'
 
 const apiBase = (() => {
   const configuredBase = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
@@ -78,6 +78,7 @@ const RoleManagement = () => {
 
   const openCreate = () => navigate('/roles/form')
   const openEdit = (role) => navigate(`/roles/form/${role.id}`)
+  const openDetail = (role) => navigate(`/roles/detail/${role.id}`)
 
   const handleDelete = async (role) => {
     if (role.code === 'SUPERADMIN') {
