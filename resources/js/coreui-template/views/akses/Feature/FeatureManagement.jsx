@@ -91,7 +91,7 @@ const FeatureManagement = () => {
   const resetSearch = () => { setSearchInput(''); setPage(1); setSearch('') }
 
   return (
-    <div className="role-page-layout mb-4">
+    <div className="role-list-page role-page-layout mb-4">
       <div className="mb-3"><h2 className="fs-4 mb-1">Management Fitur</h2></div>
       {notice && <CAlert color="success" dismissible onClose={() => setNotice('')}>{notice}</CAlert>}
       {error && <CAlert color="danger" dismissible onClose={() => setError('')}>{error}</CAlert>}
