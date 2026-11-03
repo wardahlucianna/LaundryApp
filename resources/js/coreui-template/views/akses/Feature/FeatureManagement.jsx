@@ -1,14 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { CAlert } from '@coreui/react'
 import FeatureList from './FeatureList'
-import FeatureForm from './FeatureForm'
 
 const apiBase = (() => {
   const base = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
   return base ? (base.endsWith('/api') ? base : `${base}/api`) : '/api'
 })()
-
-const emptyForm = { permission_group_id: '', name: '', code: '', path: '', menu_type: 'sidebar', is_active: true }
 
 const FeatureManagement = () => {
   const [features, setFeatures] = useState([])
@@ -18,12 +16,17 @@ const FeatureManagement = () => {
   const [page, setPage] = useState(1)
   const [pagination, setPagination] = useState({ current_page: 1, last_page: 1, total: 0 })
   const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
-  const [modalVisible, setModalVisible] = useState(false)
-  const [editingFeature, setEditingFeature] = useState(null)
-  const [form, setForm] = useState(emptyForm)
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  useEffect(() => {
+    if (location.state?.notice) {
+      setNotice(location.state.notice)
+      navigate(location.pathname, { replace: true, state: {} })
+    }
+  }, [location, navigate])
 
   const request = useCallback(async (path, options = {}) => {
     const token = localStorage.getItem('auth_token') || localStorage.getItem('access_token') || localStorage.getItem('token') || ''
@@ -68,54 +71,8 @@ const FeatureManagement = () => {
   useEffect(() => { loadGroups().catch((e) => setError(e.message || 'Gagal memuat kelompok fitur.')) }, [loadGroups])
   useEffect(() => { loadFeatures() }, [loadFeatures])
 
-  const openCreate = () => {
-    setEditingFeature(null)
-    setForm({ ...emptyForm, permission_group_id: groups[0]?.id || '' })
-    setError('')
-    setModalVisible(true)
-  }
-
-  const openEdit = (feature) => {
-    setEditingFeature(feature)
-    setForm({
-      permission_group_id: feature.permission_group_id || feature.group?.id || '',
-      name: feature.name || '',
-      code: feature.code || '',
-      path: feature.path || '',
-      menu_type: feature.menu_type || 'sidebar',
-      is_active: Boolean(feature.is_active),
-    })
-    setError('')
-    setModalVisible(true)
-  }
-
-  const saveFeature = async (event) => {
-    event.preventDefault()
-    setSaving(true)
-    setError('')
-    setNotice('')
-    try {
-      const body = {
-        permission_group_id: form.permission_group_id,
-        name: form.name.trim(),
-        code: form.code.trim().toUpperCase().replace(/\s+/g, '_'),
-        path: form.path.trim() || null,
-        menu_type: form.menu_type,
-        is_active: form.is_active,
-      }
-      await request(editingFeature ? `/permission-features/${editingFeature.id}` : '/permission-features', {
-        method: editingFeature ? 'PUT' : 'POST',
-        body: JSON.stringify(body),
-      })
-      setModalVisible(false)
-      setNotice(editingFeature ? 'Fitur berhasil diperbarui.' : 'Fitur berhasil ditambahkan.')
-      await loadFeatures()
-    } catch (e) {
-      setError(e.message || 'Gagal menyimpan fitur.')
-    } finally {
-      setSaving(false)
-    }
-  }
+  const openCreate = () => navigate('/permissions/form')
+  const openEdit = (feature) => navigate(`/permissions/form/${feature.id}`)
 
   const deleteFeature = async (feature) => {
     if (!window.confirm(`Yakin ingin menghapus fitur "${feature.name}"?\nFitur yang masih memiliki permission aksi tidak dapat dihapus.`)) return
@@ -139,7 +96,6 @@ const FeatureManagement = () => {
       {notice && <CAlert color="success" dismissible onClose={() => setNotice('')}>{notice}</CAlert>}
       {error && <CAlert color="danger" dismissible onClose={() => setError('')}>{error}</CAlert>}
       <FeatureList features={features} groups={groups} searchInput={searchInput} setSearchInput={setSearchInput} applySearch={applySearch} resetSearch={resetSearch} pagination={pagination} loading={loading} page={page} setPage={setPage} onCreate={openCreate} onEdit={openEdit} onDelete={deleteFeature} />
-      <FeatureForm visible={modalVisible} onClose={() => setModalVisible(false)} saving={saving} editingFeature={editingFeature} form={form} setForm={setForm} groups={groups} error={error} onSubmit={saveFeature} />
     </div>
   )
 }
