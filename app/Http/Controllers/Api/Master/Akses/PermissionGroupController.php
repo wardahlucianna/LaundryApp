@@ -10,7 +10,7 @@ class PermissionGroupController extends Controller
 {
     public function index()
     {
-        return response()->json(PermissionGroup::query()->withCount('features')->orderBy('name')->paginate(100));
+        return response()->json(PermissionGroup::query()->withCount('features')->orderBy('ordering')->orderBy('name')->paginate(100));
     }
 
     public function store(Request $request)
@@ -19,6 +19,7 @@ class PermissionGroupController extends Controller
             'name' => ['required', 'string', 'max:120'],
             'description' => ['nullable', 'string', 'max:500'],
             'icon' => ['required', 'string', 'max:80'],
+            'ordering' => ['required', 'integer', 'min:1'],
             'is_active' => ['sometimes', 'boolean'],
         ]);
         return response()->json(['data' => PermissionGroup::create($data)], 201);
@@ -30,6 +31,7 @@ class PermissionGroupController extends Controller
             'name' => ['sometimes', 'required', 'string', 'max:120'],
             'description' => ['nullable', 'string', 'max:500'],
             'icon' => ['sometimes', 'required', 'string', 'max:80'],
+            'ordering' => ['sometimes', 'required', 'integer', 'min:1'],
             'is_active' => ['sometimes', 'boolean'],
         ]);
         $permissionGroup->update($data);
