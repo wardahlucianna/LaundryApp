@@ -77,7 +77,6 @@ const RoleFormPage = () => {
   return <div className="role-page-layout mb-4">
     <div className="mb-3"><h2 className="fs-4 mb-1">Management Role</h2></div>
     {error && <CAlert color="danger" dismissible onClose={() => setError('')}>{error}</CAlert>}
-    {loading ? <div className="d-flex align-items-center gap-2 py-4 text-body-secondary"><CSpinner size="sm" /><span>Memuat data role dan fitur...</span></div> :
       <CCard className="role-panel role-form-card mb-4">
         <CCardHeader><strong className="fs-5">{role ? 'Edit Role' : 'Tambah Role'}</strong></CCardHeader>
         <CCardBody>
@@ -98,7 +97,8 @@ const RoleFormPage = () => {
               <span className="fw-semibold">{selectedFeatureIds.length} dipilih</span>
             </div>
             <style>{".role-permission-checkbox .form-check-input { width: 1.15rem; height: 1.15rem; margin-top: 0.15rem; } .role-permission-checkbox .form-check-input:checked { background-color: #0d6efd; border-color: #0d6efd; } .role-permission-checkbox .form-check-label { padding-left: 0.25rem; color: var(--cui-body-color); }"}</style>
-            {features.length === 0 ? <CAlert color="info">Belum ada fitur aktif yang tersedia.</CAlert> :
+            {loading ? <div className="d-flex align-items-center gap-2 py-3 text-body-secondary"><CSpinner size="sm" /><span>Memuat checklist hak akses fitur...</span></div> :
+              features.length === 0 ? <CAlert color="info">Belum ada fitur aktif yang tersedia.</CAlert> :
               <div className="d-flex flex-column gap-3">
                 {groupedFeatures.map((group) => <CCard key={group.name} className="border">
                   <CCardHeader className="py-2">
@@ -115,7 +115,7 @@ const RoleFormPage = () => {
             <div className="d-flex justify-content-end gap-2 mt-4"><CButton color="secondary" size="sm" variant="outline" type="button" disabled={saving} onClick={() => navigate('/roles/list')}>Batal</CButton><CButton color="primary" size="sm" type="submit" disabled={saving}>{saving ? <><CSpinner size="sm" className="me-2" />Menyimpan...</> : 'Simpan'}</CButton></div>
           </CForm>
         </CCardBody>
-      </CCard>}
+      </CCard>
   </div>
 }
 
