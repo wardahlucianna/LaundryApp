@@ -87,7 +87,7 @@ const RoleDetailPage = () => {
           <CCard className="mb-4">
             <CCardHeader className="d-flex justify-content-between align-items-center flex-wrap gap-2">
               <strong>Rincian Hak Akses</strong>
-              <span className="text-body fw-normal">{role.permissions?.length ?? 0} akses diberikan dari {permissions.length} tersedia</span>
+              <span className="text-body fw-semibold">{role.permissions?.length ?? 0} akses diberikan dari {permissions.length} tersedia</span>
             </CCardHeader>
             <CCardBody>
               {groupedPermissions.length === 0 ? <div className="text-body-secondary text-center py-3">Role ini belum memiliki hak akses.</div> : (
