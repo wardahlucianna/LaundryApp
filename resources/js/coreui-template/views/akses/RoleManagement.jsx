@@ -172,7 +172,6 @@ const RoleManagement = () => {
               <CTableRow>
                 <CTableHeaderCell style={{ width: '60px' }}>No.</CTableHeaderCell>
                 <CTableHeaderCell>Nama Role</CTableHeaderCell>
-                <CTableHeaderCell>Kode</CTableHeaderCell>
                 <CTableHeaderCell className="text-center">Jumlah Hak Akses</CTableHeaderCell>
                 <CTableHeaderCell>Status</CTableHeaderCell>
                 <CTableHeaderCell className="text-center" style={{ width: '140px' }}>Aksi</CTableHeaderCell>
@@ -180,14 +179,16 @@ const RoleManagement = () => {
             </CTableHead>
             <CTableBody>
               {loading ? (
-                <CTableRow><CTableDataCell colSpan={6} className="text-center py-4"><CSpinner size="sm" className="me-2" />Memuat data...</CTableDataCell></CTableRow>
+                <CTableRow><CTableDataCell colSpan={5} className="text-center py-4"><CSpinner size="sm" className="me-2" />Memuat data...</CTableDataCell></CTableRow>
               ) : roles.length === 0 ? (
                 <CTableRow><CTableDataCell colSpan={6} className="text-center text-body-secondary py-4">Data role tidak ditemukan.</CTableDataCell></CTableRow>
               ) : roles.map((role, index) => (
                 <CTableRow key={role.id}>
                   <CTableDataCell>{(pagination.current_page - 1) * 10 + index + 1}</CTableDataCell>
-                  <CTableDataCell className="fw-semibold">{role.name}</CTableDataCell>
-                  <CTableDataCell><code>{role.code}</code></CTableDataCell>
+                  <CTableDataCell>
+                    <div className="fw-semibold">{role.name}</div>
+                    <small className="text-body-secondary">{role.code}</small>
+                  </CTableDataCell>
                   <CTableDataCell className="text-center">{role.permissions_count ?? 0}</CTableDataCell>
                   <CTableDataCell>
                     <CBadge color={role.is_active ? 'success' : 'secondary'}>{role.is_active ? 'Aktif' : 'Nonaktif'}</CBadge>
