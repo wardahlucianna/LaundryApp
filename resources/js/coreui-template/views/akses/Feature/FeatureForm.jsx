@@ -12,7 +12,7 @@ const FeatureFormPage = () => {
   const { id } = useParams()
   const [feature, setFeature] = useState(null)
   const [groups, setGroups] = useState([])
-  const [values, setValues] = useState({ group_name: '', name: '', path: '', ordering: 0, menu_type: 'sidebar', is_active: true })
+  const [values, setValues] = useState({ permission_group_id: '', name: '', path: '', ordering: 0, menu_type: 'sidebar', is_active: true })
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
@@ -47,7 +47,7 @@ const FeatureFormPage = () => {
         setGroups(availableGroups)
         setFeature(loadedFeature)
         setValues({
-          group_name: loadedFeature?.group?.name || availableGroups.find((group) => group.id === loadedFeature?.permission_group_id)?.name || '',
+          permission_group_id: String(loadedFeature?.permission_group_id || loadedFeature?.group?.id || ''),
           name: loadedFeature?.name || '',
           path: loadedFeature?.path || '',
           ordering: loadedFeature?.ordering ?? 0,
@@ -64,29 +64,17 @@ const FeatureFormPage = () => {
     return () => { active = false }
   }, [id, request])
 
-  const resolveGroupId = async (groupName) => {
-    const cleanName = groupName.trim()
-    const existing = groups.find((group) => group.name.trim().toLowerCase() === cleanName.toLowerCase())
-    if (existing) return existing.id
-    const payload = await request('/permission-groups', {
-      method: 'POST',
-      body: JSON.stringify({ name: cleanName, icon: 'cilFolderOpen', is_active: true }),
-    })
-    return (payload.data || payload).id
-  }
-
   const save = async (event) => {
     event.preventDefault()
     setError('')
-    if (!values.group_name.trim() || !values.name.trim()) {
+    if (!values.permission_group_id || !values.name.trim()) {
       setError('Kelompok fitur dan nama fitur wajib diisi.')
       return
     }
     setSaving(true)
     try {
-      const permission_group_id = await resolveGroupId(values.group_name)
       const body = {
-        permission_group_id,
+        permission_group_id: Number(values.permission_group_id),
         name: values.name.trim(),
         path: values.path.trim() || null,
         ordering: Number(values.ordering),
@@ -118,7 +106,7 @@ const FeatureFormPage = () => {
             <CCardBody>
               <CForm onSubmit={save}>
                 <CRow className="g-3">
-                  <CCol xs={12} md={6}><CFormInput label="Kelompok Fitur" placeholder="Contoh: Master Data" value={values.group_name} onChange={(e) => setValues((v) => ({ ...v, group_name: e.target.value }))} required maxLength={120} /></CCol>
+                  <CCol xs={12} md={6}><CFormSelect label="Kelompok Fitur" value={values.permission_group_id} onChange={(e) => setValues((v) => ({ ...v, permission_group_id: e.target.value }))} required><option value="">Pilih Kelompok Fitur</option>{groups.filter((group) => Boolean(group.is_active) || String(group.id) === String(values.permission_group_id)).map((group) => <option key={group.id} value={group.id}>{group.name}{!group.is_active ? ' (Nonaktif)' : ''}</option>)}</CFormSelect></CCol>
                   <CCol xs={12} md={6}><CFormInput label="Nama Fitur" placeholder="Contoh: Manajemen Fitur" value={values.name} onChange={(e) => setValues((v) => ({ ...v, name: e.target.value }))} required maxLength={120} /></CCol>
                   <CCol xs={12} md={6}><CFormInput label="Path Menu" placeholder="Contoh: /permissions" value={values.path} onChange={(e) => setValues((v) => ({ ...v, path: e.target.value }))} maxLength={255} /></CCol>
                   <CCol xs={12} md={6}><CFormInput label="Ordering / Urutan" type="number" min={0} step={1} value={values.ordering} onChange={(e) => setValues((v) => ({ ...v, ordering: e.target.value }))} required /></CCol>
