@@ -1,10 +1,10 @@
 <?php
 
-namespace Database\\Seeders;
+namespace Database\Seeders;
 
-use App\\Models\\Akses\\Role;
-use App\\Models\\Akses\\User;
-use Illuminate\\Database\\Seeder;
+use App\Models\Akses\Role;
+use App\Models\Akses\User;
+use Illuminate\Database\Seeder;
 
 class AdministratorSeeder extends Seeder
 {
@@ -18,11 +18,11 @@ class AdministratorSeeder extends Seeder
         }
 
         if (!$this->command) {
-            throw new \\RuntimeException('Seeder ini harus dijalankan melalui Artisan agar password dapat diminta secara aman.');
+            throw new \RuntimeException('Seeder ini harus dijalankan melalui Artisan agar password dapat diminta secara aman.');
         }
 
-        $password = $this->command->secret('Masukkan password untuk administrator:');
-        $confirmation = $this->command->secret('Ulangi password administrator:');
+        $password = $this->command->secret('Admin123');
+        $confirmation = $this->command->secret('Admin123');
 
         if (!$password || $password !== $confirmation) {
             $this->command->error('Password kosong atau tidak cocok. Seeder dibatalkan.');
