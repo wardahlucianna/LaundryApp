@@ -64,7 +64,8 @@ class AuthController extends Controller
                 ->where('is_active', true)
                 ->where('menu_type', 'sidebar')
                 ->whereNotNull('path')
-                ->where('path', '<>', '')])
+                ->where('path', '<>', '')
+                ->orderBy('ordering')])
             ->orderBy('name')
             ->get()
             ->map(function ($group) use ($allowedFeatureIds) {
