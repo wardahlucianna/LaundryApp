@@ -16,6 +16,7 @@ const RoleDetailPage = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const [role, setRole] = useState(null)
+  const [permissions, setPermissions] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -32,16 +33,21 @@ const RoleDetailPage = () => {
   useEffect(() => {
     let active = true
     setLoading(true)
-    request(`/roles/${id}`)
-      .then((payload) => { if (active) setRole(payload.data || payload) })
-      .catch((e) => { if (active) setError(e.message || 'Gagal memuat detail role.') })
+    Promise.all([request(`/roles/${id}`), request('/permissions?is_active=1&per_page=100')])
+      .then(([rolePayload, permissionsPayload]) => {
+        if (active) {
+          setRole(rolePayload.data || rolePayload)
+          setPermissions(permissionsPayload.data || [])
+        }
+      })
+      .catch((e) => { if (active) setError(e.message || 'Gagal memuat detail role dan permission.') })
       .finally(() => { if (active) setLoading(false) })
     return () => { active = false }
   }, [id, request])
 
   const groupedPermissions = useMemo(() => {
     const groups = new Map()
-    ;(role?.permissions || []).forEach((permission) => {
+    ;permissions.forEach((permission) => {
       const groupName = permission.feature?.group?.name || 'Lainnya'
       const featureName = permission.feature?.name || permission.name || 'Fitur tidak terdefinisi'
       if (!groups.has(groupName)) groups.set(groupName, new Map())
@@ -53,7 +59,7 @@ const RoleDetailPage = () => {
       name: groupName,
       features: Array.from(features.entries()).sort(([a], [b]) => a.localeCompare(b)).map(([featureName, items]) => ({ name: featureName, items })),
     }))
-  }, [role])
+  }, [permissions])
 
   return (
     <div className="role-page-layout mb-4">
@@ -84,12 +90,12 @@ const RoleDetailPage = () => {
           <CCard className="mb-4">
             <CCardHeader className="d-flex justify-content-between align-items-center flex-wrap gap-2">
               <strong>Rincian Hak Akses</strong>
-              <CBadge color="primary">{role.permissions?.length ?? 0} akses diberikan</CBadge>
+              <CBadge color="primary">{role.permissions?.length ?? 0} akses diberikan dari {permissions.length} tersedia</CBadge>
             </CCardHeader>
             <CCardBody>
               {groupedPermissions.length === 0 ? <div className="text-body-secondary text-center py-3">Role ini belum memiliki hak akses.</div> : (
                 <div className="d-flex flex-column gap-3">
-                  <style>{" .role-permission-checkbox .form-check-input { width: 1.15rem; height: 1.15rem; margin-top: 0.15rem; } .role-permission-checkbox .form-check-input:disabled { opacity: 1; } .role-permission-checkbox .form-check-label { padding-left: 0.25rem; color: var(--cui-body-color); opacity: 1; } "}</style>
+                  <style>{" .role-permission-checkbox .form-check-input { width: 1.15rem; height: 1.15rem; margin-top: 0.15rem; } .role-permission-checkbox .form-check-input:disabled { opacity: 1; } .role-permission-checkbox .form-check-input:checked, .role-permission-checkbox .form-check-input:checked:disabled { background-color: #0d6efd; border-color: #0d6efd; } .role-permission-checkbox .form-check-label { padding-left: 0.25rem; color: var(--cui-body-color); opacity: 1; } "}</style>
                   {groupedPermissions.map((group) => (
                     <CCard key={group.name} className="border">
                       <CCardHeader className="py-2"><strong>{group.name}</strong></CCardHeader>
@@ -104,7 +110,7 @@ const RoleDetailPage = () => {
                                     className="fs-6 role-permission-checkbox"
                                     id={`role-permission-${permission.id}`}
                                     label={permission.action_name ? `${permission.name} (${permission.action_name})` : permission.name}
-                                    checked
+                                    checked={(role.permissions || []).some((assigned) => String(assigned.id) === String(permission.id))}
                                     disabled
                                   />
                                 </CCol>
