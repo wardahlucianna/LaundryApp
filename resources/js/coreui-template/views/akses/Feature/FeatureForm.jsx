@@ -69,17 +69,9 @@ const FeatureFormPage = () => {
     const cleanName = groupName.trim()
     const existing = groups.find((group) => group.name.trim().toLowerCase() === cleanName.toLowerCase())
     if (existing) return existing.id
-    const baseCode = cleanName.toUpperCase().replace(/[^A-Z0-9]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 70) || 'GROUP'
-    const existingCodes = new Set(groups.map((group) => String(group.code || '').toUpperCase()))
-    let code = baseCode
-    let suffix = 2
-    while (existingCodes.has(code)) {
-      code = `${baseCode.slice(0, 70 - String(suffix).length - 1)}_${suffix}`
-      suffix += 1
-    }
     const payload = await request('/permission-groups', {
       method: 'POST',
-      body: JSON.stringify({ name: cleanName, code, is_active: true }),
+      body: JSON.stringify({ name: cleanName, icon: 'cilFolderOpen', is_active: true }),
     })
     return (payload.data || payload).id
   }

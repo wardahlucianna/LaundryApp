@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Api\Master\Akses;
+namespace App\\Http\\Controllers\\Api\\Master\\Akses;
 
-use App\Http\Controllers\Controller;
-use App\Models\Akses\PermissionGroup;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use App\\Http\\Controllers\\Controller;
+use App\\Models\\Akses\\PermissionGroup;
+use Illuminate\\Http\\Request;
 
 class PermissionGroupController extends Controller
 {
@@ -18,7 +17,8 @@ class PermissionGroupController extends Controller
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:120'],
-            'code' => ['required', 'string', 'max:80', 'alpha_dash', 'unique:permission_groups,code'],
+            'description' => ['nullable', 'string', 'max:500'],
+            'icon' => ['required', 'string', 'max:80'],
             'is_active' => ['sometimes', 'boolean'],
         ]);
         return response()->json(['data' => PermissionGroup::create($data)], 201);
@@ -28,7 +28,8 @@ class PermissionGroupController extends Controller
     {
         $data = $request->validate([
             'name' => ['sometimes', 'required', 'string', 'max:120'],
-            'code' => ['sometimes', 'required', 'string', 'max:80', 'alpha_dash', Rule::unique('permission_groups', 'code')->ignore($permissionGroup->id)],
+            'description' => ['nullable', 'string', 'max:500'],
+            'icon' => ['sometimes', 'required', 'string', 'max:80'],
             'is_active' => ['sometimes', 'boolean'],
         ]);
         $permissionGroup->update($data);

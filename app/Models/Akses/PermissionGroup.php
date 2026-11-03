@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Models\Akses;
+namespace App\\Models\\Akses;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
+use Illuminate\\Database\\Eloquent\\Model;
+use Illuminate\\Support\\Str;
 
 class PermissionGroup extends Model
 {
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $fillable = ['name', 'code', 'is_active'];
+    protected $fillable = ['name', 'description', 'icon', 'is_active'];
     protected $casts = ['is_active' => 'boolean'];
 
     protected static function booted(): void

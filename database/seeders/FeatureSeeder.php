@@ -15,20 +15,21 @@ class FeatureSeeder extends Seeder
     public function run(): void
     {
         $groups = [
-            'DASHBOARD' => ['Beranda', 'Dashboard'],
-            'TRANSACTIONS' => ['Transaksi', 'Transactions'],
-            'OPERATIONS' => ['Operasional', 'Operations'],
-            'MASTER_DATA' => ['Master Data', 'MasterData'],
-            'SETTINGS' => ['Pengaturan', 'Settings'],
-            'REPORTS' => ['Laporan', 'Reports'],
+            'DASHBOARD' => ['Beranda', 'cilSpeedometer'],
+            'TRANSACTIONS' => ['Transaksi', 'cilCash'],
+            'OPERATIONS' => ['Operasional', 'cilBasket'],
+            'MASTER_DATA' => ['Master Data', 'cilPeople'],
+            'SETTINGS' => ['Pengaturan', 'cilSettings'],
+            'REPORTS' => ['Laporan', 'cilChartLine'],
         ];
 
         $groupModels = [];
-        foreach ($groups as $code => [$name]) {
-            $groupModels[$code] = PermissionGroup::updateOrCreate(
-                ['code' => $code],
-                ['name' => $name, 'is_active' => true],
+        foreach ($groups as $key => [$name, $icon]) {
+            $groupModels[$key] = PermissionGroup::firstOrCreate(
+                ['name' => $name],
+                ['icon' => $icon, 'is_active' => true],
             );
+            $groupModels[$key]->update(['icon' => $icon, 'is_active' => true]);
         }
 
         $features = [
@@ -61,98 +62,55 @@ class FeatureSeeder extends Seeder
 
         $actions = [
             'DASHBOARD' => ['view' => ['Lihat', 'DASHBOARD_VIEW']],
-            'TRANSACTIONS' => [
-                'view' => ['Lihat', 'TRANSACTION_VIEW'],
-                'create' => ['Tambah', 'TRANSACTION_CREATE'],
-                'update' => ['Edit', 'TRANSACTION_UPDATE'],
-                'delete' => ['Hapus', 'TRANSACTION_DELETE'],
-            ],
+            'TRANSACTIONS' => ['view' => ['Lihat', 'TRANSACTION_VIEW'], 'create' => ['Tambah', 'TRANSACTION_CREATE'], 'update' => ['Edit', 'TRANSACTION_UPDATE'], 'delete' => ['Hapus', 'TRANSACTION_DELETE']],
             'ORDERS' => ['view' => ['Lihat', 'ORDERS_VIEW']],
             'LAUNDRY_PROCESS' => ['view' => ['Lihat', 'LAUNDRY_PROCESS_VIEW']],
-            'CUSTOMERS' => [
-                'view' => ['Lihat', 'CUSTOMER_VIEW'],
-                'create' => ['Tambah', 'CUSTOMER_CREATE'],
-                'update' => ['Edit', 'CUSTOMER_UPDATE'],
-                'delete' => ['Hapus', 'CUSTOMER_DELETE'],
-            ],
+            'CUSTOMERS' => ['view' => ['Lihat', 'CUSTOMER_VIEW'], 'create' => ['Tambah', 'CUSTOMER_CREATE'], 'update' => ['Edit', 'CUSTOMER_UPDATE'], 'delete' => ['Hapus', 'CUSTOMER_DELETE']],
             'PAYMENTS' => ['view' => ['Lihat', 'PAYMENT_VIEW']],
             'DELIVERIES' => ['view' => ['Lihat', 'DELIVERY_VIEW']],
             'REPORTS' => ['view' => ['Lihat', 'REPORT_VIEW']],
-            'ROLES' => [
-                'view' => ['Lihat', 'ROLE_VIEW'],
-                'manage' => ['Kelola', 'ROLE_MANAGE'],
-            ],
-            'FEATURES' => [
-                'view' => ['Lihat', 'FEATURE_VIEW'],
-                'create' => ['Tambah', 'FEATURE_CREATE'],
-                'update' => ['Edit', 'FEATURE_UPDATE'],
-                'delete' => ['Hapus', 'FEATURE_DELETE'],
-            ],
+            'ROLES' => ['view' => ['Lihat', 'ROLE_VIEW'], 'manage' => ['Kelola', 'ROLE_MANAGE']],
+            'FEATURES' => ['view' => ['Lihat', 'FEATURE_VIEW'], 'create' => ['Tambah', 'FEATURE_CREATE'], 'update' => ['Edit', 'FEATURE_UPDATE'], 'delete' => ['Hapus', 'FEATURE_DELETE']],
             'ACCESS' => ['manage' => ['Kelola Hak Akses', 'ACCESS_MANAGE']],
         ];
 
         $permissions = collect();
         foreach ($actions as $featureCode => $featureActions) {
             foreach ($featureActions as $actionCode => [$actionLabel, $permissionCode]) {
-                $permission = Permission::updateOrCreate(
-                    ['code' => $permissionCode],
-                    [
-                        'name' => $actionLabel,
-                        'path' => $featureModels[$featureCode]->path,
-                        'permission_feature_id' => $featureModels[$featureCode]->id,
-                        'action_name' => $actionCode,
-                        'is_active' => true,
-                    ],
-                );
+                $permission = Permission::updateOrCreate(['code' => $permissionCode], [
+                    'name' => $actionLabel, 'path' => $featureModels[$featureCode]->path,
+                    'permission_feature_id' => $featureModels[$featureCode]->id,
+                    'action_name' => $actionCode, 'is_active' => true,
+                ]);
                 $permissions->push($permission);
             }
         }
 
-        // Migrate legacy OWNER role to SUPERADMIN without losing its user assignments.
         $superAdmin = Role::where('code', 'OWNER')->first();
-        if ($superAdmin) {
-            $superAdmin->update(['code' => 'SUPERADMIN', 'name' => 'Super Admin', 'is_active' => true]);
-        } else {
-            $superAdmin = Role::updateOrCreate(
-                ['code' => 'SUPERADMIN'],
-                ['name' => 'Super Admin', 'is_active' => true],
-            );
-        }
+        if ($superAdmin) $superAdmin->update(['code' => 'SUPERADMIN', 'name' => 'Super Admin', 'is_active' => true]);
+        else $superAdmin = Role::updateOrCreate(['code' => 'SUPERADMIN'], ['name' => 'Super Admin', 'is_active' => true]);
         $superAdmin->permissions()->sync($permissions->pluck('id'));
 
         User::where('role_id', $superAdmin->id)->where('username', 'owner')->update([
-            'username' => 'superadmin',
-            'full_name' => 'Super Admin',
+            'username' => 'superadmin', 'full_name' => 'Super Admin',
             'email' => env('INITIAL_SUPERADMIN_EMAIL', 'superadmin@sunrise.local'),
         ]);
 
         $admin = Role::updateOrCreate(['code' => 'ADMIN'], ['name' => 'Administrator', 'is_active' => true]);
         $admin->permissions()->sync($permissions->reject(fn ($permission) => $permission->code === 'ACCESS_MANAGE')->pluck('id'));
-
         $cashier = Role::updateOrCreate(['code' => 'KASIR'], ['name' => 'Kasir', 'is_active' => true]);
-        $cashier->permissions()->sync($permissions->whereIn('code', [
-            'DASHBOARD_VIEW', 'TRANSACTION_VIEW', 'TRANSACTION_CREATE', 'TRANSACTION_UPDATE',
-            'ORDERS_VIEW', 'CUSTOMER_VIEW', 'PAYMENT_VIEW',
-        ])->pluck('id'));
-
+        $cashier->permissions()->sync($permissions->whereIn('code', ['DASHBOARD_VIEW', 'TRANSACTION_VIEW', 'TRANSACTION_CREATE', 'TRANSACTION_UPDATE', 'ORDERS_VIEW', 'CUSTOMER_VIEW', 'PAYMENT_VIEW'])->pluck('id'));
         $operator = Role::updateOrCreate(['code' => 'OPERATOR'], ['name' => 'Operator Laundry', 'is_active' => true]);
-        $operator->permissions()->sync($permissions->whereIn('code', [
-            'DASHBOARD_VIEW', 'ORDERS_VIEW', 'LAUNDRY_PROCESS_VIEW',
-        ])->pluck('id'));
+        $operator->permissions()->sync($permissions->whereIn('code', ['DASHBOARD_VIEW', 'ORDERS_VIEW', 'LAUNDRY_PROCESS_VIEW'])->pluck('id'));
 
         if (!User::query()->exists()) {
             $username = env('INITIAL_SUPERADMIN_USERNAME', 'superadmin');
             $password = env('INITIAL_SUPERADMIN_PASSWORD') ?: Str::random(20);
-
             User::create([
-                'role_id' => $superAdmin->id,
-                'full_name' => env('INITIAL_SUPERADMIN_NAME', 'Super Admin'),
-                'username' => $username,
-                'email' => env('INITIAL_SUPERADMIN_EMAIL', 'superadmin@sunrise.local'),
-                'password' => $password,
-                'is_active' => true,
+                'role_id' => $superAdmin->id, 'full_name' => env('INITIAL_SUPERADMIN_NAME', 'Super Admin'),
+                'username' => $username, 'email' => env('INITIAL_SUPERADMIN_EMAIL', 'superadmin@sunrise.local'),
+                'password' => $password, 'is_active' => true,
             ]);
-
             $this->command?->info("Initial Super Admin created. Username: {$username} | Password: {$password}");
             $this->command?->warn('Simpan kredensial ini dan segera ganti password setelah login pertama.');
         }
