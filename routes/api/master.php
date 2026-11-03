@@ -20,6 +20,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/permission-groups/{permissionGroup}', [PermissionGroupController::class, 'destroy'])->middleware('permission:FEATURE_DELETE');
 
     Route::get('/permission-features', [PermissionFeatureController::class, 'index'])->middleware('permission:FEATURE_VIEW');
+    Route::get('/permission-features/{permissionFeature}', [PermissionFeatureController::class, 'show'])->middleware('permission:FEATURE_VIEW');
     Route::post('/permission-features', [PermissionFeatureController::class, 'store'])->middleware('permission:FEATURE_CREATE');
     Route::put('/permission-features/{permissionFeature}', [PermissionFeatureController::class, 'update'])->middleware('permission:FEATURE_UPDATE');
     Route::delete('/permission-features/{permissionFeature}', [PermissionFeatureController::class, 'destroy'])->middleware('permission:FEATURE_DELETE');
