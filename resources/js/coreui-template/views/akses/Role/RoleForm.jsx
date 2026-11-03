@@ -97,7 +97,7 @@ const RoleFormPage = () => {
               <h5 className="mb-1">Checklist Hak Akses Fitur</h5>
               <span className="fw-semibold">{selectedFeatureIds.length} dipilih</span>
             </div>
-            <style>{".role-permission-checkbox .form-check-input { width: 1.15rem; height: 1.15rem; margin-top: 0.15rem; } .role-permission-checkbox .form-check-input:checked { background-color: #0d6efd; border-color: #0d6efd; } .role-permission-checkbox .form-check-label { padding-left: 0.25rem; color: var(--cui-body-color); }"}</style>
+            <style>{".role-permission-checkbox .form-check-input { width: 1.15rem; height: 1.15rem; margin-top: 0.15rem; background-color: var(--cui-body-bg); border: 1.5px solid #6c757d; opacity: 1; } .role-permission-checkbox .form-check-input:checked { background-color: #0d6efd; border-color: #0d6efd; } .role-permission-checkbox .form-check-label { padding-left: 0.25rem; color: var(--cui-body-color); }"}</style>
             {loading ? <div className="d-flex align-items-center gap-2 py-3 text-body-secondary"><CSpinner size="sm" /><span>Memuat checklist hak akses fitur...</span></div> :
               features.length === 0 ? <CAlert color="info">Belum ada fitur aktif yang tersedia.</CAlert> :
               <div className="d-flex flex-column gap-3">
