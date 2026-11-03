@@ -9,7 +9,7 @@ class PermissionGroup extends Model
 {
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $fillable = ['name', 'description', 'icon', 'ordering', 'is_active'];
+    protected $fillable = ['name', 'icon', 'ordering', 'is_active'];
     protected $casts = ['is_active' => 'boolean'];
 
     protected static function booted(): void
