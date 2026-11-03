@@ -5,7 +5,6 @@ const RolePageLayout = ({ title, description, successMessage, errorMessage, onDi
   <div className="role-page-layout mb-4">
     <div className="mb-3">
       <h2 className="fs-4 mb-1">{title}</h2>
-      {description && <div className="small text-body-secondary">{description}</div>}
     </div>
     {successMessage && <CAlert color="success" dismissible onClose={onDismissSuccess}>{successMessage}</CAlert>}
     {errorMessage && <CAlert color="danger" dismissible onClose={onDismissError}>{errorMessage}</CAlert>}
