@@ -110,7 +110,7 @@ const RoleFormPage = () => {
 
   return (
     <div className="role-page-layout mb-4">
-      <div className="mb-3"><h2 className="fs-4 mb-1">Management Role</h2><div className="small text-body-secondary">{id ? 'Perbarui role dan hak akses aplikasi.' : 'Tambah role dan atur hak akses aplikasi.'}</div></div>
+      <div className="mb-3"><h2 className="fs-4 mb-1">Management Role</h2></div>
       {error && <CAlert color="danger" dismissible onClose={() => setError('')}>{error}</CAlert>}
       <div className="role-form-page">
         {loading ? (
