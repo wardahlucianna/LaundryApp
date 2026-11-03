@@ -1,14 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import {
-  CAlert, CBadge, CButton, CCard, CCardBody, CCardHeader, CCol,
-  CFormInput, CRow, CSpinner, CTable, CTableBody, CTableDataCell,
-  CTableHead, CTableHeaderCell, CTableRow,
-} from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import ConfirmModal from '../../components/ConfirmModal'
 import RolePageLayout from './RolePageLayout'
-import { cilPencil, cilPlus, cilSearch, cilTrash, cilReload, cilInfo } from '@coreui/icons'
+import RoleList from './RoleList'
 
 const apiBase = (() => {
   const configuredBase = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
@@ -28,8 +21,12 @@ const RoleManagement = () => {
   const [deleting, setDeleting] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
+
   useEffect(() => {
-    if (location.state?.notice) { setNotice(location.state.notice); navigate(location.pathname, { replace: true, state: {} }) }
+    if (location.state?.notice) {
+      setNotice(location.state.notice)
+      navigate(location.pathname, { replace: true, state: {} })
+    }
   }, [location, navigate])
 
   const request = useCallback(async (path, options = {}) => {
@@ -73,15 +70,10 @@ const RoleManagement = () => {
 
   useEffect(() => { loadRoles() }, [loadRoles])
 
-  const perPage = 10
-  const showingStart = pagination.total === 0 ? 0 : (pagination.current_page - 1) * perPage + 1
-  const showingEnd = Math.min(pagination.current_page * perPage, pagination.total)
-
   const openCreate = () => navigate('/roles/form')
   const openEdit = (role) => navigate(`/roles/form/${role.id}`)
-  const openDetail = (role) => navigate(`/roles/detail/${role.id}`)
 
-  const handleDelete = async (role) => {
+  const handleDelete = (role) => {
     if (role.code === 'SUPERADMIN') {
       setError('Role SUPERADMIN tidak dapat dihapus.')
       return
@@ -108,120 +100,33 @@ const RoleManagement = () => {
 
   return (
     <div className="role-list-page">
-<RolePageLayout title="Daftar Role" description="Lihat dan kelola peran aplikasi." successMessage={notice} errorMessage={error} onDismissSuccess={() => setNotice('')} onDismissError={() => setError('')}>
-      <CCard className="role-panel role-list-panel mb-4">
-        <CCardHeader className="d-flex flex-wrap justify-content-between align-items-center gap-2">
-          <div><strong className="fs-5">Daftar Role</strong></div>
-          <CButton color="primary" size="sm" className="role-compact-button" onClick={openCreate}>
-            <CIcon icon={cilPlus} size="sm" className="me-1" />Tambah Role
-          </CButton>
-        </CCardHeader>
-        <CCardBody>
-          <CRow className="mb-3">
-            <CCol xs={12} md={8} lg={6}>
-              <div className="d-flex gap-2 w-100">
-                <CFormInput
-                  placeholder="Cari nama atau kode"
-                  value={searchInput}
-                  onChange={(event) => setSearchInput(event.target.value)}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter') {
-                      const nextSearch = searchInput.trim()
-                      setPage(1)
-                      if (nextSearch === search) loadRoles()
-                      else { setRoles([]); setLoading(true); setSearch(nextSearch) }
-                    }
-                  }}
-                  aria-label="Cari role"
-                  className="flex-grow-1"
-                />
-                <CButton color="primary" size="sm" aria-label="Cari" title="Cari" className="role-search-button role-compact-button" onClick={() => {
-                  const nextSearch = searchInput.trim()
-                  setPage(1)
-                  if (nextSearch === search) loadRoles()
-                  else { setRoles([]); setLoading(true); setSearch(nextSearch) }
-                }}>
-                  <CIcon icon={cilSearch} size="sm" />Cari
-                </CButton>
-                <CButton color="secondary" variant="outline" size="sm" aria-label="Reset filter" title="Reset filter" className="role-reset-button role-compact-button" onClick={() => {
-                  setSearchInput('')
-                  if (search === '' && page === 1) {
-                    loadRoles()
-                  } else {
-                    setRoles([])
-                    setLoading(true)
-                    setSearch('')
-                    setPage(1)
-                  }
-                }}>
-                  <CIcon icon={cilReload} size="sm" />Reset
-                </CButton>
-              </div>
-            </CCol>
-          </CRow>
-
-          <CTable hover responsive align="middle" className="role-table">
-            <CTableHead>
-              <CTableRow>
-                <CTableHeaderCell style={{ width: '60px' }}>No.</CTableHeaderCell>
-                <CTableHeaderCell>Nama Role</CTableHeaderCell>
-                <CTableHeaderCell className="text-center">Jumlah Hak Akses</CTableHeaderCell>
-                <CTableHeaderCell>Status</CTableHeaderCell>
-                <CTableHeaderCell className="text-center" style={{ width: '140px' }}>Aksi</CTableHeaderCell>
-              </CTableRow>
-            </CTableHead>
-            <CTableBody>
-              {loading ? (
-                <CTableRow><CTableDataCell colSpan={5} className="text-center py-4"><CSpinner size="sm" className="me-2" />Memuat data...</CTableDataCell></CTableRow>
-              ) : roles.length === 0 ? (
-                <CTableRow><CTableDataCell colSpan={6} className="text-center text-body-secondary py-4">Data role tidak ditemukan.</CTableDataCell></CTableRow>
-              ) : roles.map((role, index) => (
-                <CTableRow key={role.id}>
-                  <CTableDataCell>{(pagination.current_page - 1) * 10 + index + 1}</CTableDataCell>
-                  <CTableDataCell>
-                    <div className="fw-semibold">{role.name}</div>
-                    <small className="text-body-secondary">{role.code}</small>
-                  </CTableDataCell>
-                  <CTableDataCell className="text-center">{role.permissions_count ?? 0}</CTableDataCell>
-                  <CTableDataCell>
-                    <CBadge color={role.is_active ? 'success' : 'secondary'}>{role.is_active ? 'Aktif' : 'Nonaktif'}</CBadge>
-                  </CTableDataCell>
-                  <CTableDataCell className="text-center">
-                    <div className="d-inline-flex gap-2">
-                      <CButton color="primary" variant="outline" size="sm" onClick={() => openEdit(role)} title="Edit role" aria-label={`Edit ${role.name}`}>
-                        <CIcon icon={cilPencil} size="sm" />
-                      </CButton>
-                      <CButton color="danger" variant="outline" size="sm" disabled={role.code === 'SUPERADMIN'} onClick={() => handleDelete(role)} title="Hapus role" aria-label={`Hapus ${role.name}`}>
-                        <CIcon icon={cilTrash} size="sm" />
-                      </CButton>
-                    </div>
-                  </CTableDataCell>
-                </CTableRow>
-              ))}
-            </CTableBody>
-          </CTable>
-
-          <div className="d-flex flex-wrap justify-content-between align-items-center gap-2">
-            <small className="text-body-secondary">Menampilkan {showingStart}–{showingEnd} dari {pagination.total} data</small>
-            <div className="d-flex gap-2">
-              <CButton color="secondary" variant="outline" size="sm" disabled={page <= 1 || loading} onClick={() => setPage((current) => current - 1)}>Sebelumnya</CButton>
-              <CButton color="secondary" variant="outline" size="sm" disabled={page >= pagination.last_page || loading} onClick={() => setPage((current) => current + 1)}>Berikutnya</CButton>
-            </div>
-          </div>
-        </CCardBody>
-      </CCard>
-
-      <ConfirmModal
-        visible={Boolean(roleToDelete)}
-        title="Konfirmasi Hapus Role"
-        message={roleToDelete ? `Yakin ingin menghapus role "${roleToDelete.name}"?` : ''}
-        confirmText="Hapus"
-        cancelText="Batal"
-        color="danger"
-        loading={deleting}
-        onConfirm={confirmDelete}
-        onCancel={() => setRoleToDelete(null)}
-      />
+      <RolePageLayout
+        title="Daftar Role"
+        description="Lihat dan kelola peran aplikasi."
+        successMessage={notice}
+        errorMessage={error}
+        onDismissSuccess={() => setNotice('')}
+        onDismissError={() => setError('')}
+      >
+        <RoleList
+          roles={roles}
+          searchInput={searchInput}
+          setSearchInput={setSearchInput}
+          search={search}
+          setSearch={setSearch}
+          page={page}
+          setPage={setPage}
+          pagination={pagination}
+          loading={loading}
+          loadRoles={loadRoles}
+          onCreate={openCreate}
+          onEdit={openEdit}
+          onDelete={handleDelete}
+          roleToDelete={roleToDelete}
+          deleting={deleting}
+          onConfirmDelete={confirmDelete}
+          onCancelDelete={() => setRoleToDelete(null)}
+        />
       </RolePageLayout>
     </div>
   )
