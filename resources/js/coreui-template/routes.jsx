@@ -1,6 +1,5 @@
 import React from 'react'
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
-const Role = React.lazy(() => import('./views/akses/Role'))
 const RoleManagement = React.lazy(() => import('./views/akses/RoleManagement'))
 const RoleFormPage = React.lazy(() => import('./views/akses/RoleFormPage'))
 const RoleDetailPage = React.lazy(() => import('./views/akses/RoleDetailPage'))
