@@ -561,3 +561,31 @@ small {
   line-height: 1.25;
   border-radius: .375rem;
 }
+
+
+/* Explicit Master Role action sizing: override Role page-wide button sizing */
+.role-list-page .role-table .table-actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .375rem;
+}
+.role-list-page .role-table .table-actions .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 2rem;
+  width: 2rem;
+  min-width: 2rem;
+  max-width: 2rem;
+  height: 2rem;
+  min-height: 2rem;
+  padding: 0;
+  line-height: 1;
+  border-radius: .375rem;
+}
+.role-list-page .role-table .table-actions .btn svg {
+  width: .875rem;
+  height: .875rem;
+  flex: 0 0 .875rem;
+}
