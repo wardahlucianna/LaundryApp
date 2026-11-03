@@ -19,8 +19,8 @@ const FeatureList = ({ features, groups, searchInput, setSearchInput, applySearc
       <CCardBody>
         <CRow className="mb-3"><CCol xs={12} md={8} lg={6}><div className="d-flex gap-2 w-100">
           <CFormInput placeholder="Cari nama, kode, atau kelompok fitur" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') applySearch() }} aria-label="Cari fitur" className="flex-grow-1" />
-          <CButton color="primary" size="sm" className="role-compact-button" onClick={applySearch}><CIcon icon={cilSearch} size="sm" className="me-1" />Cari</CButton>
-          <CButton color="secondary" variant="outline" size="sm" className="role-compact-button" onClick={resetSearch}><CIcon icon={cilReload} size="sm" className="me-1" />Reset</CButton>
+          <CButton color="primary" size="sm" className="role-compact-button role-search-button" onClick={applySearch}><CIcon icon={cilSearch} size="sm" className="me-1" />Cari</CButton>
+          <CButton color="secondary" variant="outline" size="sm" className="role-compact-button role-reset-button" onClick={resetSearch}><CIcon icon={cilReload} size="sm" className="me-1" />Reset</CButton>
         </div></CCol></CRow>
         <CTable hover responsive align="middle" className="role-table">
           <CTableHead><CTableRow>
