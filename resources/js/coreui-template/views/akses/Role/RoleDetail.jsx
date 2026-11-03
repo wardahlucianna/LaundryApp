@@ -64,6 +64,7 @@ const RoleDetailPage = () => {
           {role && <CButton color="primary" size="sm" onClick={() => navigate(`/roles/form/${role.id}`)}><CIcon icon={cilPencil} className="me-1" />Edit Role</CButton>}
         </div>
       </div>
+      </div>
       {loading ? <div className="d-flex align-items-center gap-2 py-4 text-body-secondary"><CSpinner size="sm" />Memuat detail role...</div> : role && (
         <>
           <CCard className="mb-4">
