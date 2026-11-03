@@ -17,7 +17,6 @@ class PermissionGroupController extends Controller
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:120'],
-            'description' => ['nullable', 'string', 'max:500'],
             'icon' => ['required', 'string', 'max:80'],
             'ordering' => ['required', 'integer', 'min:1'],
             'is_active' => ['sometimes', 'boolean'],
