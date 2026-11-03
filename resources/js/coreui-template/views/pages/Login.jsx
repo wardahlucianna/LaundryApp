@@ -31,12 +31,15 @@ const Login = () => {
       : '/api'
 
     try {
-      const configuredOrigin = configuredBase.replace(/\\/api$/, '')\n      await fetch(`${configuredOrigin}/sanctum/csrf-cookie`, { credentials: 'include' })\n      const response = await fetch(`${apiBase}/auth/login`, {
+      const configuredOrigin = configuredBase.endsWith('/api') ? configuredBase.slice(0, -4) : configuredBase
+      await fetch(`${configuredOrigin}/sanctum/csrf-cookie`, { credentials: 'include' })
+      const response = await fetch(`${apiBase}/auth/login`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({ username, password }),
       })
       const payload = await response.json().catch(() => ({}))
