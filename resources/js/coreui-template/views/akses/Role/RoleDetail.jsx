@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import {
-  CAlert, CBadge, CButton, CCard, CCardBody, CCardHeader, CCol,
+  CAlert, CBadge, CButton, CCard, CCardBody, CCardHeader, CCol, CFormCheck,
   CRow, CSpinner,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
@@ -40,15 +40,19 @@ const RoleDetailPage = () => {
   }, [id, request])
 
   const groupedPermissions = useMemo(() => {
-    const grouped = new Map()
+    const groups = new Map()
     ;(role?.permissions || []).forEach((permission) => {
-      const featureName = permission.feature?.name || permission.name || 'Fitur tidak terdefinisi'
       const groupName = permission.feature?.group?.name || 'Lainnya'
-      const key = `${groupName}::${featureName}`
-      if (!grouped.has(key)) grouped.set(key, { groupName, featureName, actions: [] })
-      grouped.get(key).actions.push(permission)
+      const featureName = permission.feature?.name || permission.name || 'Fitur tidak terdefinisi'
+      if (!groups.has(groupName)) groups.set(groupName, new Map())
+      const features = groups.get(groupName)
+      if (!features.has(featureName)) features.set(featureName, [])
+      features.get(featureName).push(permission)
     })
-    return Array.from(grouped.values()).sort((a, b) => a.groupName.localeCompare(b.groupName) || a.featureName.localeCompare(b.featureName))
+    return Array.from(groups.entries()).sort(([a], [b]) => a.localeCompare(b)).map(([groupName, features]) => ({
+      name: groupName,
+      features: Array.from(features.entries()).sort(([a], [b]) => a.localeCompare(b)).map(([featureName, items]) => ({ name: featureName, items })),
+    }))
   }, [role])
 
   return (
@@ -85,27 +89,29 @@ const RoleDetailPage = () => {
             <CCardBody>
               {groupedPermissions.length === 0 ? <div className="text-body-secondary text-center py-3">Role ini belum memiliki hak akses.</div> : (
                 <div className="d-flex flex-column gap-3">
-                  {groupedPermissions.map((feature) => (
-                    <CCard key={`${feature.groupName}-${feature.featureName}`} className="border">
-                      <CCardHeader className="py-2 d-flex flex-wrap align-items-center justify-content-between gap-2">
-                        <div>
-                          <div className="small text-body-secondary">{feature.groupName}</div>
-                          <strong>{feature.featureName}</strong>
-                        </div>
-                        <CBadge color="secondary">{feature.actions.length} akses</CBadge>
-                      </CCardHeader>
-                      <CCardBody>
-                        <CRow className="g-2">
-                          {feature.actions.map((permission) => (
-                            <CCol xs={12} sm={6} md={4} key={permission.id}>
-                              <div className="rounded border p-3 h-100">
-                                <div className="fw-semibold mb-2">{permission.action_name || permission.name || '-'}</div>
-                                <CBadge color="success" className="mb-2">Diizinkan</CBadge>
-                                <div className="small text-body-secondary"><code>{permission.code || '-'}</code></div>
-                              </div>
-                            </CCol>
-                          ))}
-                        </CRow>
+                  <style>{" .role-permission-checkbox .form-check-input { width: 1.15rem; height: 1.15rem; margin-top: 0.15rem; } .role-permission-checkbox .form-check-label { padding-left: 0.25rem; } "}</style>
+                  {groupedPermissions.map((group) => (
+                    <CCard key={group.name} className="border">
+                      <CCardHeader className="py-2"><strong>{group.name}</strong></CCardHeader>
+                      <CCardBody className="d-flex flex-column gap-3">
+                        {group.features.map((feature) => (
+                          <div key={feature.name}>
+                            <div className="fw-semibold mb-2">{feature.name}</div>
+                            <CRow className="g-2">
+                              {feature.items.map((permission) => (
+                                <CCol xs={12} sm={6} md={4} key={permission.id}>
+                                  <CFormCheck
+                                    className="fs-6 role-permission-checkbox"
+                                    id={`role-permission-${permission.id}`}
+                                    label={permission.action_name ? `${permission.name} (${permission.action_name})` : permission.name}
+                                    checked
+                                    disabled
+                                  />
+                                </CCol>
+                              ))}
+                            </CRow>
+                          </div>
+                        ))}
                       </CCardBody>
                     </CCard>
                   ))}
