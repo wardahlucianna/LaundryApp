@@ -1,9 +1,9 @@
 <?php
 
-namespace App\\Models\\Akses;
+namespace App\Models\Akses;
 
-use Illuminate\\Database\\Eloquent\\Model;
-use Illuminate\\Support\\Str;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class PermissionGroup extends Model
 {
