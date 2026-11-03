@@ -11,6 +11,7 @@ const RoleManagement = () => {
   const [roles, setRoles] = useState([])
   const [search, setSearch] = useState('')
   const [searchInput, setSearchInput] = useState('')
+  const [statusFilter, setStatusFilter] = useState('')
   const [page, setPage] = useState(1)
   const [pagination, setPagination] = useState({ current_page: 1, last_page: 1, total: 0 })
   const [loading, setLoading] = useState(false)
@@ -53,6 +54,7 @@ const RoleManagement = () => {
     try {
       const params = new URLSearchParams({ page: String(page), per_page: '10' })
       if (search.trim()) params.set('search', search.trim())
+      if (statusFilter !== '') params.set('is_active', statusFilter)
       const payload = await request(`/roles?${params.toString()}`)
       setRoles(payload.data || [])
       setPagination({
@@ -65,7 +67,7 @@ const RoleManagement = () => {
     } finally {
       setLoading(false)
     }
-  }, [page, search, request])
+  }, [page, search, statusFilter, request])
 
   useEffect(() => { loadRoles() }, [loadRoles])
 
@@ -114,6 +116,8 @@ const RoleManagement = () => {
           roles={roles}
           searchInput={searchInput}
           setSearchInput={setSearchInput}
+          statusFilter={statusFilter}
+          setStatusFilter={setStatusFilter}
           search={search}
           setSearch={setSearch}
           page={page}
