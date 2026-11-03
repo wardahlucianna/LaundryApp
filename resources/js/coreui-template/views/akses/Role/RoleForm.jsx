@@ -129,7 +129,7 @@ const RoleFormPage = () => {
                 <hr className="my-4" />
                 <div className="mt-4">
                   <style>{" .role-permission-checkbox .form-check-input { width: 1.15rem; height: 1.15rem; margin-top: 0.15rem; accent-color: #0d6efd; } .role-permission-checkbox .form-check-input:checked { background-color: #0d6efd; border-color: #0d6efd; } .role-permission-checkbox .form-check-input:focus { border-color: #0d6efd; box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.2); } .role-permission-checkbox .form-check-label { padding-left: 0.25rem; } "}</style>
-                  <div className="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3"><h5 className="mb-1">Checklist Hak Akses</h5><span className="badge bg-primary">{selectedPermissionIds.length} dipilih</span></div>
+                  <div className="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3"><h5 className="mb-1">Checklist Hak Akses</h5><span className="text-body fw-semibold">{selectedPermissionIds.length} dipilih</span></div>
                   {permissions.length === 0 ? <CAlert color="info">Belum ada permission aktif yang tersedia.</CAlert> : (
                     <div className="d-flex flex-column gap-3">
                       {groupedPermissions.map((group) => (
