@@ -68,9 +68,20 @@ const RoleDetailPage = () => {
       if (!features.has(featureName)) features.set(featureName, [])
       features.get(featureName).push(permission)
     })
-    return Array.from(groups.entries()).sort(([a], [b]) => a.localeCompare(b)).map(([groupName, features]) => ({
+    return Array.from(groups.entries()).sort(([a, featuresA], [b, featuresB]) => {
+      const groupOrderA = Number([...featuresA.values()][0]?.[0]?.group?.ordering ?? 0)
+      const groupOrderB = Number([...featuresB.values()][0]?.[0]?.group?.ordering ?? 0)
+      return groupOrderA - groupOrderB || a.localeCompare(b)
+    }).map(([groupName, features]) => ({
       name: groupName,
-      features: Array.from(features.entries()).sort(([a], [b]) => a.localeCompare(b)).map(([featureName, items]) => ({ name: featureName, items: [...items].sort((a, b) => a.name.localeCompare(b.name)) })),
+      features: Array.from(features.entries()).sort(([a, itemsA], [b, itemsB]) => {
+        const featureOrderA = Number(itemsA[0]?.ordering ?? 0)
+        const featureOrderB = Number(itemsB[0]?.ordering ?? 0)
+        return featureOrderA - featureOrderB || a.localeCompare(b)
+      }).map(([featureName, items]) => ({
+        name: featureName,
+        items: [...items].sort((a, b) => permissionActionOrder(a) - permissionActionOrder(b) || a.name.localeCompare(b.name)),
+      })),
     }))
   }, [permissions])
 
