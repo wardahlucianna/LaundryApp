@@ -90,6 +90,7 @@ const FeatureManagement = () => {
   }
 
   const applySearch = () => { setPage(1); setSearch(searchInput.trim()) }
+  const changeStatusFilter = (value) => { setStatusFilter(value); setPage(1); setSearch(searchInput.trim()) }
   const resetSearch = () => { setSearchInput(''); setStatusFilter(''); setPage(1); setSearch('') }
 
   return (
@@ -97,7 +98,7 @@ const FeatureManagement = () => {
       <div className="mb-3"><h2 className="fs-4 mb-1">Management Fitur</h2></div>
       {notice && <CAlert color="success" dismissible onClose={() => setNotice('')}>{notice}</CAlert>}
       {error && <CAlert color="danger" dismissible onClose={() => setError('')}>{error}</CAlert>}
-      <FeatureList features={features} groups={groups} searchInput={searchInput} setSearchInput={setSearchInput} statusFilter={statusFilter} setStatusFilter={setStatusFilter} applySearch={applySearch} resetSearch={resetSearch} pagination={pagination} loading={loading} page={page} setPage={setPage} onCreate={openCreate} onEdit={openEdit} onDelete={deleteFeature} />
+      <FeatureList features={features} groups={groups} searchInput={searchInput} setSearchInput={setSearchInput} statusFilter={statusFilter} setStatusFilter={changeStatusFilter} applySearch={applySearch} resetSearch={resetSearch} pagination={pagination} loading={loading} page={page} setPage={setPage} onCreate={openCreate} onEdit={openEdit} onDelete={deleteFeature} />
     </div>
   )
 }
