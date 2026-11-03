@@ -24,6 +24,11 @@ class PermissionFeatureController extends Controller
         return response()->json($query->paginate(min(max($request->integer('per_page', 100), 1), 100)));
     }
 
+    public function show(PermissionFeature $permissionFeature)
+    {
+        return response()->json(['data' => $permissionFeature->load('group')->loadCount('actions')]);
+    }
+
     public function store(Request $request)
     {
         $data = $request->validate([
