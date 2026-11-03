@@ -1,12 +1,12 @@
 <?php
 
-namespace App\\Http\\Controllers\\Api\\Auth;
+namespace App\Http\Controllers\Api\Auth;
 
-use App\\Http\\Controllers\\Controller;
-use App\\Models\\Akses\\User;
-use Illuminate\\Http\\Request;
-use Illuminate\\Support\\Facades\\Auth;
-use Illuminate\\Validation\\ValidationException;
+use App\Http\Controllers\Controller;
+use App\Models\Akses\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -35,7 +35,7 @@ class AuthController extends Controller
         ]);
 
         $user = User::where('username', $credentials['username'])->where('is_active', true)->first();
-        if (!$user || !\\Illuminate\\Support\\Facades\\Hash::check($credentials['password'], $user->password)) {
+        if (!$user || !\Illuminate\Support\Facades\Hash::check($credentials['password'], $user->password)) {
             throw ValidationException::withMessages(['username' => ['Username atau password salah.']]);
         }
 
@@ -58,7 +58,7 @@ class AuthController extends Controller
         $user = $request->user()->load('role.features');
         $allowedFeatureIds = $this->featureIds($user);
 
-        $groups = \\App\\Models\\Akses\\PermissionGroup::query()
+        $groups = \App\Models\Akses\PermissionGroup::query()
             ->where('is_active', true)
             ->with(['features' => fn ($query) => $query
                 ->where('is_active', true)
