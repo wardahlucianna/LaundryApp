@@ -2,21 +2,6 @@
  * AppSidebar Component
  *
  * Collapsible navigation sidebar with branding, menu items, and toggle controls.
- *
- * Features:
- * - Redux-controlled visibility state
- * - Unfoldable/narrow mode for more screen space
- * - Brand logo with full and narrow variants
- * - Close button for mobile devices
- * - Footer with toggle button
- * - Dark color scheme
- * - Fixed positioning
- *
- * @component
- * @example
- * return (
- *   <AppSidebar />
- * )
  */
 
 import React, { useEffect, useState } from 'react'
@@ -39,26 +24,13 @@ import { AppSidebarNav } from './AppSidebarNav'
 import { logo } from 'src/assets/brand/logo'
 import { sygnet } from 'src/assets/brand/sygnet'
 
-
-/**
- * AppSidebar functional component
- *
- * Manages sidebar state with Redux:
- * - sidebarShow: Controls sidebar visibility
- * - sidebarUnfoldable: Controls narrow/wide mode
- *
- * Renders navigation from _nav.js configuration file.
- * Memoized to prevent unnecessary re-renders.
- *
- * @returns {React.ReactElement} Sidebar with navigation
- */
 const AppSidebar = () => {
   const dispatch = useDispatch()
   const unfoldable = useSelector((state) => state.sidebarUnfoldable)
   const sidebarShow = useSelector((state) => state.sidebarShow)
+
   const buildNavigation = (groups) => {
     const normalizeMenuPath = (feature) => {
-      // Keep Management Fitur connected to its registered route even if its DB path is stale.
       if (String(feature.name || '').toLowerCase().includes('manajemen fitur')) return '/permissions'
       const path = String(feature.path || '').trim()
       if (!path) return null
@@ -79,7 +51,14 @@ const AppSidebar = () => {
     return items
   }
 
-  const [navigation, setNavigation] = useState([])
+  const [navigation, setNavigation] = useState(() => {
+    try {
+      const cachedGroups = sessionStorage.getItem('sunriseLaundryMenus')
+      return cachedGroups ? buildNavigation(JSON.parse(cachedGroups)) : []
+    } catch {
+      return []
+    }
+  })
 
   useEffect(() => {
     let cancelled = false
@@ -93,10 +72,13 @@ const AppSidebar = () => {
         })
         if (!response.ok) throw new Error('Gagal memuat menu.')
         const payload = await response.json()
-        if (!cancelled) setNavigation(buildNavigation(payload.data || []))
-      } catch (error) {
-        // Do not keep displaying stale menus if the latest permissions cannot be loaded.
-        if (!cancelled) setNavigation([])
+        if (!cancelled) {
+          const groups = payload.data || []
+          sessionStorage.setItem('sunriseLaundryMenus', JSON.stringify(groups))
+          setNavigation(buildNavigation(groups))
+        }
+      } catch {
+        // Keep cached navigation visible if a background refresh temporarily fails.
       }
     }
 
