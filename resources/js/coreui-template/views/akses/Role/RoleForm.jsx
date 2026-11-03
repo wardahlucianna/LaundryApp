@@ -85,7 +85,7 @@ const RoleFormPage = () => {
     <div className="mb-3"><h2 className="fs-4 mb-1">Management Role</h2></div>
     {error && <CAlert color="danger" dismissible onClose={() => setError('')}>{error}</CAlert>}
       <CCard className="role-panel role-form-card mb-4">
-        <CCardHeader><strong className="fs-5">{role ? 'Edit Role' : 'Tambah Role'}</strong></CCardHeader>
+        <CCardHeader className="d-flex align-items-center py-3" style={{ backgroundColor: 'var(--cui-tertiary-bg)', borderBottom: '1px solid var(--cui-border-color)' }}><strong className="fs-5">{role ? 'Edit Role' : 'Tambah Role'}</strong></CCardHeader>
         <CCardBody>
           {validation && <CAlert color="warning">{validation}</CAlert>}
           <CForm onSubmit={save}>
