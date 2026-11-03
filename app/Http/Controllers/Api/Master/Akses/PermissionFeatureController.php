@@ -11,7 +11,7 @@ class PermissionFeatureController extends Controller
 {
     public function index(Request $request)
     {
-        $query = PermissionFeature::query()->with('group')->withCount('actions')->orderBy('name');
+        $query = PermissionFeature::query()->with('group')->withCount('actions')->orderBy('ordering')->orderBy('name');
         if ($search = $request->string('search')->toString()) {
             $query->where(fn ($q) => $q->where('name', 'ilike', "%{$search}%")
                 ->orWhere('code', 'ilike', "%{$search}%")
@@ -36,6 +36,7 @@ class PermissionFeatureController extends Controller
             'name' => ['required', 'string', 'max:120'],
             'code' => ['required', 'string', 'max:80', 'alpha_dash', 'unique:permission_features,code'],
             'path' => ['nullable', 'string', 'max:255'],
+            'ordering' => ['required', 'integer', 'min:0'],
             'menu_type' => ['required', Rule::in(['sidebar', 'topbar'])],
             'is_active' => ['sometimes', 'boolean'],
         ]);
@@ -49,6 +50,7 @@ class PermissionFeatureController extends Controller
             'name' => ['sometimes', 'required', 'string', 'max:120'],
             'code' => ['sometimes', 'required', 'string', 'max:80', 'alpha_dash', Rule::unique('permission_features', 'code')->ignore($permissionFeature->id)],
             'path' => ['nullable', 'string', 'max:255'],
+            'ordering' => ['sometimes', 'required', 'integer', 'min:0'],
             'menu_type' => ['sometimes', 'required', Rule::in(['sidebar', 'topbar'])],
             'is_active' => ['sometimes', 'boolean'],
         ]);
