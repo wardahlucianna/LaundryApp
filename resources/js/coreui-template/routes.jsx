@@ -1,8 +1,8 @@
 import React from 'react'
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
-const RoleManagement = React.lazy(() => import('./views/akses/RoleManagement'))
-const RoleFormPage = React.lazy(() => import('./views/akses/RoleForm'))
-const RoleDetailPage = React.lazy(() => import('./views/akses/RoleDetail'))
+const RoleManagement = React.lazy(() => import('./views/akses/Role/RoleManagement'))
+const RoleFormPage = React.lazy(() => import('./views/akses/Role/RoleForm'))
+const RoleDetailPage = React.lazy(() => import('./views/akses/Role/RoleDetail'))
 const Placeholder = ({ title }) => <div className="pt-4"><h2>{title}</h2><p>Halaman ini akan diintegrasikan dengan fitur Sunrise Laundry.</p></div>
 export const routes = [
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
