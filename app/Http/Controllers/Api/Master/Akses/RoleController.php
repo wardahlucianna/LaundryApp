@@ -1,15 +1,15 @@
 <?php
 
-namespace App\\Http\\Controllers\\Api\\Master\\Akses;
+namespace App\Http\Controllers\Api\Master\Akses;
 
-use App\\Http\\Controllers\\Controller;
-use App\\Http\\Requests\\Master\\Akses\\Role\\StoreRoleRequest;
-use App\\Http\\Requests\\Master\\Akses\\Role\\UpdateRoleRequest;
-use App\\Models\\Akses\\PermissionFeature;
-use App\\Models\\Akses\\Role;
-use Illuminate\\Http\\Request;
-use Illuminate\\Support\\Facades\\DB;
-use Illuminate\\Validation\\ValidationException;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Master\Akses\Role\StoreRoleRequest;
+use App\Http\Requests\Master\Akses\Role\UpdateRoleRequest;
+use App\Models\Akses\PermissionFeature;
+use App\Models\Akses\Role;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class RoleController extends Controller
 {
