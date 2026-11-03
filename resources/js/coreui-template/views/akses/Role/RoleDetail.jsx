@@ -12,6 +12,18 @@ const apiBase = (() => {
   return base ? (base.endsWith('/api') ? base : `${base}/api`) : '/api'
 })()
 
+const permissionActionOrder = (permission) => {
+  const action = `${permission.action_name || ''} ${permission.name || ''}`.toLowerCase()
+  if (/view|lihat|read|akses/.test(action)) return 0
+  if (/create|add|tambah|insert/.test(action)) return 1
+  if (/edit|update|ubah|perbarui/.test(action)) return 2
+  if (/delete|remove|hapus/.test(action)) return 3
+  if (/print|cetak/.test(action)) return 4
+  if (/export|unduh|download/.test(action)) return 5
+  if (/import|unggah|upload/.test(action)) return 6
+  return 7
+}
+
 const RoleDetailPage = () => {
   const { id } = useParams()
   const navigate = useNavigate()
@@ -58,7 +70,7 @@ const RoleDetailPage = () => {
     })
     return Array.from(groups.entries()).sort(([a], [b]) => a.localeCompare(b)).map(([groupName, features]) => ({
       name: groupName,
-      features: Array.from(features.entries()).sort(([a], [b]) => a.localeCompare(b)).map(([featureName, items]) => ({ name: featureName, items })),
+      features: Array.from(features.entries()).sort(([a], [b]) => a.localeCompare(b)).map(([featureName, items]) => ({ name: featureName, items: [...items].sort((a, b) => permissionActionOrder(a) - permissionActionOrder(b) || (a.action_name || a.name || '').localeCompare(b.action_name || b.name || '')) })),
     }))
   }, [permissions])
 
