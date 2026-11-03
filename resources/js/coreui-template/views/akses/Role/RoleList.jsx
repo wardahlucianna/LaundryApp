@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-  CBadge, CButton, CCard, CCardBody, CCardHeader, CCol, CFormInput,
+  CBadge, CButton, CCard, CCardBody, CCardHeader, CCol, CFormInput, CFormSelect,
   CRow, CSpinner, CTable, CTableBody, CTableDataCell, CTableHead,
   CTableHeaderCell, CTableRow,
 } from '@coreui/react'
@@ -8,18 +8,18 @@ import CIcon from '@coreui/icons-react'
 import ConfirmModal from '../../../components/ConfirmModal'
 import { cilPencil, cilPlus, cilSearch, cilTrash, cilReload } from '@coreui/icons'
 
-const RoleList = ({ roles, searchInput, setSearchInput, search, setSearch, page, setPage, pagination, loading, loadRoles, onCreate, onDetail, onEdit, onDelete, roleToDelete, deleting, onConfirmDelete, onCancelDelete }) => {
+const RoleList = ({ roles, searchInput, setSearchInput, search, setSearch, statusFilter, setStatusFilter, page, setPage, pagination, loading, loadRoles, onCreate, onDetail, onEdit, onDelete, roleToDelete, deleting, onConfirmDelete, onCancelDelete }) => {
   const perPage = 10
   const showingStart = pagination.total === 0 ? 0 : (pagination.current_page - 1) * perPage + 1
   const showingEnd = Math.min(pagination.current_page * perPage, pagination.total)
   const applySearch = () => { const nextSearch = searchInput.trim(); setPage(1); if (nextSearch === search) loadRoles(); else setSearch(nextSearch) }
-  const resetSearch = () => { setSearchInput(''); if (search === '' && page === 1) loadRoles(); else { setSearch(''); setPage(1) } }
+  const resetSearch = () => { setSearchInput(''); setStatusFilter(''); if (search === '' && statusFilter === '' && page === 1) loadRoles(); else { setSearch(''); setPage(1) } }
   return <>
     <CCard className="role-panel role-list-panel mb-4">
       <CCardHeader className="d-flex flex-wrap justify-content-between align-items-center gap-2"><div><strong className="fs-5">Daftar Role</strong></div><CButton color="primary" size="sm" className="role-compact-button" onClick={onCreate}><CIcon icon={cilPlus} size="sm" className="me-1" />Tambah Role</CButton></CCardHeader>
       <CCardBody>
-        <CRow className="mb-3"><CCol xs={12} md={8} lg={6}><div className="d-flex gap-2 w-100">
-          <CFormInput placeholder="Cari nama atau kode" value={searchInput} onChange={(event) => setSearchInput(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter') applySearch() }} aria-label="Cari role" className="flex-grow-1" />
+        <CRow className="mb-3"><CCol xs={12} md={8} lg={6}><div className="d-flex flex-wrap gap-2 w-100">
+          <CFormSelect aria-label="Filter status role" value={statusFilter} onChange={(event) => { setStatusFilter(event.target.value); setPage(1) }} style={{ maxWidth: "160px" }} options={[{ label: "Semua Status", value: "" }, { label: "Aktif", value: "1" }, { label: "Nonaktif", value: "0" }]} /><CFormInput placeholder="Cari nama atau kode" value={searchInput} onChange={(event) => setSearchInput(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter') applySearch() }} aria-label="Cari role" className="flex-grow-1" />
           <CButton color="primary" size="sm" aria-label="Cari" title="Cari" className="role-search-button role-compact-button" onClick={applySearch}><CIcon icon={cilSearch} size="sm" />Cari</CButton>
           <CButton color="secondary" variant="outline" size="sm" aria-label="Reset filter" title="Reset filter" className="role-reset-button role-compact-button" onClick={resetSearch}><CIcon icon={cilReload} size="sm" />Reset</CButton>
         </div></CCol></CRow>
