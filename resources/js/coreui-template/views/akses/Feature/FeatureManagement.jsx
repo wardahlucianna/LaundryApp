@@ -174,7 +174,7 @@ const FeatureManagement = () => {
               <CTableHeaderCell>Path</CTableHeaderCell>
               <CTableHeaderCell>Jenis Menu</CTableHeaderCell>
               <CTableHeaderCell className="text-center">Jumlah Aksi</CTableHeaderCell>
-              <CTableHeaderCell>Status</CTableTableHeaderCell>
+              <CTableHeaderCell>Status</CTableHeaderCell>
               <CTableHeaderCell className="text-center" style={{ width: '120px' }}>Aksi</CTableHeaderCell>
             </CTableRow></CTableHead>
             <CTableBody>
