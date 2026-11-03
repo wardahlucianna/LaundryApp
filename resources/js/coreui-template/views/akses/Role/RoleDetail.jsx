@@ -123,8 +123,8 @@ const RoleDetailPage = () => {
                             style={{
                               width: '28px',
                               height: '28px',
-                              color: collapsedGroups[group.name] ? 'var(--cui-secondary-color)' : 'var(--cui-primary)',
-                              backgroundColor: collapsedGroups[group.name] ? 'var(--cui-tertiary-bg)' : 'var(--cui-primary-bg-subtle)',
+                              color: 'var(--cui-secondary-color)',
+                              backgroundColor: 'var(--cui-tertiary-bg)',
                               border: '1px solid var(--cui-border-color)',
                             }}
                           >
