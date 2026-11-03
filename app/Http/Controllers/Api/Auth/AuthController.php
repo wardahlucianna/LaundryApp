@@ -1,22 +1,30 @@
 <?php
 
-namespace App\Http\Controllers\Api\Auth;
+namespace App\\Http\\Controllers\\Api\\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Models\Akses\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
+use App\\Http\\Controllers\\Controller;
+use App\\Models\\Akses\\User;
+use Illuminate\\Http\\Request;
+use Illuminate\\Support\\Facades\\Auth;
+use Illuminate\\Validation\\ValidationException;
 
 class AuthController extends Controller
 {
-    private function featureCodes(?User $user): array
+    /**
+     * Return active feature IDs assigned to the user's role.
+     * Feature access is now based on role_permission_features, not legacy codes.
+     */
+    private function featureIds(?User $user): array
     {
-        if (!$user?->role) return [];
-        if ($user->role->code === 'SUPERADMIN') {
-            return \App\Models\Akses\PermissionFeature::where('is_active', true)->pluck('code')->all();
+        if (!$user?->role) {
+            return [];
         }
-        return $user->role->features->where('is_active', true)->pluck('code')->values()->all();
+
+        return $user->role->features
+            ->where('is_active', true)
+            ->pluck('id')
+            ->values()
+            ->all();
     }
 
     public function login(Request $request)
@@ -27,7 +35,7 @@ class AuthController extends Controller
         ]);
 
         $user = User::where('username', $credentials['username'])->where('is_active', true)->first();
-        if (!$user || !\Illuminate\Support\Facades\Hash::check($credentials['password'], $user->password)) {
+        if (!$user || !\\Illuminate\\Support\\Facades\\Hash::check($credentials['password'], $user->password)) {
             throw ValidationException::withMessages(['username' => ['Username atau password salah.']]);
         }
 
@@ -35,30 +43,49 @@ class AuthController extends Controller
         $request->session()->regenerate();
         $user->load('role.features');
 
-        return response()->json(['user' => $user, 'features' => $this->featureCodes($user)]);
+        return response()->json(['user' => $user, 'features' => $this->featureIds($user)]);
     }
 
     public function me(Request $request)
     {
         $user = $request->user()->load('role.features');
-        return response()->json(['user' => $user, 'features' => $this->featureCodes($user)]);
+
+        return response()->json(['user' => $user, 'features' => $this->featureIds($user)]);
     }
 
     public function menus(Request $request)
     {
         $user = $request->user()->load('role.features');
-        $allowedCodes = $this->featureCodes($user);
+        $allowedFeatureIds = $this->featureIds($user);
 
-        $groups = \App\Models\Akses\PermissionGroup::query()
+        $groups = \\App\\Models\\Akses\\PermissionGroup::query()
             ->where('is_active', true)
-            ->with(['features' => fn ($query) => $query->where('is_active', true)
-                ->where('menu_type', 'sidebar')->whereNotNull('path')->where('path', '<>','')])
-            ->orderBy('name')->get()
-            ->map(function ($group) use ($allowedCodes) {
-                $items = $group->features->filter(fn ($feature) => in_array($feature->code, $allowedCodes, true))
-                    ->map(fn ($feature) => ['id' => $feature->id, 'name' => $feature->name, 'code' => $feature->code, 'path' => $feature->path])->values();
-                return ['id' => $group->id, 'name' => $group->name, 'code' => $group->code, 'items' => $items];
-            })->filter(fn ($group) => $group['items']->isNotEmpty())->values();
+            ->with(['features' => fn ($query) => $query
+                ->where('is_active', true)
+                ->where('menu_type', 'sidebar')
+                ->whereNotNull('path')
+                ->where('path', '<>', '')])
+            ->orderBy('name')
+            ->get()
+            ->map(function ($group) use ($allowedFeatureIds) {
+                $items = $group->features
+                    ->filter(fn ($feature) => in_array($feature->id, $allowedFeatureIds, true))
+                    ->map(fn ($feature) => [
+                        'id' => $feature->id,
+                        'name' => $feature->name,
+                        'path' => $feature->path,
+                    ])
+                    ->values();
+
+                return [
+                    'id' => $group->id,
+                    'name' => $group->name,
+                    'icon' => $group->icon,
+                    'items' => $items,
+                ];
+            })
+            ->filter(fn ($group) => $group['items']->isNotEmpty())
+            ->values();
 
         return response()->json(['data' => $groups]);
     }
@@ -68,6 +95,7 @@ class AuthController extends Controller
         Auth::guard('web')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
         return response()->json(['message' => 'Berhasil keluar.']);
     }
 }
