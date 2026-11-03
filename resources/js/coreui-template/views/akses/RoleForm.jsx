@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { CAlert, CButton, CCard, CCardBody, CCardHeader, CCol, CForm, CFormCheck, CFormInput, CFormSwitch, CRow, CSpinner } from '@coreui/react'
-import RolePageLayout from './RolePageLayout'
 
 const apiBase = (() => {
   const base = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
@@ -110,7 +109,9 @@ const RoleFormPage = () => {
   }
 
   return (
-    <RolePageLayout title={id ? 'Ubah Role' : 'Tambah Role'} description={id ? 'Perbarui detail role dan hak akses.' : 'Buat role untuk mengelola hak akses aplikasi.'} errorMessage={error} onDismissError={() => setError('')}>
+    <div className="role-page-layout mb-4">
+      <div className="mb-3"><h2 className="fs-4 mb-1">{id ? 'Ubah Role' : 'Tambah Role'}</h2><div className="small text-body-secondary">{id ? 'Perbarui detail role dan hak akses.' : 'Buat role untuk mengelola hak akses aplikasi.'}</div></div>
+      {error && <CAlert color="danger" dismissible onClose={() => setError('')}>{error}</CAlert>}
       <div className="role-form-page">
         {loading ? (
           <div className="d-flex align-items-center gap-2 py-4 text-body-secondary"><CSpinner color="primary" size="sm" /><span>Memuat data role dan permission...</span></div>
@@ -159,7 +160,7 @@ const RoleFormPage = () => {
           </CCard>
         )}
       </div>
-    </RolePageLayout>
+    </div>
   )
 }
 
