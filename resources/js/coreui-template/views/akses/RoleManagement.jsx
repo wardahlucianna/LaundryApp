@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import RolePageLayout from './RolePageLayout'
 import RoleList from './RoleList'
 
 const apiBase = (() => {
@@ -100,14 +99,17 @@ const RoleManagement = () => {
 
   return (
     <div className="role-list-page">
-      <RolePageLayout
-        title="Daftar Role"
-        description="Lihat dan kelola peran aplikasi."
-        successMessage={notice}
-        errorMessage={error}
-        onDismissSuccess={() => setNotice('')}
-        onDismissError={() => setError('')}
-      >
+      <div className="role-page-layout mb-4">
+        <div className="mb-3">
+          <h2 className="fs-4 mb-1">Daftar Role</h2>
+          <div className="small text-body-secondary">Lihat dan kelola peran aplikasi.</div>
+        </div>
+        {notice && <div className="alert alert-success alert-dismissible" role="alert">
+          {notice}<button type="button" className="btn-close" aria-label="Tutup" onClick={() => setNotice('')} />
+        </div>}
+        {error && <div className="alert alert-danger alert-dismissible" role="alert">
+          {error}<button type="button" className="btn-close" aria-label="Tutup" onClick={() => setError('')} />
+        </div>}
         <RoleList
           roles={roles}
           searchInput={searchInput}
@@ -127,7 +129,7 @@ const RoleManagement = () => {
           onConfirmDelete={confirmDelete}
           onCancelDelete={() => setRoleToDelete(null)}
         />
-      </RolePageLayout>
+      </div>
     </div>
   )
 }
