@@ -9,7 +9,7 @@ import CIcon from '@coreui/icons-react'
 import { cilArrowLeft, cilPencil } from '@coreui/icons'
 
 const apiBase = (() => {
-  const base = (import.meta.env.VITE_API_URL || '').replace(/\\/$/, '')
+  const base = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
   return base ? (base.endsWith('/api') ? base : `${base}/api`) : '/api'
 })()
 
