@@ -2,117 +2,93 @@
 
 namespace Database\Seeders;
 
-use App\Models\Akses\Permission;
 use App\Models\Akses\PermissionFeature;
 use App\Models\Akses\PermissionGroup;
 use App\Models\Akses\Role;
-use App\Models\Akses\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class FeatureSeeder extends Seeder
 {
     public function run(): void
     {
-        $groups = [
-            'DASHBOARD' => ['Beranda', 'cilSpeedometer'],
-            'TRANSACTIONS' => ['Transaksi', 'cilCash'],
-            'OPERATIONS' => ['Operasional', 'cilBasket'],
-            'MASTER_DATA' => ['Master Data', 'cilPeople'],
-            'SETTINGS' => ['Pengaturan', 'cilSettings'],
-            'REPORTS' => ['Laporan', 'cilChartLine'],
-        ];
+        DB::transaction(function (): void {
+            $groups = [
+                ['name' => 'Beranda', 'description' => 'Ringkasan dan halaman utama aplikasi.', 'icon' => 'cilSpeedometer'],
+                ['name' => 'Transaksi', 'description' => 'Fitur transaksi dan pembayaran laundry.', 'icon' => 'cilCash'],
+                ['name' => 'Operasional', 'description' => 'Pengelolaan pesanan dan proses laundry.', 'icon' => 'cilBasket'],
+                ['name' => 'Master Data', 'description' => 'Pengelolaan data pelanggan dan data pendukung.', 'icon' => 'cilPeople'],
+                ['name' => 'Pengaturan', 'description' => 'Pengaturan role, fitur, dan hak akses pengguna.', 'icon' => 'cilSettings'],
+                ['name' => 'Laporan', 'description' => 'Laporan operasional dan transaksi.', 'icon' => 'cilChartLine'],
+            ];
 
-        $groupModels = [];
-        foreach ($groups as $key => [$name, $icon]) {
-            $groupModels[$key] = PermissionGroup::firstOrCreate(
-                ['name' => $name],
-                ['icon' => $icon, 'is_active' => true],
-            );
-            $groupModels[$key]->update(['icon' => $icon, 'is_active' => true]);
-        }
-
-        $features = [
-            ['DASHBOARD', 'Dashboard', 'DASHBOARD', '/dashboard', 'DASHBOARD_VIEW'],
-            ['TRANSACTIONS', 'Manajemen Transaksi', 'TRANSACTIONS', '/transactions', 'TRANSACTION_VIEW'],
-            ['OPERATIONS', 'Pesanan', 'ORDERS', '/orders', 'ORDERS_VIEW'],
-            ['OPERATIONS', 'Proses Laundry', 'LAUNDRY_PROCESS', '/process', 'LAUNDRY_PROCESS_VIEW'],
-            ['MASTER_DATA', 'Manajemen Pelanggan', 'CUSTOMERS', '/customers', 'CUSTOMER_VIEW'],
-            ['TRANSACTIONS', 'Pembayaran', 'PAYMENTS', '/payments', 'PAYMENT_VIEW'],
-            ['OPERATIONS', 'Antar Jemput', 'DELIVERIES', '/deliveries', 'DELIVERY_VIEW'],
-            ['REPORTS', 'Laporan', 'REPORTS', '/reports', 'REPORT_VIEW'],
-            ['SETTINGS', 'Manajemen Role', 'ROLES', '/roles', 'ROLE_VIEW'],
-            ['SETTINGS', 'Manajemen Fitur', 'FEATURES', '/permissions', 'FEATURE_VIEW'],
-            ['SETTINGS', 'Hak Akses', 'ACCESS', '/access', 'ACCESS_MANAGE'],
-        ];
-
-        $featureModels = [];
-        foreach ($features as [$groupCode, $name, $code, $path, $viewCode]) {
-            $featureModels[$code] = PermissionFeature::updateOrCreate(
-                ['path' => $path],
-                [
-                    'permission_group_id' => $groupModels[$groupCode]->id,
-                    'name' => $name,
-                    'path' => $path,
-                    'menu_type' => 'sidebar',
-                    'is_active' => true,
-                ],
-            );
-        }
-
-        $actions = [
-            'DASHBOARD' => ['view' => ['Lihat', 'DASHBOARD_VIEW']],
-            'TRANSACTIONS' => ['view' => ['Lihat', 'TRANSACTION_VIEW'], 'create' => ['Tambah', 'TRANSACTION_CREATE'], 'update' => ['Edit', 'TRANSACTION_UPDATE'], 'delete' => ['Hapus', 'TRANSACTION_DELETE']],
-            'ORDERS' => ['view' => ['Lihat', 'ORDERS_VIEW']],
-            'LAUNDRY_PROCESS' => ['view' => ['Lihat', 'LAUNDRY_PROCESS_VIEW']],
-            'CUSTOMERS' => ['view' => ['Lihat', 'CUSTOMER_VIEW'], 'create' => ['Tambah', 'CUSTOMER_CREATE'], 'update' => ['Edit', 'CUSTOMER_UPDATE'], 'delete' => ['Hapus', 'CUSTOMER_DELETE']],
-            'PAYMENTS' => ['view' => ['Lihat', 'PAYMENT_VIEW']],
-            'DELIVERIES' => ['view' => ['Lihat', 'DELIVERY_VIEW']],
-            'REPORTS' => ['view' => ['Lihat', 'REPORT_VIEW']],
-            'ROLES' => ['view' => ['Lihat', 'ROLE_VIEW'], 'manage' => ['Kelola', 'ROLE_MANAGE']],
-            'FEATURES' => ['view' => ['Lihat', 'FEATURE_VIEW'], 'create' => ['Tambah', 'FEATURE_CREATE'], 'update' => ['Edit', 'FEATURE_UPDATE'], 'delete' => ['Hapus', 'FEATURE_DELETE']],
-            'ACCESS' => ['manage' => ['Kelola Hak Akses', 'ACCESS_MANAGE']],
-        ];
-
-        $permissions = collect();
-        foreach ($actions as $featureCode => $featureActions) {
-            foreach ($featureActions as $actionCode => [$actionLabel, $permissionCode]) {
-                $permission = Permission::updateOrCreate(['code' => $permissionCode], [
-                    'name' => $actionLabel, 'path' => $featureModels[$featureCode]->path,
-                    'permission_feature_id' => $featureModels[$featureCode]->id,
-                    'action_name' => $actionCode, 'is_active' => true,
-                ]);
-                $permissions->push($permission);
+            $groupModels = [];
+            foreach ($groups as $groupData) {
+                $group = PermissionGroup::updateOrCreate(
+                    ['name' => $groupData['name']],
+                    [
+                        'description' => $groupData['description'],
+                        'icon' => $groupData['icon'],
+                        'is_active' => true,
+                    ],
+                );
+                $groupModels[$groupData['name']] = $group;
             }
-        }
 
-        $superAdmin = Role::where('name', 'Owner')->first();
-        if ($superAdmin) $superAdmin->update(['name' => 'Super Admin', 'is_active' => true]);
-        else $superAdmin = Role::updateOrCreate(['name' => 'Super Admin'], ['is_active' => true]);
-        $superAdmin->permissions()->sync($permissions->pluck('id'));
+            $features = [
+                ['Beranda', 'Dashboard', '/dashboard', 1],
+                ['Transaksi', 'Manajemen Transaksi', '/transactions', 10],
+                ['Operasional', 'Pesanan', '/orders', 20],
+                ['Operasional', 'Proses Laundry', '/process', 30],
+                ['Master Data', 'Manajemen Pelanggan', '/customers', 40],
+                ['Transaksi', 'Pembayaran', '/payments', 50],
+                ['Operasional', 'Antar Jemput', '/deliveries', 60],
+                ['Laporan', 'Laporan', '/reports', 70],
+                ['Pengaturan', 'Manajemen Role', '/roles', 80],
+                ['Pengaturan', 'Manajemen Fitur', '/permissions', 90],
+                ['Pengaturan', 'Hak Akses', '/access', 100],
+            ];
 
-        User::where('role_id', $superAdmin->id)->where('username', 'owner')->update([
-            'username' => 'superadmin', 'full_name' => 'Super Admin',
-            'email' => env('INITIAL_SUPERADMIN_EMAIL', 'superadmin@sunrise.local'),
-        ]);
+            $featureModels = [];
+            foreach ($features as [$groupName, $name, $path, $ordering]) {
+                $feature = PermissionFeature::updateOrCreate(
+                    ['path' => $path],
+                    [
+                        'permission_group_id' => $groupModels[$groupName]->id,
+                        'name' => $name,
+                        'ordering' => $ordering,
+                        'menu_type' => 'sidebar',
+                        'is_active' => true,
+                    ],
+                );
+                $featureModels[$path] = $feature;
+            }
 
-        $admin = Role::updateOrCreate(['name' => 'Administrator'], ['is_active' => true]);
-        $admin->permissions()->sync($permissions->reject(fn ($permission) => $permission->code === 'ACCESS_MANAGE')->pluck('id'));
-        $cashier = Role::updateOrCreate(['name' => 'Kasir'], ['is_active' => true]);
-        $cashier->permissions()->sync($permissions->whereIn('code', ['DASHBOARD_VIEW', 'TRANSACTION_VIEW', 'TRANSACTION_CREATE', 'TRANSACTION_UPDATE', 'ORDERS_VIEW', 'CUSTOMER_VIEW', 'PAYMENT_VIEW'])->pluck('id'));
-        $operator = Role::updateOrCreate(['name' => 'Operator Laundry'], ['is_active' => true]);
-        $operator->permissions()->sync($permissions->whereIn('code', ['DASHBOARD_VIEW', 'ORDERS_VIEW', 'LAUNDRY_PROCESS_VIEW'])->pluck('id'));
+            $roles = [];
+            foreach (['Super Admin', 'Administrator', 'Kasir', 'Operator Laundry'] as $roleName) {
+                $roles[$roleName] = Role::updateOrCreate(
+                    ['name' => $roleName],
+                    ['is_active' => true],
+                );
+            }
 
-        if (!User::query()->exists()) {
-            $username = env('INITIAL_SUPERADMIN_USERNAME', 'superadmin');
-            $password = env('INITIAL_SUPERADMIN_PASSWORD') ?: Str::random(20);
-            User::create([
-                'role_id' => $superAdmin->id, 'full_name' => env('INITIAL_SUPERADMIN_NAME', 'Super Admin'),
-                'username' => $username, 'email' => env('INITIAL_SUPERADMIN_EMAIL', 'superadmin@sunrise.local'),
-                'password' => $password, 'is_active' => true,
-            ]);
-            $this->command?->info("Initial Super Admin created. Username: {$username} | Password: {$password}");
-            $this->command?->warn('Simpan kredensial ini dan segera ganti password setelah login pertama.');
-        }
+            $allFeatureIds = collect($featureModels)->pluck('id')->all();
+            $adminFeatureIds = collect($featureModels)
+                ->reject(fn (PermissionFeature $feature) => $feature->path === '/access')
+                ->pluck('id')->all();
+
+            $roles['Super Admin']->features()->sync($allFeatureIds);
+            $roles['Administrator']->features()->sync($adminFeatureIds);
+
+            $roles['Kasir']->features()->sync(collect([
+                '/dashboard', '/transactions', '/orders', '/customers', '/payments',
+            ])->map(fn (string $path) => $featureModels[$path]->id)->all());
+
+            $roles['Operator Laundry']->features()->sync(collect([
+                '/dashboard', '/orders', '/process',
+            ])->map(fn (string $path) => $featureModels[$path]->id)->all());
+        });
+
+        $this->command?->info('Seeder group fitur, fitur, role, dan hak akses berhasil dijalankan.');
     }
 }
