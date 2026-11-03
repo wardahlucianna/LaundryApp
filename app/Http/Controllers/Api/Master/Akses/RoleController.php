@@ -36,7 +36,7 @@ class RoleController extends Controller
 
     public function show(Role $role)
     {
-        return response()->json(['data' => $role->load('permissions')]);
+        return response()->json(['data' => $role->load('permissions.feature.group')->loadCount('users')]);
     }
 
     public function update(UpdateRoleRequest $request, Role $role)
