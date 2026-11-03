@@ -18,7 +18,7 @@ class EnsurePermission
         return match (strtoupper($permissionCode)) {
             'FEATURE_VIEW', 'FEATURE_CREATE', 'FEATURE_UPDATE', 'FEATURE_DELETE' => 'Manajemen Fitur',
             'ROLE_VIEW', 'ROLE_MANAGE' => 'Manajemen Role',
-            'ACCESS_MANAGE' => 'Hak Akses',
+            'ACCESS_MANAGE' => 'Manajemen Role',
             default => null,
         };
     }
