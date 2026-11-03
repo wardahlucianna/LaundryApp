@@ -36,7 +36,7 @@ const RoleDetailPage = () => {
   const request = useCallback(async (path) => {
     const token = localStorage.getItem('auth_token') || localStorage.getItem('access_token') || localStorage.getItem('token') || ''
     const response = await fetch(`${apiBase}${path}`, {
-      headers: { Accept: 'application/json' }, credentials: 'include',
+      headers: { Accept: 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) }, credentials: 'include',
     })
     const payload = await response.json().catch(() => ({}))
     if (!response.ok) throw new Error(payload.message || 'Gagal memuat detail role.')
@@ -105,7 +105,7 @@ const RoleDetailPage = () => {
             <CCardBody>
               {groupedPermissions.length === 0 ? <div className="text-body-secondary text-center py-3">Role ini belum memiliki hak akses.</div> : (
                 <div className="d-flex flex-column gap-3">
-                  <style>{" .role-permission-checkbox .form-check-input { width: 1.15rem; height: 1.15rem; margin-top: 0.15rem; } .role-permission-checkbox .form-check-input:disabled { opacity: 1; } .role-permission-checkbox .form-check-input:checked, .role-permission-checkbox .form-check-input:checked:disabled { background-color: #0d6efd; border-color: #0d6efd; } .role-permission-checkbox .form-check-label, .role-permission-checkbox .form-check-input:disabled ~ .form-check-label { padding-left: 0.25rem; color: var(--cui-body-color) !important; opacity: 1 !important; } "}</style>
+                  <style>{" .role-permission-checkbox .form-check-input { width: 1.15rem; height: 1.15rem; margin-top: 0.15rem; background-color: var(--cui-body-bg); border: 1.5px solid #6c757d; opacity: 1; } .role-permission-checkbox .form-check-input:disabled { opacity: 1; } .role-permission-checkbox .form-check-input:checked, .role-permission-checkbox .form-check-input:checked:disabled { background-color: #0d6efd; border-color: #0d6efd; } .role-permission-checkbox .form-check-label, .role-permission-checkbox .form-check-input:disabled ~ .form-check-label { padding-left: 0.25rem; color: var(--cui-body-color) !important; opacity: 1 !important; } "}</style>
                   {groupedPermissions.map((group) => (
                     <CCard key={group.name} className="border">
                       <CCardHeader className="py-2">
