@@ -102,8 +102,8 @@ const RoleManagement = () => {
     <div className="role-list-page">
       <div className="role-page-layout mb-4">
         <div className="mb-3">
-          <h2 className="fs-4 mb-1">Daftar Role</h2>
-          <div className="small text-body-secondary">Lihat dan kelola peran aplikasi.</div>
+          <h2 className="fs-4 mb-1">Management Role</h2>
+          <div className="small text-body-secondary">Atur role dan hak akses pengguna aplikasi.</div>
         </div>
         {notice && <div className="alert alert-success alert-dismissible" role="alert">
           {notice}<button type="button" className="btn-close" aria-label="Tutup" onClick={() => setNotice('')} />
