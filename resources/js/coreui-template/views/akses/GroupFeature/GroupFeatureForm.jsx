@@ -8,7 +8,7 @@ const GroupFeatureForm = () => {
   const navigate = useNavigate()
   const { id } = useParams()
   const [group, setGroup] = useState(null)
-  const [values, setValues] = useState({ name: '', description: '', icon: 'cilFolderOpen', ordering: 1, is_active: true })
+  const [values, setValues] = useState({ name: '', icon: 'cilFolderOpen', ordering: 1, is_active: true })
   const [loading, setLoading] = useState(Boolean(id))
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
@@ -26,7 +26,7 @@ const GroupFeatureForm = () => {
     request('/permission-groups?per_page=100').then(payload => {
       const found = (payload.data || []).find(item => String(item.id) === String(id))
       if (!found) throw new Error('Group feature tidak ditemukan.')
-      if (active) { setGroup(found); setValues({ name: found.name || '', description: found.description || '', icon: found.icon || 'cilFolderOpen', ordering: Number(found.ordering) || 1, is_active: Boolean(found.is_active) }) }
+      if (active) { setGroup(found); setValues({ name: found.name || '', icon: found.icon || 'cilFolderOpen', ordering: Number(found.ordering) || 1, is_active: Boolean(found.is_active) }) }
     }).catch(e => { if (active) setError(e.message || 'Gagal memuat group feature.') }).finally(() => { if (active) setLoading(false) })
     return () => { active = false }
   }, [id, request])
@@ -35,7 +35,7 @@ const GroupFeatureForm = () => {
     if (!values.name.trim()) { setError('Nama group wajib diisi.'); return }
     setSaving(true)
     try {
-      const body = { name: values.name.trim(), description: values.description.trim() || null, icon: values.icon, ordering: Number(values.ordering), is_active: values.is_active }
+      const body = { name: values.name.trim(), icon: values.icon, ordering: Number(values.ordering), is_active: values.is_active }
       await request(id ? '/permission-groups/' + id : '/permission-groups', { method: id ? 'PUT' : 'POST', body: JSON.stringify(body) })
       // Immediately refresh the sidebar menu so the selected group icon is reflected.
       window.dispatchEvent(new Event('sunrise:permissions-updated'))
@@ -52,7 +52,6 @@ const GroupFeatureForm = () => {
           <CCol xs={12} md={6}><CFormInput label="Nama Group" placeholder="Contoh: Master Data" value={values.name} onChange={e => setValues(v => ({ ...v, name: e.target.value }))} required maxLength={120} /></CCol>
           <CCol xs={12} md={6}><CFormSelect label="Icon Group" value={values.icon} onChange={e => setValues(v => ({ ...v, icon: e.target.value }))} options={iconOptions.map(icon => ({ label: icon, value: icon }))} required /></CCol>
           <CCol xs={12} md={6}><CFormInput label="Ordering" type="number" min="1" step="1" value={values.ordering} onChange={e => setValues(v => ({ ...v, ordering: e.target.value }))} required /></CCol>
-          <CCol xs={12}><CFormInput label="Deskripsi" placeholder="Deskripsi group feature" value={values.description} onChange={e => setValues(v => ({ ...v, description: e.target.value }))} maxLength={500} /></CCol>
           <CCol xs={12}><div className="role-status-box d-flex align-items-center justify-content-between rounded p-3"><div className="role-status-copy"><div className="fw-semibold mb-1">Status</div><div className="role-status-note">Aktifkan group feature agar dapat digunakan.</div></div><CFormSwitch className={`role-status-switch ${values.is_active ? 'is-active' : 'is-inactive'}`} label={values.is_active ? 'Aktif' : 'Nonaktif'} checked={values.is_active} onChange={e => setValues(v => ({ ...v, is_active: e.target.checked }))} /></div></CCol>
         </CRow><div className="d-flex justify-content-end gap-2 mt-4"><CButton color="secondary" size="sm" variant="outline" type="button" disabled={saving} onClick={() => navigate('/permission-groups')}>Batal</CButton><CButton color="primary" size="sm" type="submit" disabled={saving}>{saving ? <><CSpinner size="sm" className="me-2" />Menyimpan...</> : 'Simpan'}</CButton></div></CForm>
       </CCardBody></CCard>}
