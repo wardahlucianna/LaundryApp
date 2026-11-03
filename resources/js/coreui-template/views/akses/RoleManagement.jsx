@@ -7,6 +7,7 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import ConfirmModal from '../../components/ConfirmModal'
+import RolePageLayout from './RolePageLayout'
 import { cilPencil, cilPlus, cilSearch, cilTrash, cilReload, cilInfo } from '@coreui/icons'
 
 const apiBase = (() => {
@@ -107,15 +108,7 @@ const RoleManagement = () => {
 
   return (
     <div className="role-list-page">
-      <CRow className="mb-3">
-        <CCol>
-          <h2 className="fs-4 mb-1">Manajemen Role</h2>
-        </CCol>
-      </CRow>
-
-      {notice && <CAlert color="success" dismissible onClose={() => setNotice('')}>{notice}</CAlert>}
-      {error && <CAlert color="danger" dismissible onClose={() => setError('')}>{error}</CAlert>}
-
+<RolePageLayout title="Daftar Role" description="Lihat dan kelola peran aplikasi." successMessage={notice} errorMessage={error} onDismissSuccess={() => setNotice('')} onDismissError={() => setError('')}>
       <CCard className="role-panel role-list-panel mb-4">
         <CCardHeader className="d-flex flex-wrap justify-content-between align-items-center gap-2">
           <div><strong className="fs-5">Daftar Role</strong></div>
@@ -229,6 +222,7 @@ const RoleManagement = () => {
         onConfirm={confirmDelete}
         onCancel={() => setRoleToDelete(null)}
       />
+      </RolePageLayout>
     </div>
   )
 }
