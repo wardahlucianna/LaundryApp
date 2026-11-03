@@ -13,6 +13,7 @@ const FeatureManagement = () => {
   const [groups, setGroups] = useState([])
   const [searchInput, setSearchInput] = useState('')
   const [search, setSearch] = useState('')
+  const [statusFilter, setStatusFilter] = useState('')
   const [page, setPage] = useState(1)
   const [pagination, setPagination] = useState({ current_page: 1, last_page: 1, total: 0 })
   const [loading, setLoading] = useState(true)
@@ -58,6 +59,7 @@ const FeatureManagement = () => {
     try {
       const params = new URLSearchParams({ page: String(page), per_page: '10' })
       if (search.trim()) params.set('search', search.trim())
+      if (statusFilter !== '') params.set('is_active', statusFilter)
       const payload = await request(`/permission-features?${params.toString()}`)
       setFeatures(payload.data || [])
       setPagination({ current_page: payload.current_page || 1, last_page: payload.last_page || 1, total: payload.total || 0 })
@@ -66,7 +68,7 @@ const FeatureManagement = () => {
     } finally {
       setLoading(false)
     }
-  }, [page, search, request])
+  }, [page, search, statusFilter, request])
 
   useEffect(() => { loadGroups().catch((e) => setError(e.message || 'Gagal memuat kelompok fitur.')) }, [loadGroups])
   useEffect(() => { loadFeatures() }, [loadFeatures])
@@ -88,14 +90,14 @@ const FeatureManagement = () => {
   }
 
   const applySearch = () => { setPage(1); setSearch(searchInput.trim()) }
-  const resetSearch = () => { setSearchInput(''); setPage(1); setSearch('') }
+  const resetSearch = () => { setSearchInput(''); setStatusFilter(''); setPage(1); setSearch('') }
 
   return (
     <div className="role-list-page role-page-layout mb-4">
       <div className="mb-3"><h2 className="fs-4 mb-1">Management Fitur</h2></div>
       {notice && <CAlert color="success" dismissible onClose={() => setNotice('')}>{notice}</CAlert>}
       {error && <CAlert color="danger" dismissible onClose={() => setError('')}>{error}</CAlert>}
-      <FeatureList features={features} groups={groups} searchInput={searchInput} setSearchInput={setSearchInput} applySearch={applySearch} resetSearch={resetSearch} pagination={pagination} loading={loading} page={page} setPage={setPage} onCreate={openCreate} onEdit={openEdit} onDelete={deleteFeature} />
+      <FeatureList features={features} groups={groups} searchInput={searchInput} setSearchInput={setSearchInput} statusFilter={statusFilter} setStatusFilter={setStatusFilter} applySearch={applySearch} resetSearch={resetSearch} pagination={pagination} loading={loading} page={page} setPage={setPage} onCreate={openCreate} onEdit={openEdit} onDelete={deleteFeature} />
     </div>
   )
 }
