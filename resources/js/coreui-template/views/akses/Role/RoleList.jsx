@@ -18,7 +18,7 @@ const RoleList = ({ roles, searchInput, setSearchInput, search, setSearch, statu
     <CCard className="role-panel role-list-panel mb-4">
       <CCardHeader className="d-flex flex-wrap justify-content-between align-items-center gap-2"><div><strong className="fs-5">Daftar Role</strong></div><CButton color="primary" size="sm" className="role-compact-button" onClick={onCreate}><CIcon icon={cilPlus} size="sm" className="me-1" />Tambah Role</CButton></CCardHeader>
       <CCardBody>
-        <CRow className="mb-3"><CCol xs={12} md={8} lg={6}><div className="d-flex flex-wrap gap-2 w-100">
+        <CRow className="mb-3"><CCol xs={12}><div className="d-flex flex-wrap flex-lg-nowrap align-items-center gap-2 w-100">
           <CFormInput placeholder="Cari nama atau kode" value={searchInput} onChange={(event) => setSearchInput(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter') applySearch() }} aria-label="Cari role" className="flex-grow-1" /><CFormSelect aria-label="Filter status role" value={statusFilter} onChange={(event) => { setStatusFilter(event.target.value); setPage(1) }} style={{ maxWidth: "160px" }} options={[{ label: "Semua Status", value: "" }, { label: "Aktif", value: "1" }, { label: "Nonaktif", value: "0" }]} />
           <CButton color="primary" size="sm" aria-label="Cari" title="Cari" className="role-search-button role-compact-button" onClick={applySearch}><CIcon icon={cilSearch} size="sm" />Cari</CButton>
           <CButton color="secondary" variant="outline" size="sm" aria-label="Reset filter" title="Reset filter" className="role-reset-button role-compact-button" onClick={resetSearch}><CIcon icon={cilReload} size="sm" />Reset</CButton>
