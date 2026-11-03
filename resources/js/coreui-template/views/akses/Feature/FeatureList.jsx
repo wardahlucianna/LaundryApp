@@ -1,13 +1,13 @@
 import React from 'react'
 import {
-  CBadge, CButton, CCard, CCardBody, CCardHeader, CCol, CFormInput,
+  CBadge, CButton, CCard, CCardBody, CCardHeader, CCol, CFormInput, CFormSelect,
   CRow, CSpinner, CTable, CTableBody, CTableDataCell, CTableHead,
   CTableHeaderCell, CTableRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilPencil, cilPlus, cilSearch, cilTrash, cilReload } from '@coreui/icons'
 
-const FeatureList = ({ features, groups, searchInput, setSearchInput, applySearch, resetSearch, pagination, loading, page, setPage, onCreate, onEdit, onDelete }) => {
+const FeatureList = ({ features, groups, searchInput, setSearchInput, statusFilter, setStatusFilter, applySearch, resetSearch, pagination, loading, page, setPage, onCreate, onEdit, onDelete }) => {
   const showingStart = pagination.total === 0 ? 0 : (pagination.current_page - 1) * 10 + 1
   const showingEnd = Math.min(pagination.current_page * 10, pagination.total)
   return (
@@ -17,8 +17,8 @@ const FeatureList = ({ features, groups, searchInput, setSearchInput, applySearc
         <CButton color="primary" size="sm" className="role-compact-button" onClick={onCreate} disabled={groups.length === 0}><CIcon icon={cilPlus} size="sm" className="me-1" />Tambah Fitur</CButton>
       </CCardHeader>
       <CCardBody>
-        <CRow className="mb-3"><CCol xs={12} md={8} lg={6}><div className="d-flex gap-2 w-100">
-          <CFormInput placeholder="Cari nama, kode, atau kelompok fitur" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') applySearch() }} aria-label="Cari fitur" className="flex-grow-1" />
+        <CRow className="mb-3"><CCol xs={12} md={8} lg={6}><div className="d-flex flex-wrap gap-2 w-100">
+          <CFormSelect aria-label="Filter status fitur" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} style={{ maxWidth: "160px" }} options={[{ label: "Semua Status", value: "" }, { label: "Aktif", value: "1" }, { label: "Nonaktif", value: "0" }]} /><CFormInput placeholder="Cari nama, kode, atau kelompok fitur" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') applySearch() }} aria-label="Cari fitur" className="flex-grow-1" />
           <CButton color="primary" size="sm" className="role-compact-button role-search-button" onClick={applySearch}><CIcon icon={cilSearch} size="sm" className="me-1" />Cari</CButton>
           <CButton color="secondary" variant="outline" size="sm" className="role-compact-button role-reset-button" onClick={resetSearch}><CIcon icon={cilReload} size="sm" className="me-1" />Reset</CButton>
         </div></CCol></CRow>
