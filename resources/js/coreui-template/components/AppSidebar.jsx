@@ -59,21 +59,21 @@ const AppSidebar = () => {
   const buildNavigation = (groups) => {
     const normalizeMenuPath = (feature) => {
       // Keep Management Fitur connected to its registered route even if its DB path is stale.
-      if (String(feature.code || '').toUpperCase() === 'FEATURES') return '/permissions'
+      if (String(feature.name || '').toLowerCase().includes('manajemen fitur')) return '/permissions'
       const path = String(feature.path || '').trim()
       if (!path) return null
       return path.startsWith('/') ? path : `/${path}`
     }
-    const groupIcons = { DASHBOARD: cilSpeedometer, TRANSACTIONS: cilCash, OPERATIONS: cilBasket, MASTER_DATA: cilPeople, SETTINGS: cilSettings, REPORTS: cilChartLine }
+    const groupIcons = { Beranda: cilSpeedometer, Dashboard: cilSpeedometer, Transaksi: cilCash, Operasional: cilBasket, 'Master Data': cilPeople, Pengaturan: cilSettings, Laporan: cilChartLine }
     const items = []
     ;(groups || []).forEach((group) => {
-      const icon = <CIcon icon={groupIcons[group.code] || cilSettings} customClassName="nav-icon" />
+      const icon = <CIcon icon={groupIcons[group.name] || cilSettings} customClassName="nav-icon" />
       const children = (group.items || []).map((feature) => ({
         component: CNavItem,
         name: feature.name,
         to: normalizeMenuPath(feature),
       })).filter((item) => Boolean(item.to))
-      if (group.code === 'DASHBOARD' && children.length === 1) items.push({ ...children[0], icon })
+      if ((group.name === 'Beranda' || group.name === 'Dashboard') && children.length === 1) items.push({ ...children[0], icon })
       else if (children.length) items.push({ component: CNavGroup, name: group.name, icon, items: children })
     })
     return items
@@ -84,16 +84,11 @@ const AppSidebar = () => {
   useEffect(() => {
     let cancelled = false
     const loadMenus = async () => {
-      const token = localStorage.getItem('auth_token') || localStorage.getItem('access_token') || localStorage.getItem('token') || ''
-      if (!token) {
-        if (!cancelled) setNavigation([])
-        return
-      }
       try {
         const configuredBase = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
         const apiBase = configuredBase ? (configuredBase.endsWith('/api') ? configuredBase : `${configuredBase}/api`) : '/api'
         const response = await fetch(`${apiBase}/auth/me/menus`, {
-          headers: { Accept: 'application/json' },
+          headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
           credentials: 'include',
         })
         if (!response.ok) throw new Error('Gagal memuat menu.')
