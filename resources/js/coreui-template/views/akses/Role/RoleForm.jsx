@@ -52,9 +52,13 @@ const RoleFormPage = () => {
       if (!groups.has(groupName)) groups.set(groupName, [])
       groups.get(groupName).push(feature)
     })
-    return Array.from(groups.entries()).sort(([a], [b]) => a.localeCompare(b)).map(([name, items]) => ({
+    return Array.from(groups.entries()).sort(([a, itemsA], [b, itemsB]) => {
+      const orderA = Number(itemsA[0]?.group?.ordering ?? 0)
+      const orderB = Number(itemsB[0]?.group?.ordering ?? 0)
+      return orderA - orderB || a.localeCompare(b)
+    }).map(([name, items]) => ({
       name,
-      items: items.sort((a, b) => a.name.localeCompare(b.name)),
+      items: items.sort((a, b) => Number(a.ordering ?? 0) - Number(b.ordering ?? 0) || a.name.localeCompare(b.name)),
     }))
   }, [features])
 
