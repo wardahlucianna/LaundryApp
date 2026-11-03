@@ -31,7 +31,7 @@ const RoleFormPage = () => {
     setError('')
     ;(async () => {
       try {
-        const [featuresPayload, rolePayload] = await Promise.all([request('/permission-features?is_active=1&per_page=100'), id ? request(`/roles/${id}`) : Promise.resolve(null)])
+        const [featuresPayload, rolePayload] = await Promise.all([request('/roles/features/options'), id ? request(`/roles/${id}`) : Promise.resolve(null)])
         if (!active) return
         const loadedRole = rolePayload?.data || rolePayload
         const available = featuresPayload.data || []
