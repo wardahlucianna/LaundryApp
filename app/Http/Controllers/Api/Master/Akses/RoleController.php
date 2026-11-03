@@ -52,7 +52,7 @@ class RoleController extends Controller
             'feature_ids' => ['present', 'array'],
             'feature_ids.*' => ['uuid', 'exists:permission_features,id'],
         ]);
-        if ($role->code === 'SUPERADMIN') throw ValidationException::withMessages(['role' => 'Hak akses SUPERADMIN selalu penuh.']);
+        if (strtoupper(trim($role->name)) === 'SUPER ADMIN') throw ValidationException::withMessages(['role' => 'Hak akses SUPERADMIN selalu penuh.']);
         DB::transaction(fn () => $role->features()->sync($data['feature_ids']));
         return response()->json(['data' => $role->load('features')]);
     }
