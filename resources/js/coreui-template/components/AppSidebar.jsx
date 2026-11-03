@@ -16,7 +16,7 @@ import {
   CSidebarToggler,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilSpeedometer, cilPeople, cilBasket, cilCash, cilChartLine, cilSettings } from '@coreui/icons'
+import { cilSpeedometer, cilPeople, cilBasket, cilCash, cilChartLine, cilSettings, cilFolderOpen, cilBuilding, cilTags } from '@coreui/icons'
 import { CNavGroup, CNavItem } from '@coreui/react'
 
 import { AppSidebarNav } from './AppSidebarNav'
@@ -36,10 +36,11 @@ const AppSidebar = () => {
       if (!path) return null
       return path.startsWith('/') ? path : `/${path}`
     }
-    const groupIcons = { Beranda: cilSpeedometer, Dashboard: cilSpeedometer, Transaksi: cilCash, Operasional: cilBasket, 'Master Data': cilPeople, Pengaturan: cilSettings, Laporan: cilChartLine }
+    const groupIcons = { cilFolderOpen, cilPeople, cilBasket, cilCash, cilSettings, cilChartLine, cilSpeedometer, cilBuilding, cilTags }
     const items = []
     ;(groups || []).forEach((group) => {
-      const icon = <CIcon icon={groupIcons[group.name] || cilSettings} customClassName="nav-icon" />
+      // Use the icon selected in Management Group Feature, not a hardcoded name mapping.
+      const icon = <CIcon icon={groupIcons[group.icon] || cilSettings} customClassName="nav-icon" />
       const children = (group.items || []).map((feature) => ({
         component: CNavItem,
         name: feature.name,
