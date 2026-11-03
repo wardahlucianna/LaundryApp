@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { CAlert, CSpinner } from '@coreui/react'
 import RoleForm from './RoleForm'
+import RolePageLayout from './RolePageLayout'
 
 const apiBase = (() => {
   const base = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
@@ -71,11 +72,11 @@ const RoleFormPage = () => {
   }
 
   return (
-    <div className="role-form-page">
-      <div className="role-page-heading mb-3"><div><h2 className="fs-4 mb-1">Manajemen Role</h2></div></div>
-      {error && <CAlert color="danger" dismissible onClose={() => setError('')}>{error}</CAlert>}
+    <RolePageLayout title={id ? "Ubah Role" : "Tambah Role"} description={id ? "Perbarui detail role dan hak akses." : "Buat role untuk mengelola hak akses aplikasi."} errorMessage={error} onDismissError={() => setError('')}>
+      <div className="role-form-page">
       {loading ? <div className="d-flex align-items-center gap-2 py-4 text-body-secondary"><CSpinner color="primary" size="sm" /> <span>Memuat data role dan permission...</span></div> : <RoleForm role={role} permissions={permissions} saving={saving} onSave={save} onCancel={() => navigate('/roles/list')} />}
-    </div>
+      </div>
+    </RolePageLayout>
   )
 }
 export default RoleFormPage
