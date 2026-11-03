@@ -5,7 +5,7 @@ import {
   CTableHeaderCell, CTableRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import ConfirmModal from '../../components/ConfirmModal'
+import ConfirmModal from '../../../components/ConfirmModal'
 import { cilInfo, cilPencil, cilPlus, cilSearch, cilTrash, cilReload } from '@coreui/icons'
 
 const RoleList = ({ roles, searchInput, setSearchInput, search, setSearch, page, setPage, pagination, loading, loadRoles, onCreate, onDetail, onEdit, onDelete, roleToDelete, deleting, onConfirmDelete, onCancelDelete }) => {
