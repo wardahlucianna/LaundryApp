@@ -66,6 +66,7 @@ class AuthController extends Controller
                 ->whereNotNull('path')
                 ->where('path', '<>', '')
                 ->orderBy('ordering')])
+            ->orderBy('ordering')
             ->orderBy('name')
             ->get()
             ->map(function ($group) use ($allowedFeatureIds) {
