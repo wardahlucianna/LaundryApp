@@ -67,13 +67,9 @@ const RoleDetailPage = () => {
       <div className="mb-3"><h2 className="fs-4 mb-1">Detail Role</h2><div className="small text-body-secondary">Informasi role dan hak akses yang diberikan.</div></div>
       {error && <CAlert color="danger" dismissible onClose={() => setError('')}>{error}</CAlert>}
       <div className="role-detail-page">
-      <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-        <div>
-        <div className="d-flex gap-2">
-          <CButton color="secondary" variant="outline" size="sm" onClick={() => navigate('/roles/list')}><CIcon icon={cilArrowLeft} className="me-1" />Kembali</CButton>
-          {role && <CButton color="primary" size="sm" onClick={() => navigate(`/roles/form/${role.id}`)}><CIcon icon={cilPencil} className="me-1" />Edit Role</CButton>}
-        </div>
-      </div>
+      <div className="d-flex justify-content-end align-items-center gap-2 mb-3">
+        <CButton color="secondary" variant="outline" size="sm" onClick={() => navigate('/roles/list')}><CIcon icon={cilArrowLeft} className="me-1" />Kembali</CButton>
+        {role && <CButton color="primary" size="sm" onClick={() => navigate(`/roles/form/${role.id}`)}><CIcon icon={cilPencil} className="me-1" />Edit Role</CButton>}
       </div>
       {loading ? <div className="d-flex align-items-center gap-2 py-4 text-body-secondary"><CSpinner size="sm" />Memuat detail role...</div> : role && (
         <>
