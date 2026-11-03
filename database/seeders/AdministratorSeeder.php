@@ -21,8 +21,8 @@ class AdministratorSeeder extends Seeder
             throw new \RuntimeException('Seeder ini harus dijalankan melalui Artisan agar password dapat diminta secara aman.');
         }
 
-        $password = $this->command->secret('Admin123');
-        $confirmation = $this->command->secret('Admin123');
+        $password = $this->command->secret('Masukkan password untuk administrator:');
+        $confirmation = $this->command->secret('Ulangi password administrator:');
 
         if (!$password || $password !== $confirmation) {
             $this->command->error('Password kosong atau tidak cocok. Seeder dibatalkan.');
