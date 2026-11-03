@@ -27,6 +27,18 @@ class RoleController extends Controller
         return response()->json(['data' => Role::create($request->validated())], 201);
     }
 
+    public function featureOptions()
+    {
+        $features = PermissionFeature::query()
+            ->with('group')
+            ->where('is_active', true)
+            ->orderBy('ordering')
+            ->orderBy('name')
+            ->get();
+
+        return response()->json(['data' => $features]);
+    }
+
     public function show(Role $role)
     {
         return response()->json(['data' => $role->load('features.group')->loadCount('users')]);
