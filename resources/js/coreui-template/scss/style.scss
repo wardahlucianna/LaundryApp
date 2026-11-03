@@ -374,19 +374,6 @@ small {
   height: .95rem;
 }
 
-/* Compact icon-only edit/delete actions in Role table */
-.role-list-page .role-table .d-inline-flex.gap-2 .btn {
-  width: 2rem;
-  min-width: 2rem;
-  height: 2rem;
-  min-height: 2rem;
-  padding: 0;
-  border-radius: .375rem;
-}
-.role-list-page .role-table .d-inline-flex.gap-2 .btn svg {
-  width: .8rem;
-  height: .8rem;
-}
 
 /* Role status switch: calm green for active, slate gray for inactive */
 .role-status-box {
@@ -497,19 +484,6 @@ small {
   border-radius: var(--app-control-radius);
 }
 
-/* Keep table edit/delete icon buttons square and aligned */
-.role-list-page .role-table .d-inline-flex.gap-2 .btn {
-  width: 2rem;
-  min-width: 2rem;
-  height: 2rem;
-  min-height: 2rem;
-  padding: 0;
-  border-radius: .375rem;
-}
-.role-list-page .role-table .d-inline-flex.gap-2 .btn svg {
-  width: .8rem;
-  height: .8rem;
-}
 
 
 /* Standardize action buttons inside data tables across all modules */
@@ -563,29 +537,3 @@ small {
 }
 
 
-/* Explicit Master Role action sizing: override Role page-wide button sizing */
-.role-list-page .role-table .table-actions {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: .375rem;
-}
-.role-list-page .role-table .table-actions .btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 2rem;
-  width: 2rem;
-  min-width: 2rem;
-  max-width: 2rem;
-  height: 2rem;
-  min-height: 2rem;
-  padding: 0;
-  line-height: 1;
-  border-radius: .375rem;
-}
-.role-list-page .role-table .table-actions .btn svg {
-  width: .875rem;
-  height: .875rem;
-  flex: 0 0 .875rem;
-}
