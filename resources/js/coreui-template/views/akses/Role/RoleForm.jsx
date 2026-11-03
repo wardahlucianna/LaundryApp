@@ -18,7 +18,8 @@ const RoleFormPage = () => {
   const [validation, setValidation] = useState('')
 
   const request = useCallback(async (path, options = {}) => {
-    const response = await fetch(`${apiBase}${path}`, { ...options, credentials: 'include', headers: { Accept: 'application/json', ...(options.body ? { 'Content-Type': 'application/json' } : {}), ...(options.headers || {}) } })
+    const token = localStorage.getItem('auth_token') || localStorage.getItem('access_token') || localStorage.getItem('token') || ''
+    const response = await fetch(`${apiBase}${path}`, { ...options, credentials: 'include', headers: { Accept: 'application/json', ...(options.body ? { 'Content-Type': 'application/json' } : {}), ...(token ? { Authorization: `Bearer ${token}` } : {}), ...(options.headers || {}) } })
     const payload = await response.json().catch(() => ({}))
     if (!response.ok) { const msg = payload.errors ? Object.values(payload.errors).flat().join(' ') : ''; throw new Error(msg || payload.message || 'Permintaan gagal diproses.') }
     return payload
@@ -112,7 +113,7 @@ const RoleFormPage = () => {
                   {!collapsedGroups[group.name] && <CCardBody><CRow className="g-2">{group.items.map(feature => <CCol xs={12} sm={6} md={4} key={feature.id}><CFormCheck className="fs-6 role-permission-checkbox" id={`role-feature-${feature.id}`} label={feature.name} checked={selectedFeatureIds.includes(feature.id)} onChange={e => toggleFeature(feature.id, e.target.checked)} /></CCol>)}</CRow></CCardBody>}
                 </CCard>)}
               </div>}
-            <div className="d-flex justify-content-end gap-2 mt-4"><CButton color="secondary" size="sm" variant="outline" type="button" disabled={saving} onClick={() => navigate('/roles/list')}>Batal</CButton><CButton color="primary" size="sm" type="submit" disabled={saving}>{saving ? <><CSpinner size="sm" className="me-2" />Menyimpan...</> : 'Simpan'}</CButton></div>
+            <div className="d-flex justify-content-end gap-2 mt-4"><CButton color="secondary" size="sm" variant="outline" type="button" disabled={saving} onClick={() => navigate('/roles/list')}>Batal</CButton><CButton color="primary" size="sm" type="submit" disabled={saving || loading || Boolean(error)}>{saving ? <><CSpinner size="sm" className="me-2" />Menyimpan...</> : 'Simpan'}</CButton></div>
           </CForm>
         </CCardBody>
       </CCard>
