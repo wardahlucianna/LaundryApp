@@ -1,10 +1,11 @@
 <?php
 
-namespace App\\Http\\Middleware;
+namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\\Http\\Request;
-use Symfony\\Component\\HttpFoundation\\Response;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+use App\Models\Akses\PermissionFeature;
 
 class EnsurePermission
 {
@@ -37,7 +38,7 @@ class EnsurePermission
 
         $featureName = $this->featureNameFor($permissionCode);
         $feature = $featureName
-            ? \\App\\Models\\Akses\\PermissionFeature::query()
+            ? PermissionFeature::query()
                 ->where('name', $featureName)
                 ->where('is_active', true)
                 ->first()
