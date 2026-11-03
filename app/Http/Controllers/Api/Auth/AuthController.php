@@ -47,7 +47,6 @@ class AuthController extends Controller
     public function menus(Request $request)
     {
         $user = $request->user()->load('role.permissions');
-        $isSuperAdmin = $user->role?->code === 'SUPERADMIN';
         $allowedCodes = $user->role?->permissions
             ->where('is_active', true)
             ->pluck('code')
@@ -64,13 +63,13 @@ class AuthController extends Controller
             }])
             ->orderBy('name')
             ->get()
-            ->map(function ($group) use ($isSuperAdmin, $allowedCodes) {
+            ->map(function ($group) use ($allowedCodes) {
                 $items = $group->features
-                    ->filter(function ($feature) use ($isSuperAdmin, $allowedCodes) {
+                    ->filter(function ($feature) use ($allowedCodes) {
                         $viewPermission = $feature->actions->first(
                             fn ($action) => strtolower((string) $action->action_name) === 'view'
                         );
-                        return $viewPermission && ($isSuperAdmin || in_array($viewPermission->code, $allowedCodes, true));
+                        return $viewPermission && in_array($viewPermission->code, $allowedCodes, true);
                     })
                     ->map(fn ($feature) => [
                         'id' => $feature->id,
