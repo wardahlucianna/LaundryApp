@@ -5,7 +5,7 @@ import {
   CRow, CSpinner,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilArrowLeft, cilPencil, cilChevronBottom, cilChevronRight } from '@coreui/icons'
+import { cilArrowLeft, cilPencil } from '@coreui/icons'
 
 const apiBase = (() => {
   const base = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
@@ -117,7 +117,34 @@ const RoleDetailPage = () => {
                           aria-expanded={!collapsedGroups[group.name]}
                         >
                           <span>{group.name}</span>
-                          <CIcon icon={collapsedGroups[group.name] ? cilChevronRight : cilChevronBottom} />
+                          <span
+                            className="d-inline-flex align-items-center justify-content-center rounded-circle flex-shrink-0"
+                            aria-hidden="true"
+                            style={{
+                              width: '28px',
+                              height: '28px',
+                              color: collapsedGroups[group.name] ? 'var(--cui-secondary-color)' : 'var(--cui-primary)',
+                              backgroundColor: collapsedGroups[group.name] ? 'var(--cui-tertiary-bg)' : 'var(--cui-primary-bg-subtle)',
+                              border: '1px solid var(--cui-border-color)',
+                            }}
+                          >
+                            <svg
+                              width="14"
+                              height="14"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              style={{
+                                transform: collapsedGroups[group.name] ? 'rotate(-90deg)' : 'rotate(0deg)',
+                                transition: 'transform 180ms ease',
+                              }}
+                            >
+                              <path d="m6 9 6 6 6-6" />
+                            </svg>
+                          </span>
                         </CButton>
                       </CCardHeader>
                       {!collapsedGroups[group.name] && <CCardBody className="d-flex flex-column gap-3">
