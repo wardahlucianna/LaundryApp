@@ -125,7 +125,7 @@ const RoleListPage = () => {
         total: payload.total || 0,
       })
     } catch (loadError) {
-      setError(loadError.message || 'Gagal memuat data role.')
+      setError(loadError.message || 'Gagal memuat data peran.')
     } finally {
       setLoading(false)
     }
@@ -136,28 +136,28 @@ const RoleListPage = () => {
   }, [loadRoles])
 
   const openCreate = async () => {
-    const listPath = await getAccessFeaturePath(['Manajemen Role', 'Management Role'])
+    const listPath = await getAccessFeaturePath(['Manajemen Role', 'Manajemen Peran'])
     if (listPath) navigate(`${listPath}/form`)
-    else setError('Path Management Role belum terdaftar di database.')
+    else setError('Path Manajemen Peran belum terdaftar di database.')
   }
 
   const openEdit = async (role) => {
-    const listPath = await getAccessFeaturePath(['Manajemen Role', 'Management Role'])
+    const listPath = await getAccessFeaturePath(['Manajemen Role', 'Manajemen Peran'])
     if (listPath) navigate(`${listPath}/form/${role.id}`)
-    else setError('Path Management Role belum terdaftar di database.')
+    else setError('Path Manajemen Peran belum terdaftar di database.')
   }
 
   const openDetail = async (role) => {
-    const listPath = await getAccessFeaturePath(['Manajemen Role', 'Management Role'])
+    const listPath = await getAccessFeaturePath(['Manajemen Role', 'Manajemen Peran'])
     if (listPath) navigate(`${listPath}/detail/${role.id}`)
-    else setError('Path Management Role belum terdaftar di database.')
+    else setError('Path Manajemen Peran belum terdaftar di database.')
   }
 
   const handleDelete = (role) => {
     const roleName = String(role.name || '').trim().toUpperCase()
 
     if (roleName === 'SUPER ADMIN') {
-      setError('Role Super Admin tidak dapat dihapus.')
+      setError('Peran Super Admin tidak dapat dihapus.')
       return
     }
 
@@ -234,7 +234,7 @@ const RoleListPage = () => {
 
   return (
     <MasterPageLayout
-      title="Management Role"
+      title="Manajemen Peran"
       className="role-list-page"
       notice={notice}
       error={error}
@@ -246,7 +246,7 @@ const RoleListPage = () => {
       <CCard className="role-panel role-list-panel mb-4">
         <CCardHeader className="d-flex flex-wrap justify-content-between align-items-center gap-2">
           <div>
-            <strong className="fs-5">Daftar Role</strong>
+            <strong className="fs-5">Daftar Peran</strong>
           </div>
 
           <CButton
@@ -256,7 +256,7 @@ const RoleListPage = () => {
             onClick={openCreate}
           >
             <CIcon icon={cilPlus} size="sm" className="me-1" />
-            Tambah Role
+            Tambah Peran
           </CButton>
         </CCardHeader>
 
@@ -265,11 +265,11 @@ const RoleListPage = () => {
             <CCol xs={12}>
               <div className="d-flex flex-wrap flex-lg-nowrap align-items-center gap-2 w-100">
                 <CFormInput
-                  placeholder="Cari nama role"
+                  placeholder="Cari nama peran"
                   value={searchInput}
                   onChange={(event) => setSearchInput(event.target.value)}
                   onKeyDown={handleSearchKeyDown}
-                  aria-label="Cari role"
+                  aria-label="Cari peran"
                   className="flex-grow-1"
                 />
 
@@ -337,7 +337,7 @@ const RoleListPage = () => {
             rows={roles}
             rowKey="id"
             loading={loading}
-            emptyMessage="Data role tidak ditemukan."
+            emptyMessage="Data peran tidak ditemukan."
             hover
             responsive
             className="role-table"
@@ -359,7 +359,7 @@ const RoleListPage = () => {
         title="Konfirmasi Hapus Role"
         message={
           roleToDelete
-            ? `Yakin ingin menghapus role "${roleToDelete.name}"?`
+            ? `Yakin ingin menghapus peran "${roleToDelete.name}"?`
             : ''
         }
         confirmText="Hapus"
