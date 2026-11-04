@@ -11,6 +11,7 @@ import { getAccessFeaturePath } from '../../../utils/accessNavigation'
 
 const groupIkons = { cilFolderOpen, cilPeople, cilBasket, cilCash, cilSettings, cilChartLine, cilSpeedometer, cilBuilding, cilTags }
 const groupNames = ['Manajemen Kelompok Fitur', 'Manajemen Group Fitur', 'Manajemen Kelompok Fitur', 'Group Feature', 'Feature Group']
+const getGroupStatus = (group) => Boolean(group.isActive ?? group.is_active)
 
 const GroupFeatureList = () => {
   const [groups, setGroups] = useState([])
@@ -62,7 +63,7 @@ const GroupFeatureList = () => {
   const filteredGroups = groups.filter((group) => {
     const keyword = search.trim().toLowerCase()
     const matchesSearch = !keyword || String(group.name || '').toLowerCase().includes(keyword) || String(group.description || '').toLowerCase().includes(keyword)
-    const matchesStatus = statusFilter === '' || String(Number(Boolean(group.is_active))) === statusFilter
+    const matchesStatus = statusFilter === '' || String(Number(getGroupStatus(group))) === statusFilter
     return matchesSearch && matchesStatus
   })
   const pagination = { current_page: page, last_page: Math.max(1, Math.ceil(filteredGroups.length / perPage)), total: filteredGroups.length }
@@ -98,7 +99,7 @@ const GroupFeatureList = () => {
     { key: 'icon', title: 'Ikon', render: (group) => <CIkon icon={groupIkons[group.icon] || cilFolderOpen} size="xl" /> },
     { key: 'name', title: 'Nama Kelompok', render: (group) => <div><div className="fw-semibold">{group.name}</div><small className="text-body-secondary">Urutan: {group.ordering ?? 0}</small></div> },
     { key: 'features_count', title: 'Jumlah Fitur', className: 'text-center', headerClassName: 'text-center', render: (group) => group.features_count ?? 0 },
-    { key: 'status', title: 'Status', className: 'text-center', headerClassName: 'text-center', render: (group) => <CBadge color={group.is_active ? 'success' : 'secondary'}>{group.is_active ? 'Aktif' : 'Nonaktif'}</CBadge> },
+    { key: 'status', title: 'Status', className: 'text-center', headerClassName: 'text-center', render: (group) => <CBadge color={getGroupStatus(group) ? 'success' : 'secondary'}>{getGroupStatus(group) ? 'Aktif' : 'Nonaktif'}</CBadge> },
     { key: 'actions', title: 'Aksi', width: '100px', className: 'text-center', headerClassName: 'text-center', render: (group) => <div className="table-actions d-inline-flex gap-2"><CButton color="primary" variant="outline" size="sm" onClick={() => goTo(`/form/${group.groupFeatureId}`)} title="Edit"><CIkon icon={cilPencil} size="sm" /></CButton><CButton color="danger" variant="outline" size="sm" onClick={() => deleteGroup(group)} title="Hapus"><CIkon icon={cilTrash} size="sm" /></CButton></div> },
   ]
 
