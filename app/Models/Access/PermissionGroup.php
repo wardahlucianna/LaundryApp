@@ -20,6 +20,6 @@ class PermissionGroup extends Model
 
     public function features()
     {
-        return $this->hasMany(PermissionFeature::class, 'permission_group_id');
+        return $this->hasMany(PermissionFeature::class, 'featureId');
     }
 }
