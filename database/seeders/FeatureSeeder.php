@@ -54,7 +54,7 @@ class FeatureSeeder extends Seeder
                 $feature = PermissionFeature::updateOrCreate(
                     ['path' => $path],
                     [
-                        'permission_group_id' => $groupModels[$groupName]->id,
+                        'featureId' => $groupModels[$groupName]->id,
                         'name' => $name,
                         'ordering' => $ordering,
                         'menu_type' => 'sidebar',
