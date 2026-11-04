@@ -360,9 +360,9 @@ const GroupFeatureForm = () => {
                     try {
                       const listPath = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
                       if (listPath) navigate(`${listPath}?view=groups`)
-                      else navigate(-1)
-                    } catch {
-                      navigate(-1)
+                      else setError('Path Management Fitur belum terdaftar di database.')
+                    } catch (navigationError) {
+                      setError(navigationError.message || 'Gagal membaca path Management Fitur dari database.')
                     }
                   }}
                 >
