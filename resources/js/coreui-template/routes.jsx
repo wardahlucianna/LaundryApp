@@ -21,7 +21,8 @@ const normalizePath = (value) => {
   const path = String(value || '').trim()
   if (!path) return null
   const leadingSlash = path.startsWith('/') ? path : `/${path}`
-  return leadingSlash.replace(/\\/+$/, '') || '/'
+  const trimmed = leadingSlash.endsWith('/') ? leadingSlash.slice(0, -1) : leadingSlash
+  return trimmed || '/'
 }
 
 const resolveFeaturePath = (menuGroups, names) => {
@@ -59,5 +60,3 @@ export const buildAccessRoutes = (menuGroups) => {
   return dynamicRoutes
 }
 
-export const routes = [
-]
