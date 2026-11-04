@@ -4,7 +4,6 @@ const RoleManagement = React.lazy(() => import('./views/access/Role/RoleList'))
 const RoleFormPage = React.lazy(() => import('./views/access/Role/RoleForm'))
 const RoleDetailPage = React.lazy(() => import('./views/access/Role/RoleDetail'))
 const FeatureManagement = React.lazy(() => import('./views/access/Feature/FeatureList'))
-const GroupFeatureManagement = React.lazy(() => import('./views/access/GroupFeature/GroupFeatureList'))
 const GroupFeatureFormPage = React.lazy(() => import('./views/access/GroupFeature/GroupFeatureForm'))
 const GroupFeatureDetailPage = React.lazy(() => import('./views/access/GroupFeature/GroupFeatureDetail'))
 const FeatureFormPage = React.lazy(() => import('./views/access/Feature/FeatureForm'))
@@ -17,7 +16,6 @@ export const routes = [
   { path: '/reports', name: 'Laporan', element: () => <Placeholder title="Laporan" /> },
   { path: '/settings', name: 'Pengaturan', element: () => <Placeholder title="Pengaturan" /> },
   { path: '/permissions', name: 'Management Fitur', element: FeatureManagement },
-  { path: '/permission-groups', name: 'Management Group Feature', element: GroupFeatureManagement },
   { path: '/permission-groups/form', name: 'Form Group Feature', element: GroupFeatureFormPage },
   { path: '/permission-groups/form/:id', name: 'Edit Group Feature', element: GroupFeatureFormPage },
   { path: '/permission-groups/detail/:id', name: 'Detail Group Feature', element: GroupFeatureDetailPage },
