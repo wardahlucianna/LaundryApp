@@ -87,7 +87,7 @@ class RoleController extends Controller
     public function syncFeatures(Request $request, Role $role)
     {
         $data = $request->validate([
-            'feature_ids' => ['present', 'array'],
+            'featureIds' => ['present', 'array'],
             'feature_ids.*' => ['uuid', 'exists:features,id'],
         ]);
         if (strtoupper(trim($role->name)) === 'SUPER ADMIN') throw ValidationException::withMessages(['role' => 'Hak akses SUPERADMIN selalu penuh.']);
