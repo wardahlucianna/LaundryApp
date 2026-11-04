@@ -237,7 +237,7 @@ const RoleFormPage = () => {
         new Event('sunrise:permissions-updated'),
       )
 
-      const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role'])
+      const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role', 'Manajemen Peran'])
       if (!listPath) throw new Error('Path list Manajemen Peran belum terdaftar di database.')
       navigate(listPath, {
         state: {
@@ -423,7 +423,7 @@ const RoleFormPage = () => {
                 disabled={saving}
                 onClick={async () => {
                   try {
-                    const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role'])
+                    const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role', 'Manajemen Peran'])
                     if (listPath) navigate(listPath)
                     else navigate(-1)
                   } catch {
