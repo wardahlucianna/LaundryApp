@@ -100,8 +100,9 @@ const FeatureListPage = () => {
     loadFeatures()
   }, [loadFeatures])
 
-  const openCreate = () => navigate('/permissions/form')
-  const openEdit = (feature) => navigate(`/permissions/form/${feature.id}`)
+  const featureRouteBase = location.pathname.startsWith('/feature') ? '/feature' : '/permissions'
+  const openCreate = () => navigate(`${featureRouteBase}/form`)
+  const openEdit = (feature) => navigate(`${featureRouteBase}/form/${feature.id}`)
 
   const deleteFeature = async (feature) => {
     if (!window.confirm(`Yakin ingin menghapus fitur "${feature.name}"?\nData fitur akan dihapus dari daftar.`)) return
