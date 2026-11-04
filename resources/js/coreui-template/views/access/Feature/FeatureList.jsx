@@ -18,6 +18,7 @@ import MasterPageLayout from '../../../components/layout/MasterPageLayout'
 import GlobalTable from '../../../components/data/GlobalTable'
 import GlobalPagination from '../../../components/data/GlobalPagination'
 import { apiBase } from '../../../../services/api'
+import { getAccessFeaturePath } from '../../../utils/accessNavigation'
 
 const FeatureListPage = () => {
   const [features, setFeatures] = useState([])
@@ -37,7 +38,7 @@ const FeatureListPage = () => {
 
   const navigate = useNavigate()
   const location = useLocation()
-  const isGroupFeatureRoute = location.pathname.startsWith('/permission-groups')
+  const isGroupFeatureRoute = new URLSearchParams(location.search).get('view') === 'groups'
   const perPage = 10
   const groupPerPage = 10
 
@@ -100,9 +101,16 @@ const FeatureListPage = () => {
     loadFeatures()
   }, [loadFeatures])
 
-  const featureRouteBase = location.pathname.startsWith('/feature') ? '/feature' : '/permissions'
-  const openCreate = () => navigate(`${featureRouteBase}/form`)
-  const openEdit = (feature) => navigate(`${featureRouteBase}/form/${feature.id}`)
+  const openCreate = async () => {
+    const featureRouteBase = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
+    if (featureRouteBase) navigate(`${featureRouteBase}/form`)
+    else setError('Path Management Fitur belum terdaftar di database.')
+  }
+  const openEdit = async (feature) => {
+    const featureRouteBase = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
+    if (featureRouteBase) navigate(`${featureRouteBase}/form/${feature.id}`)
+    else setError('Path Management Fitur belum terdaftar di database.')
+  }
 
   const deleteFeature = async (feature) => {
     if (!window.confirm(`Yakin ingin menghapus fitur "${feature.name}"?\nData fitur akan dihapus dari daftar.`)) return
@@ -144,9 +152,21 @@ const FeatureListPage = () => {
   })
   const groupPagination = { current_page: groupPage, last_page: Math.max(1, Math.ceil(filteredGroups.length / groupPerPage)), total: filteredGroups.length }
   const paginatedGroups = filteredGroups.slice((groupPage - 1) * groupPerPage, groupPage * groupPerPage)
-  const openGroupCreate = () => navigate('/permission-groups/form')
-  const openGroupEdit = (group) => navigate('/permission-groups/form/' + group.id)
-  const openGroupDetail = (group) => navigate('/permission-groups/detail/' + group.id)
+  const openGroupCreate = async () => {
+    const basePath = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
+    if (basePath) navigate(`${basePath}/group-feature/form`)
+    else setError('Path Management Fitur belum terdaftar di database.')
+  }
+  const openGroupEdit = async (group) => {
+    const basePath = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
+    if (basePath) navigate(`${basePath}/group-feature/form/${group.id}`)
+    else setError('Path Management Fitur belum terdaftar di database.')
+  }
+  const openGroupDetail = async (group) => {
+    const basePath = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
+    if (basePath) navigate(`${basePath}/group-feature/detail/${group.id}`)
+    else setError('Path Management Fitur belum terdaftar di database.')
+  }
   const deleteGroup = async (group) => {
     if (!window.confirm('Yakin ingin menghapus group ' + group.name + '?')) return
     setError(''); setNotice('')
