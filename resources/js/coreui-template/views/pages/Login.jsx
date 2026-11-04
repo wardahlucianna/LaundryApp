@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { apiBase, apiOrigin } from '../../../services/api'
 import {
   CAlert,
   CButton,
@@ -25,14 +26,9 @@ const Login = () => {
     setError('')
     setLoading(true)
 
-    const configuredBase = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
-    const apiBase = configuredBase
-      ? (configuredBase.endsWith('/api') ? configuredBase : `${configuredBase}/api`)
-      : '/api'
 
     try {
-      const configuredOrigin = configuredBase.endsWith('/api') ? configuredBase.slice(0, -4) : configuredBase
-      await fetch(`${configuredOrigin}/sanctum/csrf-cookie`, { credentials: 'include' })
+      await fetch(`${apiOrigin}/sanctum/csrf-cookie`, { credentials: 'include' })
       const response = await fetch(`${apiBase}/auth/login`, {
         method: 'POST',
         headers: {
