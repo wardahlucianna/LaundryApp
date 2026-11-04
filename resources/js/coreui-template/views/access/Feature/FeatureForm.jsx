@@ -268,7 +268,7 @@ const getGroupId = (group) =>
                     </label>
 
                     <CFormSelect
-                      value={values.featureId}
+                      value={values.groupFeatureId}
                       onChange={handleGroupChange}
                       required
                     >
@@ -318,7 +318,7 @@ const getGroupId = (group) =>
                   <CCol xs={12} md={6}>
                     <CFormSelect
                       label="Jenis Menu"
-                      value={values.menu_type}
+                      value={values.menuType}
                       onChange={handleMenuTypeChange}
                       required
                     >
