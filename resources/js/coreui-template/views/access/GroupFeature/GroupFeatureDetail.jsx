@@ -63,7 +63,7 @@ const GroupFeatureDetail = () => {
         )
 
         if (!found) {
-          throw new Error('Group feature tidak ditemukan.')
+          throw new Error('Kelompok fitur tidak ditemukan.')
         }
 
         if (active) {
@@ -74,7 +74,7 @@ const GroupFeatureDetail = () => {
         if (active) {
           setError(
             loadError.message ||
-              'Gagal memuat detail group feature.',
+              'Gagal memuat detail kelompok fitur.',
           )
         }
       })
@@ -91,17 +91,17 @@ const GroupFeatureDetail = () => {
 
   const openEdit = async () => {
     try {
-      const basePath = await getAccessFeaturePath(['Manajemen Kelompok Fitur', 'Manajemen Group Fitur', 'Management Group Feature', 'Group Feature', 'Feature Group'])
+      const basePath = await getAccessFeaturePath(['Manajemen Kelompok Fitur', 'Manajemen Group Fitur', 'Manajemen Kelompok Fitur', 'Group Feature', 'Feature Group'])
       if (basePath) navigate(`${basePath}/form/${group.id}`)
-      else setError('Path Management Fitur belum terdaftar di database.')
+      else setError('Path Manajemen Kelompok Fitur belum terdaftar di database.')
     } catch (navigationError) {
-      setError(navigationError.message || 'Gagal membaca path Management Fitur dari database.')
+      setError(navigationError.message || 'Gagal membaca path Manajemen Kelompok Fitur dari database.')
     }
   }
 
   return (
     <MasterPageLayout
-      title="Management Group Feature"
+      title="Manajemen Kelompok Fitur"
       className="role-detail-page"
       error={error}
       onClearError={() => setError('')}
@@ -109,26 +109,26 @@ const GroupFeatureDetail = () => {
       {loading ? (
         <div className="d-flex align-items-center gap-2 py-4 text-body-secondary">
           <CSpinner size="sm" color="primary" />
-          <span>Memuat detail group feature...</span>
+          <span>Memuat detail kelompok fitur...</span>
         </div>
       ) : (
         group && (
           <CCard className="role-panel role-form-card mb-4">
             <CCardHeader>
-              <strong className="fs-5">Detail Group Feature</strong>
+              <strong className="fs-5">Detail Kelompok Fitur</strong>
             </CCardHeader>
 
             <CCardBody>
               <CRow className="g-3">
                 <CCol xs={12} md={6}>
                   <div className="text-body-secondary small">
-                    Nama Group
+                    Nama Kelompok
                   </div>
                   <div className="fw-semibold">{group.name}</div>
                 </CCol>
 
                 <CCol xs={12} md={6}>
-                  <div className="text-body-secondary small">Icon</div>
+                  <div className="text-body-secondary small">Ikon</div>
                   <div className="fw-semibold">
                     {group.icon || 'cilFolderOpen'}
                   </div>
@@ -167,11 +167,11 @@ const GroupFeatureDetail = () => {
                   variant="outline"
                   onClick={async () => {
                   try {
-                    const listPath = await getAccessFeaturePath(['Manajemen Kelompok Fitur', 'Manajemen Group Fitur', 'Management Group Feature', 'Group Feature', 'Feature Group'])
+                    const listPath = await getAccessFeaturePath(['Manajemen Kelompok Fitur', 'Manajemen Group Fitur', 'Manajemen Kelompok Fitur', 'Group Feature', 'Feature Group'])
                     if (listPath) navigate(listPath)
-                    else setError('Path Management Fitur belum terdaftar di database.')
+                    else setError('Path Manajemen Kelompok Fitur belum terdaftar di database.')
                   } catch (navigationError) {
-                    setError(navigationError.message || 'Gagal membaca path Management Fitur dari database.')
+                    setError(navigationError.message || 'Gagal membaca path Manajemen Kelompok Fitur dari database.')
                   }
                 }}
                 >
