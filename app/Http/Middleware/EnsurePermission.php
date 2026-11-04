@@ -39,12 +39,12 @@ class EnsurePermission
         $feature = $featureNames
             ? PermissionFeature::query()
                 ->whereIn('name', $featureNames)
-                ->where('is_active', true)
+                ->where('isActive', true)
                 ->first()
             : null;
 
         $allowed = $feature && $user->role?->features
-            ->contains(fn ($assigned) => $assigned->id === $feature->id && $assigned->is_active);
+            ->contains(fn ($assigned) => $assigned->featureId === $feature->featureId && $assigned->isActive);
 
         if (!$allowed) {
             return response()->json(['message' => 'Anda tidak memiliki hak akses untuk fitur ini.'], 403);
