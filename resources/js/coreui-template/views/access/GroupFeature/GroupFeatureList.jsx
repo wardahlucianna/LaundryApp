@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { CBadge, CButton, CCard, CCardBody, CCardHeader, CCol, CFormInput, CFormSelect, CRow } from '@coreui/react'
+import { CBadge, CButton, CCard, CCardBody, CCardHeader, CCol, CFormInput, CFormSelect, CRow, CModal, CModalHeader, CModalBody, CModalFooter } from '@coreui/react'
 import CIkon from '@coreui/icons-react'
 import { cilFolderOpen, cilPeople, cilBasket, cilCash, cilSettings, cilChartLine, cilSpeedometer, cilBuilding, cilTags, cilPencil, cilPlus, cilReload, cilSearch, cilTrash } from '@coreui/icons'
 import MasterPageLayout from '../../../components/layout/MasterPageLayout'
@@ -21,6 +21,8 @@ const GroupFeatureList = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
+  const [deleteTarget, setDeleteTarget] = useState(null)
+  const [deleting, setDeleting] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
   const perPage = 10
@@ -72,15 +74,20 @@ const GroupFeatureList = () => {
       else setError('Path Manajemen Kelompok Fitur belum terdaftar di database.')
     } catch (navigationError) { setError(navigationError.message || 'Gagal membaca path menu dari database.') }
   }
-  const deleteGroup = async (group) => {
-    if (!window.confirm(`Yakin ingin menghapus kelompok fitur "${group.name}"?`)) return
+  const deleteGroup = (group) => setDeleteTarget(group)
+
+  const confirmDelete = async () => {
+    if (!deleteTarget) return
+    setDeleting(true)
     setError(''); setNotice('')
     try {
-      await request(`/permission-groups/${group.id}`, { method: 'DELETE' })
+      await request(`/permission-groups/${deleteTarget.id}`, { method: 'DELETE' })
       window.dispatchEvent(new Event('sunrise:permissions-updated'))
       setNotice('Kelompok fitur berhasil dihapus.')
       await loadGroups()
+      setDeleteTarget(null)
     } catch (deleteError) { setError(deleteError.message || 'Gagal menghapus kelompok fitur.') }
+    finally { setDeleting(false) }
   }
   const applySearch = () => { setPage(1); setSearch(searchInput.trim()) }
   const resetSearch = () => { setSearchInput(''); setSearch(''); setStatusFilter(''); setPage(1) }
@@ -108,6 +115,16 @@ const GroupFeatureList = () => {
           <GlobalPagination currentPage={pagination.current_page} lastPage={pagination.last_page} total={pagination.total} perPage={perPage} onPageChange={setPage} loading={loading} />
         </CCardBody>
       </CCard>
+      <CModal visible={Boolean(deleteTarget)} onClose={() => !deleting && setDeleteTarget(null)} alignment="center">
+        <CModalHeader><strong>Konfirmasi Hapus</strong></CModalHeader>
+        <CModalBody>
+          Apakah kamu yakin ingin menghapus kelompok fitur <strong>{deleteTarget?.name}</strong>? Data yang dihapus tidak dapat dikembalikan.
+        </CModalBody>
+        <CModalFooter>
+          <CButton color="secondary" variant="outline" size="sm" disabled={deleting} onClick={() => setDeleteTarget(null)}>Batal</CButton>
+          <CButton color="danger" size="sm" disabled={deleting} onClick={confirmDelete}>{deleting ? 'Menghapus...' : 'Ya, Hapus'}</CButton>
+        </CModalFooter>
+      </CModal>
     </MasterPageLayout>
   )
 }
