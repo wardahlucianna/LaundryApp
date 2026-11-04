@@ -112,7 +112,7 @@ const GroupFeatureList = () => {
                 <CFormInput placeholder="Cari nama kelompok fitur" value={searchInput} onChange={(event) => setSearchInput(event.target.value)} onKeyDown={(event) => event.key === 'Enter' && applySearch()} aria-label="Cari kelompok fitur" className="flex-grow-1" />
                 <CFormSelect aria-label="Filter status kelompok fitur" value={statusFilter} onChange={(event) => { setStatusFilter(event.target.value); setPage(1) }} style={{ maxWidth: '160px' }} options={[{ label: 'Semua Status', value: '' }, { label: 'Aktif', value: '1' }, { label: 'Nonaktif', value: '0' }]} />
               </div>
-              <div className="d-flex flex-wrap align-items-center justify-content-start gap-2">
+              <div className="d-flex flex-wrap align-items-center justify-content-start gap-2 pb-3 border-bottom">
                 <CButton color="primary" size="sm" className="role-compact-button role-search-button" onClick={applySearch}><CIkon icon={cilSearch} size="sm" className="me-1" />Cari</CButton>
                 <CButton color="secondary" variant="outline" size="sm" className="role-compact-button role-reset-button" onClick={resetSearch}><CIkon icon={cilReload} size="sm" className="me-1" />Reset</CButton>
               </div>
