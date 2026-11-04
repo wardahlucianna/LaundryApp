@@ -53,6 +53,9 @@ const RoleFormPage = () => {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+  const [loadFailed, setLoadFailed] = useState(false)
+
+  const formDisabled = loading || saving || loadFailed
 
   const request = useCallback(async (path, options = {}) => {
     const token =
@@ -95,6 +98,7 @@ const RoleFormPage = () => {
     let active = true
 
     setLoading(true)
+    setLoadFailed(false)
     setError('')
 
     const load = async () => {
@@ -126,6 +130,7 @@ const RoleFormPage = () => {
         )
       } catch (loadError) {
         if (active) {
+          setLoadFailed(true)
           setError(
             loadError.message ||
               'Gagal memuat data peran dan fitur.',
@@ -306,6 +311,7 @@ const RoleFormPage = () => {
                   onChange={handleNameChange}
                   required
                   maxLength={100}
+                  disabled={formDisabled}
                 />
               </CCol>
 
@@ -325,6 +331,7 @@ const RoleFormPage = () => {
                     label={values.is_active ? 'Aktif' : 'Nonaktif'}
                     checked={values.is_active}
                     onChange={handleStatusChange}
+                    disabled={formDisabled}
                   />
                 </div>
               </CCol>
@@ -362,6 +369,7 @@ const RoleFormPage = () => {
                         color="link"
                         className="d-flex align-items-center justify-content-between w-100 p-0 text-decoration-none text-body fw-semibold"
                         onClick={() => toggleGroupCollapse(group.name)}
+                        disabled={formDisabled}
                         aria-expanded={!collapsedGroups[group.name]}
                       >
                         <span>{group.name}</span>
@@ -416,6 +424,7 @@ const RoleFormPage = () => {
                                 checked={selectedFeatureIds.includes(
                                   feature.featureId,
                                 )}
+                                disabled={formDisabled}
                                 onChange={(event) =>
                                   toggleFeature(
                                     feature.featureId,
@@ -439,7 +448,7 @@ const RoleFormPage = () => {
                 size="sm"
                 variant="outline"
                 type="button"
-                disabled={saving}
+                disabled={formDisabled}
                 onClick={async () => {
                   try {
                     const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role', 'Manajemen Peran'])
@@ -457,7 +466,7 @@ const RoleFormPage = () => {
                 color="primary"
                 size="sm"
                 type="submit"
-                disabled={saving || loading || Boolean(error)}
+                disabled={formDisabled || Boolean(error)}
               >
                 {saving ? (
                   <>
