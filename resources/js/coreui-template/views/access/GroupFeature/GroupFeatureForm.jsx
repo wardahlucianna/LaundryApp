@@ -58,6 +58,9 @@ const GroupFeatureForm = () => {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [iconPickerOpen, setIconPickerOpen] = useState(false)
+  const [loadFailed, setLoadFailed] = useState(false)
+
+  const formDisabled = loading || saving || loadFailed
 
   const request = useCallback(async (path, options = {}) => {
     const token =
@@ -107,6 +110,7 @@ const GroupFeatureForm = () => {
     }
 
     setLoading(true)
+    setLoadFailed(false)
     setError('')
 
     request('/permission-groups?per_page=100')
@@ -133,6 +137,7 @@ const GroupFeatureForm = () => {
       })
       .catch((loadError) => {
         if (active) {
+          setLoadFailed(true)
           setError(loadError.message || 'Gagal memuat kelompok fitur.')
         }
       })
@@ -256,6 +261,7 @@ const GroupFeatureForm = () => {
                     onChange={handleNameChange}
                     required
                     maxLength={120}
+                    disabled={formDisabled}
                   />
                 </CCol>
 
@@ -270,6 +276,7 @@ const GroupFeatureForm = () => {
                       aria-label="Pilih ikon kelompok"
                       aria-expanded={iconPickerOpen}
                       onClick={() => setIconPickerOpen((open) => !open)}
+                      disabled={formDisabled}
                     >
                       <span className="d-flex align-items-center gap-2">
                         <CIcon
@@ -299,6 +306,7 @@ const GroupFeatureForm = () => {
                                 variant={values.icon === item.name ? 'outline' : 'ghost'}
                                 className="d-flex flex-column align-items-center justify-content-center gap-1 w-100 py-2"
                                 onClick={() => handleIconChange(item.name)}
+                                disabled={formDisabled}
                                 title={item.label}
                                 aria-label={item.label}
                                 role="option"
@@ -313,7 +321,7 @@ const GroupFeatureForm = () => {
                       </div>
                     )}
                   </div>
-                  <input type="hidden" name="icon" value={values.icon} required />
+                  <input type="hidden" name="icon" value={values.icon} required disabled={formDisabled} />
                 </CCol>
 
                 <CCol xs={12} md={6}>
@@ -325,6 +333,7 @@ const GroupFeatureForm = () => {
                     value={values.ordering}
                     onChange={handleUrutanChange}
                     required
+                    disabled={formDisabled}
                   />
                 </CCol>
 
@@ -344,6 +353,7 @@ const GroupFeatureForm = () => {
                       label={values.is_active ? 'Aktif' : 'Nonaktif'}
                       checked={values.is_active}
                       onChange={handleStatusChange}
+                      disabled={formDisabled}
                     />
                   </div>
                 </CCol>
@@ -355,7 +365,7 @@ const GroupFeatureForm = () => {
                   size="sm"
                   variant="outline"
                   type="button"
-                  disabled={saving}
+                  disabled={formDisabled}
                   onClick={async () => {
                     try {
                       const listPath = await getAccessFeaturePath(['Manajemen Kelompok Fitur', 'Manajemen Group Fitur', 'Manajemen Kelompok Fitur', 'Group Feature', 'Feature Group'])
@@ -373,7 +383,7 @@ const GroupFeatureForm = () => {
                   color="primary"
                   size="sm"
                   type="submit"
-                  disabled={saving}
+                  disabled={formDisabled}
                 >
                   {saving ? (
                     <>
