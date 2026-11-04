@@ -388,18 +388,18 @@ const RoleFormPage = () => {
                               xs={12}
                               sm={6}
                               md={4}
-                              key={feature.id}
+                              key={feature.featureId}
                             >
                               <CFormCheck
                                 className="fs-6 role-permission-checkbox"
-                                id={`role-feature-${feature.id}`}
+                                id={`role-feature-${feature.featureId}`}
                                 label={feature.name}
                                 checked={selectedFeatureIds.includes(
-                                  feature.id,
+                                  feature.featureId,
                                 )}
                                 onChange={(event) =>
                                   toggleFeature(
-                                    feature.id,
+                                    feature.featureId,
                                     event.target.checked,
                                   )
                                 }
