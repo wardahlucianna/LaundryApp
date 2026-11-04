@@ -21,9 +21,9 @@ import { getAccessFeaturePath } from '../../../utils/accessNavigation'
 
 
 const getGroupId = (group) =>
-  group?.id ??
-  group?.permission_group_id ??
-  group?.permissionGroupId ??
+  group?.groupFeatureId ??
+  group?.featureId ??
+  group?.featureId ??
   group?.groupId ??
   ''
   const FeatureFormPage = () => {
@@ -33,7 +33,7 @@ const getGroupId = (group) =>
   const [feature, setFeature] = useState(null)
   const [groups, setGroups] = useState([])
   const [values, setValues] = useState({
-    permission_group_id: '',
+    featureId: '',
     name: '',
     path: '',
     ordering: 0,
@@ -108,13 +108,13 @@ const getGroupId = (group) =>
         setFeature(loadedFeature)
 
         const selectedGroupId = String(
-          loadedFeature?.permission_group_id ||
-            loadedFeature?.group?.id ||
+          loadedFeature?.featureId ||
+            loadedFeature?.group?.groupFeatureId ||
             '',
         )
 
         setValues({
-          permission_group_id: selectedGroupId,
+          featureId: selectedGroupId,
           name: loadedFeature?.name || '',
           path: loadedFeature?.path || '',
           ordering: loadedFeature?.ordering ?? 0,
@@ -143,13 +143,13 @@ const getGroupId = (group) =>
 
   const availableGroups = groups.filter((group) =>
     Boolean(group.is_active) ||
-    String(group.id) === String(values.permission_group_id),
+    String(group.groupFeatureId) === String(values.featureId),
   )
 
   const handleGroupChange = (event) => {
     setValues((current) => ({
       ...current,
-      permission_group_id: event.target.value,
+      featureId: event.target.value,
     }))
   }
 
@@ -192,7 +192,7 @@ const getGroupId = (group) =>
     event.preventDefault()
     setError('')
 
-    if (!values.permission_group_id || !values.name.trim()) {
+    if (!values.featureId || !values.name.trim()) {
       setError('Kelompok fitur dan nama fitur wajib diisi.')
       return
     }
@@ -201,7 +201,7 @@ const getGroupId = (group) =>
 
     try {
       const body = {
-        permission_group_id: values.permission_group_id,
+        featureId: values.featureId,
         name: values.name.trim(),
         path: values.path.trim() || null,
         ordering: Number(values.ordering),
@@ -269,7 +269,7 @@ const getGroupId = (group) =>
                     </label>
 
                     <CFormSelect
-                      value={values.permission_group_id}
+                      value={values.featureId}
                       onChange={handleGroupChange}
                       required
                     >
