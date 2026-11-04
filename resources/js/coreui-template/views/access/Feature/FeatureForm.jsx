@@ -218,6 +218,7 @@ const getGroupId = (group) =>
         body: JSON.stringify(body),
       })
 
+      window.dispatchEvent(new Event('sunrise:permissions-updated'))
       const listPath = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
       if (!listPath) throw new Error('Path list Management Fitur belum terdaftar di database.')
       navigate(listPath, {
