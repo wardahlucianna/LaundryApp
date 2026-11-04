@@ -222,6 +222,7 @@ const FeatureListPage = () => {
         </div>
       ),
     },
+    { key: 'roles_count', title: 'Jumlah Role', className: 'text-center', headerClassName: 'text-center', render: (feature) => feature.roles_count ?? 0 },
     { key: 'group', title: 'Kelompok', render: (feature) => getGroupName(feature) },
     { key: 'path', title: 'Path', render: (feature) => <small>{feature.path || '—'}</small> },
     { key: 'menu_type', title: 'Jenis Menu', render: (feature) => feature.menuType === 'topbar' ? 'Bilah Atas' : 'Menu Samping' },
