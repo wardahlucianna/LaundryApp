@@ -7,6 +7,7 @@ import {
   CCard,
   CCardBody,
   CCardHeader,
+  CAlert,
   CCol,
   CFormInput,
   CFormSelect,
@@ -45,6 +46,7 @@ const RoleListPage = () => {
   const [notice, setNotice] = useState('')
   const [roleToDelete, setRoleToDelete] = useState(null)
   const [deleting, setDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState('')
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -161,6 +163,7 @@ const RoleListPage = () => {
       return
     }
 
+    setDeleteError('')
     setRoleToDelete(role)
   }
 
@@ -172,6 +175,7 @@ const RoleListPage = () => {
     setDeleting(true)
     setError('')
     setNotice('')
+    setDeleteError('')
 
     try {
       await request(`/roles/${roleToDelete.roleId}`, {
@@ -182,14 +186,15 @@ const RoleListPage = () => {
       setRoleToDelete(null)
 
       await loadRoles()
-    } catch (deleteError) {
-      setError(deleteError.message || 'Gagal menghapus peran.')
+    } catch (requestError) {
+      setDeleteError(requestError.message || 'Gagal menghapus peran.')
     } finally {
       setDeleting(false)
     }
   }
 
   const cancelDelete = () => {
+    setDeleteError('')
     setRoleToDelete(null)
   }
 
@@ -363,9 +368,10 @@ const RoleListPage = () => {
         visible={Boolean(roleToDelete)}
         title="Konfirmasi Hapus Peran"
         message={
-          roleToDelete
-            ? `Yakin ingin menghapus peran "${roleToDelete.name}"?`
-            : ''
+          <>
+            {deleteError && <CAlert color="danger" className="mb-3">{deleteError}</CAlert>}
+            {roleToDelete ? `Yakin ingin menghapus peran "${roleToDelete.name}"?` : ''}
+          </>
         }
         confirmText="Hapus"
         cancelText="Batal"
