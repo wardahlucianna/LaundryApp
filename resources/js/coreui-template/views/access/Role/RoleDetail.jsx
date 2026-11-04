@@ -178,9 +178,9 @@ const RoleDetailPage = () => {
     try {
       const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role', 'Manajemen Peran'])
       if (listPath) navigate(listPath)
-      else navigate(-1)
-    } catch {
-      navigate(-1)
+      else setError('Path Management Role belum terdaftar di database.')
+    } catch (navigationError) {
+      setError(navigationError.message || 'Gagal membaca path Management Role dari database.')
     }
   }
 
