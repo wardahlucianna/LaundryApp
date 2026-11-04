@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 
 class PermissionFeature extends Model
 {
+    protected $table = 'features';
     public $incrementing = false;
     protected $keyType = 'string';
     protected $fillable = ['permission_group_id', 'name', 'path', 'ordering', 'menu_type', 'is_active'];
