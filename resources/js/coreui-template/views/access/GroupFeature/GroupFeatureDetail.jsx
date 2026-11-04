@@ -92,7 +92,7 @@ const GroupFeatureDetail = () => {
   const openEdit = async () => {
     try {
       const basePath = await getAccessFeaturePath(['Manajemen Kelompok Fitur', 'Manajemen Group Fitur', 'Management Group Feature', 'Group Feature', 'Feature Group'])
-      if (basePath) navigate(`${basePath}/group-feature/form/${group.id}`)
+      if (basePath) navigate(`${basePath}/form/${group.id}`)
       else setError('Path Management Fitur belum terdaftar di database.')
     } catch (navigationError) {
       setError(navigationError.message || 'Gagal membaca path Management Fitur dari database.')
@@ -168,7 +168,7 @@ const GroupFeatureDetail = () => {
                   onClick={async () => {
                   try {
                     const listPath = await getAccessFeaturePath(['Manajemen Kelompok Fitur', 'Manajemen Group Fitur', 'Management Group Feature', 'Group Feature', 'Feature Group'])
-                    if (listPath) navigate(`${listPath}?view=groups`)
+                    if (listPath) navigate(listPath)
                     else setError('Path Management Fitur belum terdaftar di database.')
                   } catch (navigationError) {
                     setError(navigationError.message || 'Gagal membaca path Management Fitur dari database.')
