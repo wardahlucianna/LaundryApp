@@ -16,8 +16,8 @@ class PermissionFeatureController extends Controller
             $query->where(fn ($q) => $q->where('name', 'ilike', "%{$search}%")
                 ->orWhereHas('group', fn ($g) => $g->where('name', 'ilike', "%{$search}%")));
         }
-        if ($request->filled('permission_group_id')) {
-            $query->where('permission_group_id', $request->input('permission_group_id'));
+        if ($request->filled('featureId')) {
+            $query->where('featureId', $request->input('featureId'));
         }
         if ($request->has('is_active')) $query->where('is_active', $request->boolean('is_active'));
         return response()->json($query->paginate(min(max($request->integer('per_page', 100), 1), 100)));
@@ -31,7 +31,7 @@ class PermissionFeatureController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'permission_group_id' => ['required', 'uuid', 'exists:groupFeature,id'],
+            'featureId' => ['required', 'uuid', 'exists:groupFeature,id'],
             'name' => ['required', 'string', 'max:120'],
             'path' => ['nullable', 'string', 'max:255'],
             'ordering' => ['required', 'integer', 'min:0'],
@@ -44,7 +44,7 @@ class PermissionFeatureController extends Controller
     public function update(Request $request, PermissionFeature $permissionFeature)
     {
         $data = $request->validate([
-            'permission_group_id' => ['sometimes', 'required', 'uuid', 'exists:groupFeature,id'],
+            'featureId' => ['sometimes', 'required', 'uuid', 'exists:groupFeature,id'],
             'name' => ['sometimes', 'required', 'string', 'max:120'],
             'path' => ['nullable', 'string', 'max:255'],
             'ordering' => ['sometimes', 'required', 'integer', 'min:0'],
