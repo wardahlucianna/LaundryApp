@@ -43,6 +43,18 @@ const iconOptions = [
   { name: 'cilTags', label: 'Kategori', icon: cilTags },
 ]
 
+const getGroupActiveStatus = (group) => {
+  const rawStatus = group?.isActive ?? group?.is_active ?? group?.active ?? group?.status
+  if (typeof rawStatus === 'boolean') return rawStatus
+  if (typeof rawStatus === 'number') return rawStatus === 1
+
+  const normalizedStatus = String(rawStatus ?? '').trim().toLowerCase()
+  if (['1', 'true', 'aktif', 'active'].includes(normalizedStatus)) return true
+  if (['0', 'false', 'nonaktif', 'inactive'].includes(normalizedStatus)) return false
+
+  return false
+}
+
 const GroupFeatureForm = () => {
   const navigate = useNavigate()
   const { id } = useParams()
@@ -71,12 +83,13 @@ const GroupFeatureForm = () => {
 
     const response = await fetch(`${apiBase}${path}`, {
       ...options,
+      credentials: 'include',
       headers: {
         Accept: 'application/json',
         ...(options.body
           ? { 'Content-Type': 'application/json' }
           : {}),
-        Authorization: `Bearer ${token}`,
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...(options.headers || {}),
       },
     })
@@ -113,13 +126,11 @@ const GroupFeatureForm = () => {
     setLoadFailed(false)
     setError('')
 
-    request('/permission-groups?per_page=100')
+    request(`/permission-groups/${id}`)
       .then((payload) => {
-        const found = (payload.data || []).find(
-          (item) => String(item.groupFeatureId) === String(id),
-        )
+        const found = payload?.data?.data || payload?.data || payload
 
-        if (!found) {
+        if (!found || String(found.groupFeatureId ?? found.groupId) !== String(id)) {
           throw new Error('Kelompok fitur tidak ditemukan.')
         }
 
@@ -132,9 +143,9 @@ const GroupFeatureForm = () => {
           name: found.name || '',
           icon: found.icon || 'cilFolderOpen',
           ordering: Number(found.ordering) || 1,
-          is_active: Boolean(found.isActive ?? found.is_active),
+          is_active: getGroupActiveStatus(found),
         })
-      })
+      }
       .catch((loadError) => {
         if (active) {
           setLoadFailed(true)
