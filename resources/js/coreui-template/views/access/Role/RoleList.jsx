@@ -29,7 +29,7 @@ import {
 } from '@coreui/icons'
 
 import ConfirmModal from '../../../components/ConfirmModal'
-import GlobalPagination from '../../../components/GlobalPagination'
+import GlobalPagination from '../../../components/data/GlobalPagination'
 
 import MasterPageLayout from '../../../components/layout/MasterPageLayout'
 import { apiBase } from '../../../../services/api'
