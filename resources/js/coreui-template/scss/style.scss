@@ -539,3 +539,38 @@ small {
 
 
 
+
+/* Shared master page frame: common heading rhythm, while page-specific bodies remain custom. */
+.master-page-layout {
+  width: 100%;
+  min-width: 0;
+  color: var(--cui-body-color);
+}
+.master-page-heading {
+  min-height: 2.5rem;
+}
+.master-page-title {
+  color: #172A45;
+  font-weight: 700;
+  letter-spacing: -.025em;
+}
+.master-page-description {
+  max-width: 48rem;
+  font-size: .8125rem;
+  line-height: 1.5;
+}
+.master-page-heading-actions {
+  flex: 0 0 auto;
+}
+.master-page-layout .role-panel,
+.master-page-layout .card {
+  border-radius: 1rem;
+}
+@media (max-width: 576px) {
+  .master-page-heading {
+    align-items: flex-start !important;
+  }
+  .master-page-heading-actions {
+    width: 100%;
+  }
+}
