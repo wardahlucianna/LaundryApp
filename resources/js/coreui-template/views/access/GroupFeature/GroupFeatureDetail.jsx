@@ -11,7 +11,7 @@ import {
   CSpinner,
 } from '@coreui/react'
 
-import MasterPageLayout from '../../../components/MasterPageLayout'
+import MasterPageLayout from '../../../components/layout/MasterPageLayout'
 
 import { apiBase } from '../../../../services/api'
 
