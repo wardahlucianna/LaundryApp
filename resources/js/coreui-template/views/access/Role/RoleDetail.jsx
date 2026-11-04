@@ -230,10 +230,17 @@ const RoleDetailPage = () => {
     >
       <div className="role-detail-page">
         {loading ? (
-          <div className="d-flex align-items-center gap-2 py-4 text-body-secondary">
-            <CSpinner size="sm" className="me-2" color="warning" />
-            Memuat detail peran...
-          </div>
+          <CCard className="mb-4">
+            <CCardHeader>
+              <strong>Detail Peran</strong>
+            </CCardHeader>
+            <CCardBody>
+              <div className="d-flex align-items-center gap-2 py-3 text-body-secondary">
+                <CSpinner size="sm" color="warning" />
+                Memuat detail peran...
+              </div>
+            </CCardBody>
+          </CCard>
         ) : (
           role && (
             <>
