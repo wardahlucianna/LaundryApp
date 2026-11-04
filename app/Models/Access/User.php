@@ -12,39 +12,31 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $table = 'users';
-
+    protected $primaryKey = 'usersId';
     public $incrementing = false;
     protected $keyType = 'string';
+    const CREATED_AT = 'createdAt';
+    const UPDATED_AT = 'updatedAt';
+    const REMEMBER_TOKEN = 'rememberToken';
 
     protected $fillable = [
-        'role_id',
-        'full_name',
-        'username',
-        'email',
-        'phone',
-        'password',
-        'is_active',
+        'roleId', 'fullName', 'username', 'email', 'phone', 'password', 'isActive',
     ];
 
-    protected $hidden = ['password', 'remember_token'];
+    protected $hidden = ['password', 'rememberToken'];
 
     protected function casts(): array
     {
-        return [
-            'password' => 'hashed',
-            'is_active' => 'boolean',
-        ];
+        return ['password' => 'hashed', 'isActive' => 'boolean'];
     }
 
     protected static function booted(): void
     {
-        static::creating(function (User $user): void {
-            $user->id ??= (string) Str::uuid();
-        });
+        static::creating(fn (User $user) => $user->usersId ??= (string) Str::uuid());
     }
 
     public function role()
     {
-        return $this->belongsTo(Role::class, 'role_id');
+        return $this->belongsTo(Role::class, 'roleId', 'rolesId');
     }
 }
