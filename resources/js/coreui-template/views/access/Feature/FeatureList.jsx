@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import {
   CBadge,
+  CAlert,
   CButton,
   CCard,
   CCardBody,
@@ -41,6 +42,7 @@ const FeatureListPage = () => {
   const [notice, setNotice] = useState('')
   const [deleteTarget, setDeleteTarget] = useState(null)
   const [deleting, setDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState('')
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -128,15 +130,16 @@ const FeatureListPage = () => {
     else setError('Path Manajemen Fitur belum terdaftar di database.')
   }
 
-  const deleteFeature = (feature) => setDeleteTarget({ type: 'feature', item: feature })
+  const deleteFeature = (feature) => { setDeleteError(''); setDeleteTarget({ type: 'feature', item: feature }) }
 
-  const deleteGroup = (group) => setDeleteTarget({ type: 'group', item: group })
+  const deleteGroup = (group) => { setDeleteError(''); setDeleteTarget({ type: 'group', item: group }) }
 
   const confirmDelete = async () => {
     if (!deleteTarget) return
     setDeleting(true)
     setError('')
     setNotice('')
+    setDeleteError('')
     try {
       const { type, item } = deleteTarget
       await request(type === 'feature' ? `/permission-features/${item.id}` : `/permission-groups/${item.id}`, { method: 'DELETE' })
@@ -145,8 +148,8 @@ const FeatureListPage = () => {
       if (type === 'feature') await loadFeatures()
       else await loadGroups()
       setDeleteTarget(null)
-    } catch (deleteError) {
-      setError(deleteError.message || 'Gagal menghapus data.')
+    } catch (deleteRequestError) {
+      setDeleteError(deleteRequestError.message || 'Gagal menghapus data.')
     } finally {
       setDeleting(false)
     }
@@ -297,10 +300,11 @@ const FeatureListPage = () => {
       <CModal visible={Boolean(deleteTarget)} onClose={() => !deleting && setDeleteTarget(null)} alignment="center">
         <CModalHeader><strong>Konfirmasi Hapus</strong></CModalHeader>
         <CModalBody>
+          {deleteError && <CAlert color="danger" className="mb-3" dismissible onClose={() => setDeleteError('')}><strong>Penghapusan gagal:</strong> {deleteError}</CAlert>}
           Apakah kamu yakin ingin menghapus {deleteTarget?.type === 'feature' ? 'fitur' : 'kelompok fitur'} <strong>{deleteTarget?.item?.name}</strong>? Data yang dihapus tidak dapat dikembalikan.
         </CModalBody>
         <CModalFooter>
-          <CButton color="secondary" variant="outline" size="sm" disabled={deleting} onClick={() => setDeleteTarget(null)}>Batal</CButton>
+          <CButton color="secondary" variant="outline" size="sm" disabled={deleting} onClick={() => { setDeleteTarget(null); setDeleteError('') }}>Batal</CButton>
           <CButton color="danger" size="sm" disabled={deleting} onClick={confirmDelete}>{deleting ? 'Menghapus...' : 'Ya, Hapus'}</CButton>
         </CModalFooter>
       </CModal>
