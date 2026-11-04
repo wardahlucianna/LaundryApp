@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Akses\Role;
-use App\Models\Akses\User;
+use App\Models\Access\Role;
+use App\Models\Access\User;
 use Illuminate\Database\Seeder;
 
 class AdministratorSeeder extends Seeder
