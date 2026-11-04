@@ -9,11 +9,22 @@ import {
   CCol,
   CForm,
   CFormInput,
-  CFormSelect,
   CFormSwitch,
   CRow,
   CSpinner,
 } from '@coreui/react'
+import CIcon from '@coreui/icons-react'
+import {
+  cilFolderOpen,
+  cilPeople,
+  cilBasket,
+  cilCash,
+  cilSettings,
+  cilChartLine,
+  cilSpeedometer,
+  cilBuilding,
+  cilTags,
+} from '@coreui/icons'
 
 import MasterPageLayout from '../../../components/layout/MasterPageLayout'
 
@@ -21,15 +32,15 @@ import { apiBase } from '../../../../services/api'
 
 
 const iconOptions = [
-  'cilFolderOpen',
-  'cilPeople',
-  'cilBasket',
-  'cilCash',
-  'cilSettings',
-  'cilChartLine',
-  'cilSpeedometer',
-  'cilBuilding',
-  'cilTags',
+  { name: 'cilFolderOpen', label: 'Folder', icon: cilFolderOpen },
+  { name: 'cilPeople', label: 'Pengguna', icon: cilPeople },
+  { name: 'cilBasket', label: 'Keranjang', icon: cilBasket },
+  { name: 'cilCash', label: 'Keuangan', icon: cilCash },
+  { name: 'cilSettings', label: 'Pengaturan', icon: cilSettings },
+  { name: 'cilChartLine', label: 'Grafik', icon: cilChartLine },
+  { name: 'cilSpeedometer', label: 'Dashboard', icon: cilSpeedometer },
+  { name: 'cilBuilding', label: 'Gedung', icon: cilBuilding },
+  { name: 'cilTags', label: 'Kategori', icon: cilTags },
 ]
 
 const GroupFeatureForm = () => {
@@ -46,6 +57,7 @@ const GroupFeatureForm = () => {
   const [loading, setLoading] = useState(Boolean(id))
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+  const [iconPickerOpen, setIconPickerOpen] = useState(false)
 
   const request = useCallback(async (path, options = {}) => {
     const token =
@@ -142,11 +154,12 @@ const GroupFeatureForm = () => {
     }))
   }
 
-  const handleIconChange = (event) => {
+  const handleIconChange = (iconName) => {
     setValues((current) => ({
       ...current,
-      icon: event.target.value,
+      icon: iconName,
     }))
+    setIconPickerOpen(false)
   }
 
   const handleOrderingChange = (event) => {
@@ -245,16 +258,60 @@ const GroupFeatureForm = () => {
                 </CCol>
 
                 <CCol xs={12} md={6}>
-                  <CFormSelect
-                    label="Icon Group"
-                    value={values.icon}
-                    onChange={handleIconChange}
-                    options={iconOptions.map((icon) => ({
-                      label: icon,
-                      value: icon,
-                    }))}
-                    required
-                  />
+                  <label className="form-label">Icon Group</label>
+                  <div className="position-relative">
+                    <CButton
+                      type="button"
+                      color="secondary"
+                      variant="outline"
+                      className="d-flex align-items-center justify-content-between w-100"
+                      aria-label="Pilih icon group"
+                      aria-expanded={iconPickerOpen}
+                      onClick={() => setIconPickerOpen((open) => !open)}
+                    >
+                      <span className="d-flex align-items-center gap-2">
+                        <CIcon
+                          icon={iconOptions.find((item) => item.name === values.icon)?.icon || cilFolderOpen}
+                          size="lg"
+                        />
+                        <span>
+                          {iconOptions.find((item) => item.name === values.icon)?.label || values.icon}
+                        </span>
+                      </span>
+                      <span className="text-body-secondary">▾</span>
+                    </CButton>
+
+                    {iconPickerOpen && (
+                      <div
+                        className="position-absolute start-0 end-0 mt-1 p-2 bg-body border rounded shadow"
+                        style={{ zIndex: 1050 }}
+                        role="listbox"
+                        aria-label="Pilihan icon group"
+                      >
+                        <div className="row g-2">
+                          {iconOptions.map((item) => (
+                            <div className="col-4" key={item.name}>
+                              <CButton
+                                type="button"
+                                color={values.icon === item.name ? 'primary' : 'secondary'}
+                                variant={values.icon === item.name ? 'outline' : 'ghost'}
+                                className="d-flex flex-column align-items-center justify-content-center gap-1 w-100 py-2"
+                                onClick={() => handleIconChange(item.name)}
+                                title={item.label}
+                                aria-label={item.label}
+                                role="option"
+                                aria-selected={values.icon === item.name}
+                              >
+                                <CIcon icon={item.icon} size="xl" />
+                                <span className="small">{item.label}</span>
+                              </CButton>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <input type="hidden" name="icon" value={values.icon} required />
                 </CCol>
 
                 <CCol xs={12} md={6}>
