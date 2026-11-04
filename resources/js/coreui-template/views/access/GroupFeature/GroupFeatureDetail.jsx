@@ -158,7 +158,7 @@ const GroupFeatureDetail = () => {
                   color="secondary"
                   size="sm"
                   variant="outline"
-                  onClick={() => navigate('/permission-groups')}
+                  onClick={() => navigate(-1)}
                 >
                   Kembali
                 </CButton>
