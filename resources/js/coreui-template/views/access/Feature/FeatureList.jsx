@@ -44,7 +44,7 @@ const FeatureListPage = () => {
   useEffect(() => {
     if (!isGroupFeatureRoute) return
     let active = true
-    getAccessFeaturePath(['Manajemen Kelompok Fitur', 'Manajemen Group Fitur', 'Manajemen Kelompok Fitur', 'Kelompok Fitur', 'Kelompok Fitur'])
+    getAccessFeaturePath(['Manajemen Kelompok Fitur', 'Manajemen Group Fitur', 'Management Group Feature', 'Group Feature', 'Feature Group'])
       .then((path) => { if (active && path) setGroupFeatureTarget(path) })
       .catch(() => { if (active) setError('Path Manajemen Kelompok Fitur belum terdaftar di database.') })
     return () => { active = false }
@@ -112,12 +112,12 @@ const FeatureListPage = () => {
   }, [loadFeatures])
 
   const openCreate = async () => {
-    const featureRouteBase = await getAccessFeaturePath(['Manajemen Fitur', 'Manajemen Fitur'])
+    const featureRouteBase = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
     if (featureRouteBase) navigate(`${featureRouteBase}/form`)
     else setError('Path Manajemen Fitur belum terdaftar di database.')
   }
   const openEdit = async (feature) => {
-    const featureRouteBase = await getAccessFeaturePath(['Manajemen Fitur', 'Manajemen Fitur'])
+    const featureRouteBase = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
     if (featureRouteBase) navigate(`${featureRouteBase}/form/${feature.id}`)
     else setError('Path Manajemen Fitur belum terdaftar di database.')
   }
@@ -164,17 +164,17 @@ const FeatureListPage = () => {
   const groupPagination = { current_page: groupPage, last_page: Math.max(1, Math.ceil(filteredGroups.length / groupPerPage)), total: filteredGroups.length }
   const paginatedGroups = filteredGroups.slice((groupPage - 1) * groupPerPage, groupPage * groupPerPage)
   const openGroupCreate = async () => {
-    const basePath = await getAccessFeaturePath(['Manajemen Fitur', 'Manajemen Fitur'])
+    const basePath = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
     if (basePath) navigate(`${basePath}/group-feature/form`)
     else setError('Path Manajemen Fitur belum terdaftar di database.')
   }
   const openGroupEdit = async (group) => {
-    const basePath = await getAccessFeaturePath(['Manajemen Fitur', 'Manajemen Fitur'])
+    const basePath = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
     if (basePath) navigate(`${basePath}/group-feature/form/${group.id}`)
     else setError('Path Manajemen Fitur belum terdaftar di database.')
   }
   const openGroupDetail = async (group) => {
-    const basePath = await getAccessFeaturePath(['Manajemen Fitur', 'Manajemen Fitur'])
+    const basePath = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
     if (basePath) navigate(`${basePath}/group-feature/detail/${group.id}`)
     else setError('Path Manajemen Fitur belum terdaftar di database.')
   }
