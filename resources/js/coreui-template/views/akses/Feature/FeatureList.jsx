@@ -5,6 +5,7 @@ import {
   CTableHeaderCell, CTableRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
+import GlobalPagination from '../../../components/GlobalPagination'
 import { cilPencil, cilPlus, cilSearch, cilTrash, cilReload } from '@coreui/icons'
 
 const FeatureList = ({ features, groups, searchInput, setSearchInput, statusFilter, setStatusFilter, applySearch, resetSearch, pagination, loading, page, setPage, onCreate, onEdit, onDelete }) => {
@@ -35,7 +36,7 @@ const FeatureList = ({ features, groups, searchInput, setSearchInput, statusFilt
                 </CTableRow>)}
           </CTableBody>
         </CTable>
-        <div className="d-flex flex-wrap justify-content-between align-items-center gap-2"><small className="text-body-secondary">Menampilkan {showingStart}–{showingEnd} dari {pagination.total} data</small><div className="d-flex gap-2"><CButton color="secondary" variant="outline" size="sm" disabled={page <= 1 || loading} onClick={() => setPage((current) => current - 1)}>Sebelumnya</CButton><CButton color="secondary" variant="outline" size="sm" disabled={page >= pagination.last_page || loading} onClick={() => setPage((current) => current + 1)}>Berikutnya</CButton></div></div>
+        <GlobalPagination currentPage={pagination.current_page} lastPage={pagination.last_page} total={pagination.total} perPage={10} onPageChange={setPage} loading={loading} />
       </CCardBody>
     </CCard>
   )
