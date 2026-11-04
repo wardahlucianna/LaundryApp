@@ -6,7 +6,6 @@ import React, {
 } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import {
-  CAlert,
   CBadge,
   CButton,
   CCard,
@@ -214,17 +213,9 @@ const RoleDetailPage = () => {
       title="Management Role"
       className="role-detail-page"
       headingActions={headingActions}
+      error={error}
+      onClearError={() => setError('')}
     >
-      {error && (
-        <CAlert
-          color="danger"
-          dismissible
-          onClose={() => setError('')}
-        >
-          {error}
-        </CAlert>
-      )}
-
       <div className="role-detail-page">
         {loading ? (
           <div className="d-flex align-items-center gap-2 py-4 text-body-secondary">
