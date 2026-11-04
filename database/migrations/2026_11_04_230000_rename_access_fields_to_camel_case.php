@@ -10,7 +10,7 @@ return new class extends Migration
     {
         // groupFeature: use an explicit camelCase primary key.
         Schema::table('features', function (Blueprint $table) {
-            $table->dropForeign(['featureId']);
+            $table->dropForeign(['permission_group_id']);
         });
         Schema::renameColumn('groupFeature', 'id', 'groupFeatureId');
         Schema::renameColumn('features', 'permission_group_id', 'featureId');
