@@ -12,7 +12,7 @@ class AuthController extends Controller
 {
     /**
      * Return active feature IDs assigned to the user's role.
-     * Feature access is now based on role_permission_features, not legacy codes.
+     * Feature access is now based on roleFeatures, not legacy codes.
      */
     private function featureIds(?User $user): array
     {
