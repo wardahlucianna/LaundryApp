@@ -16,6 +16,7 @@ export const routes = [
   { path: '/reports', name: 'Laporan', element: () => <Placeholder title="Laporan" /> },
   { path: '/settings', name: 'Pengaturan', element: () => <Placeholder title="Pengaturan" /> },
   { path: '/permissions', name: 'Management Fitur', element: FeatureManagement },
+  { path: '/permission-groups', name: 'Management Group Feature', element: FeatureManagement },
   { path: '/permission-groups/form', name: 'Form Group Feature', element: GroupFeatureFormPage },
   { path: '/permission-groups/form/:id', name: 'Edit Group Feature', element: GroupFeatureFormPage },
   { path: '/permission-groups/detail/:id', name: 'Detail Group Feature', element: GroupFeatureDetailPage },
