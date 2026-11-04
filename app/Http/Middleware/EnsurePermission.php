@@ -16,7 +16,7 @@ class EnsurePermission
     private function featureNamesFor(string $permissionCode): ?array
     {
         return match (strtoupper($permissionCode)) {
-            'FEATURE_VIEW', 'FEATURE_CREATE', 'FEATURE_UPDATE', 'FEATURE_DELETE' => 'Manajemen Fitur',
+            'FEATURE_VIEW', 'FEATURE_CREATE', 'FEATURE_UPDATE', 'FEATURE_DELETE' => ['Manajemen Fitur'],
             'ROLE_VIEW', 'ROLE_MANAGE', 'ACCESS_MANAGE' => ['Management Role', 'Manajemen Role', 'Manajemen Peran'],
             default => null,
         };
