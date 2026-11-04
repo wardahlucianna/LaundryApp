@@ -17,6 +17,7 @@ import {
 import MasterPageLayout from '../../../components/layout/MasterPageLayout'
 
 import { apiBase } from '../../../../services/api'
+import { getAccessFeaturePath } from '../../../utils/accessNavigation'
 
 
 const getGroupId = (group) =>
@@ -217,7 +218,9 @@ const getGroupId = (group) =>
         body: JSON.stringify(body),
       })
 
-      navigate('/permissions', {
+      const listPath = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
+      if (!listPath) throw new Error('Path list Management Fitur belum terdaftar di database.')
+      navigate(listPath, {
         state: {
           notice: id
             ? 'Fitur berhasil diperbarui.'
@@ -352,7 +355,15 @@ const getGroupId = (group) =>
                     variant="outline"
                     type="button"
                     disabled={saving}
-                    onClick={() => navigate(-1)}
+                    onClick={async () => {
+                      try {
+                        const listPath = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
+                        if (listPath) navigate(listPath)
+                        else navigate(-1)
+                      } catch {
+                        navigate(-1)
+                      }
+                    }}
                   >
                     Batal
                   </CButton>
