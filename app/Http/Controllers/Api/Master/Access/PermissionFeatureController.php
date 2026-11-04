@@ -44,7 +44,7 @@ class PermissionFeatureController extends Controller
     public function update(Request $request, PermissionFeature $permissionFeature)
     {
         $data = $request->validate([
-            'featureId' => ['sometimes', 'required', 'uuid', 'exists:groupFeature,id'],
+            'featureId' => ['sometimes', 'required', 'uuid', 'exists:groupFeature,groupFeatureId'],
             'name' => ['sometimes', 'required', 'string', 'max:120'],
             'path' => ['nullable', 'string', 'max:255'],
             'ordering' => ['sometimes', 'required', 'integer', 'min:0'],
