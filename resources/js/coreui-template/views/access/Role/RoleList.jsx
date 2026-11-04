@@ -30,6 +30,18 @@ import MasterPageLayout from '../../../components/layout/MasterPageLayout'
 import { apiBase } from '../../../../services/api'
 import { getAccessFeaturePath } from '../../../utils/accessNavigation'
 
+const getRoleActiveStatus = (role) => {
+  const rawStatus = role?.isActive ?? role?.is_active ?? role?.active ?? role?.status
+  if (typeof rawStatus === 'boolean') return rawStatus
+  if (typeof rawStatus === 'number') return rawStatus === 1
+
+  const normalizedStatus = String(rawStatus ?? '').trim().toLowerCase()
+  if (['1', 'true', 'aktif', 'active'].includes(normalizedStatus)) return true
+  if (['0', 'false', 'nonaktif', 'inactive'].includes(normalizedStatus)) return false
+
+  return false
+}
+
 const RoleListPage = () => {
   const [roles, setRoles] = useState([])
   const [search, setSearch] = useState('')
@@ -331,7 +343,7 @@ const RoleListPage = () => {
                 const permissionCount = role.permissions_count ?? role.features_count ?? role.role_permissions_count ?? (Array.isArray(role.features) ? role.features.length : null) ?? (Array.isArray(role.permissions) ? role.permissions.length : null)
                 return permissionCount ?? 0
               } },
-              { key: 'status', title: 'Status', render: (role) => <CBadge color={role.is_active ? 'success' : 'secondary'}>{role.is_active ? 'Aktif' : 'Nonaktif'}</CBadge> },
+              { key: 'status', title: 'Status', render: (role) => { const isActive = getRoleActiveStatus(role); return <CBadge color={isActive ? 'success' : 'secondary'}>{isActive ? 'Aktif' : 'Nonaktif'}</CBadge> } },
               { key: 'actions', title: 'Aksi', width: 170, className: 'text-center', headerClassName: 'text-center', render: (role) => (
                 <div className="table-actions d-inline-flex gap-2">
                   <CButton color="info" variant="outline" size="sm" onClick={() => openDetail(role)} title="Detail peran" aria-label={`Detail ${role.name}`}>
