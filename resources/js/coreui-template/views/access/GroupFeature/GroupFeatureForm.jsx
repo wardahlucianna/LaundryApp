@@ -116,7 +116,7 @@ const GroupFeatureForm = () => {
         )
 
         if (!found) {
-          throw new Error('Group feature tidak ditemukan.')
+          throw new Error('Kelompok fitur tidak ditemukan.')
         }
 
         if (!active) {
@@ -133,7 +133,7 @@ const GroupFeatureForm = () => {
       })
       .catch((loadError) => {
         if (active) {
-          setError(loadError.message || 'Gagal memuat group feature.')
+          setError(loadError.message || 'Gagal memuat kelompok fitur.')
         }
       })
       .finally(() => {
@@ -162,7 +162,7 @@ const GroupFeatureForm = () => {
     setIconPickerOpen(false)
   }
 
-  const handleOrderingChange = (event) => {
+  const handleUrutanChange = (event) => {
     setValues((current) => ({
       ...current,
       ordering: event.target.value,
@@ -181,7 +181,7 @@ const GroupFeatureForm = () => {
     setError('')
 
     if (!values.name.trim()) {
-      setError('Nama group wajib diisi.')
+      setError('Nama kelompok wajib diisi.')
       return
     }
 
@@ -207,17 +207,17 @@ const GroupFeatureForm = () => {
       // Refresh the sidebar menu so the selected group icon is reflected.
       window.dispatchEvent(new Event('sunrise:permissions-updated'))
 
-      const listPath = await getAccessFeaturePath(['Manajemen Kelompok Fitur', 'Manajemen Group Fitur', 'Management Group Feature', 'Group Feature', 'Feature Group'])
-      if (!listPath) throw new Error('Path Management Fitur belum terdaftar di database.')
+      const listPath = await getAccessFeaturePath(['Manajemen Kelompok Fitur', 'Manajemen Group Fitur', 'Manajemen Kelompok Fitur', 'Group Feature', 'Feature Group'])
+      if (!listPath) throw new Error('Path Manajemen Kelompok Fitur belum terdaftar di database.')
       navigate(listPath, {
         state: {
           notice: id
-            ? 'Group feature berhasil diperbarui.'
-            : 'Group feature berhasil ditambahkan.',
+            ? 'Kelompok fitur berhasil diperbarui.'
+            : 'Kelompok fitur berhasil ditambahkan.',
         },
       })
     } catch (saveError) {
-      setError(saveError.message || 'Gagal menyimpan group feature.')
+      setError(saveError.message || 'Gagal menyimpan kelompok fitur.')
     } finally {
       setSaving(false)
     }
@@ -225,7 +225,7 @@ const GroupFeatureForm = () => {
 
   return (
     <MasterPageLayout
-      title="Management Group Feature"
+      title="Manajemen Kelompok Fitur"
       className="role-form-page"
       error={error}
       onClearError={() => setError('')}
@@ -235,13 +235,13 @@ const GroupFeatureForm = () => {
       {loading ? (
         <div className="d-flex align-items-center gap-2 py-4 text-body-secondary">
           <CSpinner size="sm" color="primary" />
-          <span>Memuat data group feature...</span>
+          <span>Memuat data kelompok fitur...</span>
         </div>
       ) : (
         <CCard className="role-panel role-form-card mb-4">
           <CCardHeader>
             <strong className="fs-5">
-              {group ? 'Edit Group Feature' : 'Tambah Group Feature'}
+              {group ? 'Ubah Kelompok Fitur' : 'Tambah Kelompok Fitur'}
             </strong>
           </CCardHeader>
 
@@ -250,8 +250,8 @@ const GroupFeatureForm = () => {
               <CRow className="g-3">
                 <CCol xs={12} md={6}>
                   <CFormInput
-                    label="Nama Group"
-                    placeholder="Contoh: Master Data"
+                    label="Nama Kelompok"
+                    placeholder="Contoh: Data Master"
                     value={values.name}
                     onChange={handleNameChange}
                     required
@@ -260,14 +260,14 @@ const GroupFeatureForm = () => {
                 </CCol>
 
                 <CCol xs={12} md={6}>
-                  <label className="form-label">Icon Group</label>
+                  <label className="form-label">Ikon Kelompok</label>
                   <div className="position-relative">
                     <CButton
                       type="button"
                       color="secondary"
                       variant="outline"
                       className="d-flex align-items-center justify-content-between w-100"
-                      aria-label="Pilih icon group"
+                      aria-label="Pilih ikon kelompok"
                       aria-expanded={iconPickerOpen}
                       onClick={() => setIconPickerOpen((open) => !open)}
                     >
@@ -288,7 +288,7 @@ const GroupFeatureForm = () => {
                         className="position-absolute start-0 end-0 mt-1 p-2 bg-body border rounded shadow"
                         style={{ zIndex: 1050 }}
                         role="listbox"
-                        aria-label="Pilihan icon group"
+                        aria-label="Pilihan ikon kelompok"
                       >
                         <div className="row g-2">
                           {iconOptions.map((item) => (
@@ -318,12 +318,12 @@ const GroupFeatureForm = () => {
 
                 <CCol xs={12} md={6}>
                   <CFormInput
-                    label="Ordering"
+                    label="Urutan"
                     type="number"
                     min="1"
                     step="1"
                     value={values.ordering}
-                    onChange={handleOrderingChange}
+                    onChange={handleUrutanChange}
                     required
                   />
                 </CCol>
@@ -333,7 +333,7 @@ const GroupFeatureForm = () => {
                     <div className="role-status-copy">
                       <div className="fw-semibold mb-1">Status</div>
                       <div className="role-status-note">
-                        Aktifkan group feature agar dapat digunakan.
+                        Aktifkan kelompok fitur agar dapat digunakan.
                       </div>
                     </div>
 
@@ -358,11 +358,11 @@ const GroupFeatureForm = () => {
                   disabled={saving}
                   onClick={async () => {
                     try {
-                      const listPath = await getAccessFeaturePath(['Manajemen Kelompok Fitur', 'Manajemen Group Fitur', 'Management Group Feature', 'Group Feature', 'Feature Group'])
+                      const listPath = await getAccessFeaturePath(['Manajemen Kelompok Fitur', 'Manajemen Group Fitur', 'Manajemen Kelompok Fitur', 'Group Feature', 'Feature Group'])
                       if (listPath) navigate(listPath)
-                      else setError('Path Management Fitur belum terdaftar di database.')
+                      else setError('Path Manajemen Kelompok Fitur belum terdaftar di database.')
                     } catch (navigationError) {
-                      setError(navigationError.message || 'Gagal membaca path Management Fitur dari database.')
+                      setError(navigationError.message || 'Gagal membaca path Manajemen Kelompok Fitur dari database.')
                     }
                   }}
                 >
