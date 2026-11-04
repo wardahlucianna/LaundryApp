@@ -231,7 +231,7 @@ const RoleDetailPage = () => {
       <div className="role-detail-page">
         {loading ? (
           <div className="d-flex align-items-center gap-2 py-4 text-body-secondary">
-            <CSpinner size="sm" />
+            <CSpinner size="sm" color="warning" />
             Memuat detail peran...
           </div>
         ) : (
