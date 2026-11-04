@@ -45,7 +45,7 @@ const FeatureListPage = () => {
   useEffect(() => {
     if (!location.state?.notice) return
     setNotice(location.state.notice)
-    navigate(location.pathname, { replace: true, state: {} })
+    navigate(`${location.pathname}${location.search}`, { replace: true, state: {} })
   }, [location, navigate])
 
   const request = useCallback(async (path, options = {}) => {
