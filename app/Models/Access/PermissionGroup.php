@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 class PermissionGroup extends Model
 {
     protected $table = 'groupFeature';
+    protected $primaryKey = 'groupFeatureId';
     public $incrementing = false;
     protected $keyType = 'string';
     protected $fillable = ['name', 'icon', 'ordering', 'is_active'];
@@ -15,11 +16,11 @@ class PermissionGroup extends Model
 
     protected static function booted(): void
     {
-        static::creating(fn (PermissionGroup $group) => $group->id ??= (string) Str::uuid());
+        static::creating(fn (PermissionGroup $group) => $group->groupFeatureId ??= (string) Str::uuid());
     }
 
     public function features()
     {
-        return $this->hasMany(PermissionFeature::class, 'featureId');
+        return $this->hasMany(PermissionFeature::class, 'featureId', 'groupFeatureId');
     }
 }
