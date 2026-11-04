@@ -8,10 +8,10 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Remove any existing features.featureId column before renaming id to featureId.
-        if (Schema::hasTable('features') && Schema::hasColumn('features', 'id') && Schema::hasColumn('features', 'featureId')) {
+        // Preserve the group-feature foreign key before promoting id to the feature primary key.
+        if (Schema::hasTable('features') && Schema::hasColumn('features', 'id') && Schema::hasColumn('features', 'featureId') && !Schema::hasColumn('features', 'groupFeatureId')) {
             Schema::table('features', function (Blueprint $table) {
-                $table->dropColumn('featureId');
+                $table->renameColumn('featureId', 'groupFeatureId');
             });
         }
 
