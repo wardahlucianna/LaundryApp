@@ -10,7 +10,7 @@ class PermissionFeature extends Model
     protected $table = 'features';
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $fillable = ['permission_group_id', 'name', 'path', 'ordering', 'menu_type', 'is_active'];
+    protected $fillable = ['featureId', 'name', 'path', 'ordering', 'menu_type', 'is_active'];
     protected $casts = ['is_active' => 'boolean'];
 
     protected static function booted(): void
@@ -20,11 +20,11 @@ class PermissionFeature extends Model
 
     public function group()
     {
-        return $this->belongsTo(PermissionGroup::class, 'permission_group_id');
+        return $this->belongsTo(PermissionGroup::class, 'featureId');
     }
 
     public function roles()
     {
-        return $this->belongsToMany(Role::class, 'role_permission_features', 'permission_feature_id', 'role_id');
+        return $this->belongsToMany(Role::class, 'roleFeatures', 'featureId', 'roleId');
     }
 }
