@@ -220,7 +220,7 @@ const getGroupId = (group) =>
 
       window.dispatchEvent(new Event('sunrise:permissions-updated'))
       const listPath = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
-      if (!listPath) throw new Error('Path list Management Fitur belum terdaftar di database.')
+      if (!listPath) throw new Error('Path daftar Manajemen Fitur belum terdaftar di database.')
       navigate(listPath, {
         state: {
           notice: id
@@ -286,7 +286,7 @@ const getGroupId = (group) =>
                   <CCol xs={12} md={6}>
                     <CFormInput
                       label="Nama Fitur"
-                      placeholder="Contoh: Manajemen Fitur"
+                      placeholder="Contoh: Pengelolaan Fitur"
                       value={values.name}
                       onChange={handleNameChange}
                       required
@@ -306,7 +306,7 @@ const getGroupId = (group) =>
 
                   <CCol xs={12} md={6}>
                     <CFormInput
-                      label="Ordering / Urutan"
+                      label="Urutan"
                       type="number"
                       min={0}
                       step={1}
@@ -323,8 +323,8 @@ const getGroupId = (group) =>
                       onChange={handleMenuTypeChange}
                       required
                     >
-                      <option value="sidebar">Sidebar</option>
-                      <option value="topbar">Topbar</option>
+                      <option value="sidebar">Menu Samping</option>
+                      <option value="topbar">Bilah Atas</option>
                     </CFormSelect>
                   </CCol>
 
@@ -360,7 +360,7 @@ const getGroupId = (group) =>
                       try {
                         const listPath = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
                         if (listPath) navigate(listPath)
-                        else setError('Path list Management Fitur belum terdaftar di database.')
+                        else setError('Path daftar Manajemen Fitur belum terdaftar di database.')
                       } catch (navigationError) {
                         setError(navigationError.message || 'Gagal membaca path Management Fitur dari database.')
                       }
