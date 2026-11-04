@@ -266,28 +266,33 @@ const FeatureListPage = () => {
                   <CCardBody>
                     <CRow className="mb-3">
                       <CCol xs={12}>
-                        <div className="d-flex flex-wrap flex-lg-nowrap align-items-center gap-2 w-100">
-                          <CFormInput
-                            placeholder="Cari nama atau kelompok fitur"
-                            value={searchInput}
-                            onChange={(event) => setSearchInput(event.target.value)}
-                            onKeyDown={(event) => event.key === 'Enter' && applySearch()}
-                            aria-label="Cari fitur"
-                            className="flex-grow-1"
-                          />
-                          <CFormSelect
-                            aria-label="Filter status fitur"
-                            value={statusFilter}
-                            onChange={(event) => changeStatusFilter(event.target.value)}
-                            style={{ maxWidth: '160px' }}
-                            options={[{ label: 'Semua Status', value: '' }, { label: 'Aktif', value: '1' }, { label: 'Nonaktif', value: '0' }]}
-                          />
-                          <CButton color="primary" size="sm" className="role-compact-button role-search-button" onClick={applySearch}>
-                            <CIcon icon={cilSearch} size="sm" className="me-1" />Cari
-                          </CButton>
-                          <CButton color="secondary" variant="outline" size="sm" className="role-compact-button role-reset-button" onClick={resetSearch}>
-                            <CIcon icon={cilReload} size="sm" className="me-1" />Reset
-                          </CButton>
+                        <div className="d-flex flex-column gap-2 w-100">
+                          <div className="d-flex flex-column flex-md-row align-items-stretch align-items-md-center gap-2 w-100">
+                            <CFormInput
+                              placeholder="Cari nama atau kelompok fitur"
+                              value={searchInput}
+                              onChange={(event) => setSearchInput(event.target.value)}
+                              onKeyDown={(event) => event.key === 'Enter' && applySearch()}
+                              aria-label="Cari fitur"
+                              className="flex-grow-1 w-auto"
+                              style={{ minWidth: 0 }}
+                            />
+                            <CFormSelect
+                              aria-label="Filter status fitur"
+                              value={statusFilter}
+                              onChange={(event) => changeStatusFilter(event.target.value)}
+                              style={{ width: '160px', maxWidth: '160px' }}
+                              options={[{ label: 'Semua Status', value: '' }, { label: 'Aktif', value: '1' }, { label: 'Nonaktif', value: '0' }]}
+                            />
+                          </div>
+                          <div className="d-flex flex-wrap align-items-center justify-content-start gap-2 pb-3 border-bottom">
+                            <CButton color="primary" size="sm" className="role-compact-button role-search-button" onClick={applySearch}>
+                              <CIcon icon={cilSearch} size="sm" className="me-1" />Cari
+                            </CButton>
+                            <CButton color="secondary" variant="outline" size="sm" className="role-compact-button role-reset-button" onClick={resetSearch}>
+                              <CIcon icon={cilReload} size="sm" className="me-1" />Reset
+                            </CButton>
+                          </div>
                         </div>
                       </CCol>
                     </CRow>
