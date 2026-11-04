@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { CBadge, CButton, CCard, CCardBody, CCardHeader, CCol, CFormInput, CFormSelect, CRow } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
+import CIkon from '@coreui/icons-react'
 import { cilFolderOpen, cilPeople, cilBasket, cilCash, cilSettings, cilChartLine, cilSpeedometer, cilBuilding, cilTags, cilPencil, cilPlus, cilReload, cilSearch, cilTrash } from '@coreui/icons'
 import MasterPageLayout from '../../../components/layout/MasterPageLayout'
 import GlobalTable from '../../../components/data/GlobalTable'
@@ -9,8 +9,8 @@ import GlobalPagination from '../../../components/data/GlobalPagination'
 import { apiBase } from '../../../../services/api'
 import { getAccessFeaturePath } from '../../../utils/accessNavigation'
 
-const groupIcons = { cilFolderOpen, cilPeople, cilBasket, cilCash, cilSettings, cilChartLine, cilSpeedometer, cilBuilding, cilTags }
-const groupNames = ['Manajemen Kelompok Fitur', 'Manajemen Group Fitur', 'Management Group Feature', 'Group Feature', 'Feature Group']
+const groupIkons = { cilFolderOpen, cilPeople, cilBasket, cilCash, cilSettings, cilChartLine, cilSpeedometer, cilBuilding, cilTags }
+const groupNames = ['Manajemen Kelompok Fitur', 'Manajemen Group Fitur', 'Manajemen Kelompok Fitur', 'Group Feature', 'Feature Group']
 
 const GroupFeatureList = () => {
   const [groups, setGroups] = useState([])
@@ -87,22 +87,22 @@ const GroupFeatureList = () => {
 
   const columns = [
     { key: 'number', title: 'No.', width: '60px', render: (_group, index) => (page - 1) * perPage + index + 1 },
-    { key: 'icon', title: 'Icon', render: (group) => <CIcon icon={groupIcons[group.icon] || cilFolderOpen} size="xl" /> },
-    { key: 'name', title: 'Nama Kelompok', render: (group) => <div><div className="fw-semibold">{group.name}</div><div className="small text-body-secondary d-flex align-items-center gap-2"><span>Ordering: {group.ordering ?? 0}</span><CBadge color={group.is_active ? 'success' : 'secondary'}>{group.is_active ? 'Aktif' : 'Nonaktif'}</CBadge></div></div> },
+    { key: 'icon', title: 'Ikon', render: (group) => <CIkon icon={groupIkons[group.icon] || cilFolderOpen} size="xl" /> },
+    { key: 'name', title: 'Nama Kelompok', render: (group) => <div><div className="fw-semibold">{group.name}</div><div className="small text-body-secondary d-flex align-items-center gap-2"><span>Urutan: {group.ordering ?? 0}</span><CBadge color={group.is_active ? 'success' : 'secondary'}>{group.is_active ? 'Aktif' : 'Nonaktif'}</CBadge></div></div> },
     { key: 'features_count', title: 'Jumlah Fitur', className: 'text-center', headerClassName: 'text-center', render: (group) => group.features_count ?? 0 },
-    { key: 'actions', title: 'Aksi', width: '150px', className: 'text-center', headerClassName: 'text-center', render: (group) => <div className="table-actions d-inline-flex gap-2"><CButton color="info" variant="outline" size="sm" onClick={() => goTo(`/detail/${group.id}`)} title="Detail"><CIcon icon={cilFolderOpen} size="sm" /></CButton><CButton color="primary" variant="outline" size="sm" onClick={() => goTo(`/form/${group.id}`)} title="Edit"><CIcon icon={cilPencil} size="sm" /></CButton><CButton color="danger" variant="outline" size="sm" onClick={() => deleteGroup(group)} title="Hapus"><CIcon icon={cilTrash} size="sm" /></CButton></div> },
+    { key: 'actions', title: 'Aksi', width: '150px', className: 'text-center', headerClassName: 'text-center', render: (group) => <div className="table-actions d-inline-flex gap-2"><CButton color="info" variant="outline" size="sm" onClick={() => goTo(`/detail/${group.id}`)} title="Rincian"><CIkon icon={cilFolderOpen} size="sm" /></CButton><CButton color="primary" variant="outline" size="sm" onClick={() => goTo(`/form/${group.id}`)} title="Edit"><CIkon icon={cilPencil} size="sm" /></CButton><CButton color="danger" variant="outline" size="sm" onClick={() => deleteGroup(group)} title="Hapus"><CIkon icon={cilTrash} size="sm" /></CButton></div> },
   ]
 
   return (
     <MasterPageLayout title="Manajemen Kelompok Fitur" className="role-list-page" notice={notice} error={error} onClearNotice={() => setNotice('')} onClearError={() => setError('')}>
       <CCard className="role-panel role-list-panel mb-4">
-        <CCardHeader className="d-flex flex-wrap justify-content-between align-items-center gap-2"><strong className="fs-5">Daftar Kelompok Fitur</strong><CButton color="primary" size="sm" className="role-compact-button" onClick={() => goTo('/form')}><CIcon icon={cilPlus} size="sm" className="me-1" />Tambah Kelompok</CButton></CCardHeader>
+        <CCardHeader className="d-flex flex-wrap justify-content-between align-items-center gap-2"><strong className="fs-5">Daftar Kelompok Fitur</strong><CButton color="primary" size="sm" className="role-compact-button" onClick={() => goTo('/form')}><CIkon icon={cilPlus} size="sm" className="me-1" />Tambah Kelompok Fitur</CButton></CCardHeader>
         <CCardBody>
           <CRow className="mb-3"><CCol xs={12}><div className="d-flex flex-wrap flex-lg-nowrap align-items-center gap-2 w-100">
             <CFormInput placeholder="Cari nama kelompok fitur" value={searchInput} onChange={(event) => setSearchInput(event.target.value)} onKeyDown={(event) => event.key === 'Enter' && applySearch()} aria-label="Cari kelompok fitur" className="flex-grow-1" />
             <CFormSelect aria-label="Filter status kelompok fitur" value={statusFilter} onChange={(event) => { setStatusFilter(event.target.value); setPage(1) }} style={{ maxWidth: '160px' }} options={[{ label: 'Semua Status', value: '' }, { label: 'Aktif', value: '1' }, { label: 'Nonaktif', value: '0' }]} />
-            <CButton color="primary" size="sm" className="role-compact-button role-search-button" onClick={applySearch}><CIcon icon={cilSearch} size="sm" className="me-1" />Cari</CButton>
-            <CButton color="secondary" variant="outline" size="sm" className="role-compact-button role-reset-button" onClick={resetSearch}><CIcon icon={cilReload} size="sm" className="me-1" />Reset</CButton>
+            <CButton color="primary" size="sm" className="role-compact-button role-search-button" onClick={applySearch}><CIkon icon={cilSearch} size="sm" className="me-1" />Cari</CButton>
+            <CButton color="secondary" variant="outline" size="sm" className="role-compact-button role-reset-button" onClick={resetSearch}><CIkon icon={cilReload} size="sm" className="me-1" />Reset</CButton>
           </div></CCol></CRow>
           <GlobalTable columns={columns} rows={rows} rowKey="id" loading={loading} emptyMessage="Data kelompok fitur tidak ditemukan." hover responsive className="role-table" />
           <GlobalPagination currentPage={pagination.current_page} lastPage={pagination.last_page} total={pagination.total} perPage={perPage} onPageChange={setPage} loading={loading} />
