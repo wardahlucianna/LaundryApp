@@ -1,16 +1,49 @@
-import React, { Suspense } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { CContainer, CSpinner } from '@coreui/react'
 
 // Explicit extension avoids Vite resolving the renamed JSX route file incorrectly.
-import { routes } from '../routes.jsx'
+import { buildAccessRoutes, routes } from '../routes.jsx'
+import { apiBase } from '../../services/api'
 
 const AppContent = () => {
+  const [accessRoutes, setAccessRoutes] = useState([])
+
+  useEffect(() => {
+    let active = true
+    const loadAccessRoutes = async () => {
+      try {
+        const token = localStorage.getItem('auth_token') || localStorage.getItem('access_token') || localStorage.getItem('token') || ''
+        const response = await fetch(`${apiBase}/auth/me/menus`, {
+          headers: {
+            Accept: 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            'X-Requested-With': 'XMLHttpRequest',
+          },
+          credentials: 'include',
+        })
+        if (!response.ok) throw new Error('Gagal membaca konfigurasi route menu.')
+        const payload = await response.json()
+        if (active) setAccessRoutes(buildAccessRoutes(payload.data || []))
+      } catch {
+        if (active) setAccessRoutes([])
+      }
+    }
+    loadAccessRoutes()
+    window.addEventListener('focus', loadAccessRoutes)
+    window.addEventListener('sunrise:permissions-updated', loadAccessRoutes)
+    return () => {
+      active = false
+      window.removeEventListener('focus', loadAccessRoutes)
+      window.removeEventListener('sunrise:permissions-updated', loadAccessRoutes)
+    }
+  }, [])
+
   return (
     <CContainer className="px-4" lg>
       <Suspense fallback={<CSpinner color="primary" />}>
         <Routes>
-          {routes.map((route, idx) => (
+          {[...routes, ...accessRoutes].map((route, idx) => (
             route.element && (
               <Route
                 key={idx}
