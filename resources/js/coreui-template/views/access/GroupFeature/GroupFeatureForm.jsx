@@ -250,7 +250,7 @@ const GroupFeatureForm = () => {
 
       {loading ? (
         <div className="d-flex align-items-center gap-2 py-4 text-body-secondary">
-          <CSpinner size="sm" style={{ color: "#F2C94C" }} />
+          <CSpinner size="sm" className="me-2" color="warning" />
           <span>Memuat data kelompok fitur...</span>
         </div>
       ) : (
@@ -398,7 +398,7 @@ const GroupFeatureForm = () => {
                 >
                   {saving ? (
                     <>
-                      <CSpinner size="sm" className="me-2" />
+                      <CSpinner size="sm" className="me-2" color="warning" />
                       Menyimpan...
                     </>
                   ) : (

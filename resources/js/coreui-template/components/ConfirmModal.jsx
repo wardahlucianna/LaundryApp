@@ -24,7 +24,7 @@ const ConfirmModal = ({
     <CModalFooter>
       <CButton color="secondary" variant="outline" disabled={loading} onClick={onCancel}>{cancelText}</CButton>
       <CButton color={color} disabled={loading} onClick={onConfirm}>
-        {loading ? <><CSpinner size="sm" className="me-2" />Memproses...</> : confirmText}
+        {loading ? <><CSpinner size="sm" className="me-2" color="warning" />Memproses...</> : confirmText}
       </CButton>
     </CModalFooter>
   </CModal>

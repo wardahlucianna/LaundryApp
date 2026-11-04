@@ -105,7 +105,7 @@ const Login = () => {
                     />
                   </div>
                   <CButton color="primary" type="submit" className="w-100" disabled={loading}>
-                    {loading ? <><CSpinner size="sm" className="me-2" />Memuat menu...</> : 'Masuk'}
+                    {loading ? <><CSpinner size="sm" className="me-2" color="warning" />Memuat menu...</> : 'Masuk'}
                   </CButton>
                 </CForm>
               </CCardBody>

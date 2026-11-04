@@ -109,7 +109,7 @@ const GroupFeatureDetail = () => {
     >
       {loading ? (
         <div className="d-flex align-items-center gap-2 py-4 text-body-secondary">
-          <CSpinner size="sm" color="primary" />
+          <CSpinner size="sm" className="me-2" color="warning" />
           <span>Memuat detail kelompok fitur...</span>
         </div>
       ) : (

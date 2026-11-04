@@ -287,7 +287,7 @@ const FeatureFormPage = () => {
             <CCardBody>
               {loading && (
                 <div className="d-flex align-items-center gap-2 mb-3 text-body-secondary small" role="status">
-                  <CSpinner size="sm" style={{ color: "#F2C94C" }} />
+                  <CSpinner size="sm" className="me-2" color="warning" />
                   <span>Memuat data fitur, input sementara dinonaktifkan...</span>
                 </div>
               )}
@@ -464,7 +464,7 @@ const FeatureFormPage = () => {
                   >
                     {saving ? (
                       <>
-                        <CSpinner size="sm" className="me-2" />
+                        <CSpinner size="sm" className="me-2" color="warning" />
                         Menyimpan...
                       </>
                     ) : (
