@@ -68,7 +68,7 @@ const RoleDetailPage = () => {
 
     if (!response.ok) {
       throw new Error(
-        payload.message || 'Gagal memuat detail role.',
+        payload.message || 'Gagal memuat detail peran.',
       )
     }
 
@@ -97,7 +97,7 @@ const RoleDetailPage = () => {
         if (active) {
           setError(
             loadError.message ||
-              'Gagal memuat detail role dan permission.',
+              'Gagal memuat detail peran dan permission.',
           )
         }
       })
@@ -176,7 +176,7 @@ const RoleDetailPage = () => {
 
   const goBack = async () => {
     try {
-      const listPath = await getAccessFeaturePath(['Manajemen Role', 'Management Role'])
+      const listPath = await getAccessFeaturePath(['Manajemen Role', 'Manajemen Peran'])
       if (listPath) navigate(listPath)
       else navigate(-1)
     } catch {
@@ -187,10 +187,10 @@ const RoleDetailPage = () => {
   const openEdit = async () => {
     if (role) {
       try {
-        const listPath = await getAccessFeaturePath(['Manajemen Role', 'Management Role'])
+        const listPath = await getAccessFeaturePath(['Manajemen Role', 'Manajemen Peran'])
         if (listPath) navigate(`${listPath}/form/${role.id}`)
       } catch {
-        setError('Gagal membaca path Management Role dari database.')
+        setError('Gagal membaca path Manajemen Peran dari database.')
       }
     }
   }
@@ -214,7 +214,7 @@ const RoleDetailPage = () => {
           onClick={openEdit}
         >
           <CIcon icon={cilPencil} className="me-1" />
-          Edit Role
+          Edit Peran
         </CButton>
       )}
     </>
@@ -222,7 +222,7 @@ const RoleDetailPage = () => {
 
   return (
     <MasterPageLayout
-      title="Management Role"
+      title="Manajemen Peran"
       className="role-detail-page"
       headingActions={headingActions}
       error={error}
@@ -232,21 +232,21 @@ const RoleDetailPage = () => {
         {loading ? (
           <div className="d-flex align-items-center gap-2 py-4 text-body-secondary">
             <CSpinner size="sm" />
-            Memuat detail role...
+            Memuat detail peran...
           </div>
         ) : (
           role && (
             <>
               <CCard className="mb-4">
                 <CCardHeader>
-                  <strong>Informasi Role</strong>
+                  <strong>Informasi Peran</strong>
                 </CCardHeader>
 
                 <CCardBody>
                   <CRow className="g-3">
                     <CCol xs={12} md={6}>
                       <div className="small text-body-secondary mb-1">
-                        Nama Role
+                        Nama Peran
                       </div>
                       <div className="fw-semibold">
                         {role.name || '-'}
@@ -289,7 +289,7 @@ const RoleDetailPage = () => {
                 <CCardBody>
                   {groupedPermissions.length === 0 ? (
                     <div className="text-body-secondary text-center py-3">
-                      Role ini belum memiliki hak akses.
+                      Peran ini belum memiliki hak akses.
                     </div>
                   ) : (
                     <div className="d-flex flex-column gap-3">
