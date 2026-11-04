@@ -352,7 +352,7 @@ const getGroupId = (group) =>
                     variant="outline"
                     type="button"
                     disabled={saving}
-                    onClick={() => navigate('/permissions')}
+                    onClick={() => navigate(-1)}
                   >
                     Batal
                   </CButton>
