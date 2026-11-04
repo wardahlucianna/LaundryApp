@@ -29,7 +29,7 @@ class PermissionFeature extends Model
 
     public function roles()
     {
-        return $this->belongsToMany(Role::class, 'roleFeatures', 'featureId', 'roleId', 'featureId', 'rolesId')
-            ->withPivot('roleFeaturesId');
+        return $this->belongsToMany(Role::class, 'roleFeatures', 'featureId', 'roleId', 'featureId', 'roleId')
+            ->withPivot('roleFeatureId');
     }
 }
