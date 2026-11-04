@@ -418,7 +418,7 @@ const RoleFormPage = () => {
                 variant="outline"
                 type="button"
                 disabled={saving}
-                onClick={() => navigate('/roles/list')}
+                onClick={() => navigate(-1)}
               >
                 Batal
               </CButton>
