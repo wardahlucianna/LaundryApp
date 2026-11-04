@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import {
   CBadge,
   CAlert,
@@ -47,16 +47,7 @@ const FeatureListPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const isGroupFeatureRoute = new URLSearchParams(location.search).get('view') === 'groups'
-  const [groupFeatureTarget, setGroupFeatureTarget] = useState(null)
 
-  useEffect(() => {
-    if (!isGroupFeatureRoute) return
-    let active = true
-    getAccessFeaturePath(['Manajemen Kelompok Fitur', 'Manajemen Group Fitur', 'Management Group Feature', 'Group Feature', 'Feature Group'])
-      .then((path) => { if (active && path) setGroupFeatureTarget(path) })
-      .catch(() => { if (active) setError('Path Manajemen Kelompok Fitur belum terdaftar di database.') })
-    return () => { active = false }
-  }, [isGroupFeatureRoute])
   const perPage = 10
   const groupPerPage = 10
 
@@ -249,8 +240,6 @@ const FeatureListPage = () => {
       ),
     },
   ]
-
-  if (isGroupFeatureRoute) return groupFeatureTarget ? <Navigate to={groupFeatureTarget} replace /> : null
 
   return (
     <MasterPageLayout title={"Manajemen Fitur"} className="role-list-page" notice={notice} error={error} onClearNotice={() => setNotice('')} onClearError={() => setError('')}>
