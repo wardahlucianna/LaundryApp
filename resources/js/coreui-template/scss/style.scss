@@ -574,3 +574,27 @@ small {
     width: 100%;
   }
 }
+
+/* Common card shell across master list, form, and detail pages. */
+.master-page-layout .card {
+  border: 1px solid #E6EAF0;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 5px 20px rgba(23, 42, 69, .045);
+  background: var(--cui-card-bg, #fff);
+}
+.master-page-layout .card > .card-header {
+  padding: .9rem 1.15rem;
+  background: #fff;
+  border-bottom: 1px solid #EDF0F4;
+  color: #172A45;
+}
+.master-page-layout .card > .card-body {
+  padding: 1.15rem;
+}
+@media (max-width: 576px) {
+  .master-page-layout .card > .card-header,
+  .master-page-layout .card > .card-body {
+    padding: .9rem;
+  }
+}
