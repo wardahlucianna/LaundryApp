@@ -41,7 +41,11 @@ export const buildAccessRoutes = (menuGroups) => {
 
   if (groupFeatureBase) {
     dynamicRoutes.push(
-      { path: groupFeatureBase, name: 'Management Group Feature', element: GroupFeatureManagement },\n      { path: `${groupFeatureBase}/form`, name: 'Form Group Feature', element: GroupFeatureFormPage },\n      { path: `${groupFeatureBase}/form/:id`, name: 'Edit Group Feature', element: GroupFeatureFormPage },\n      { path: `${groupFeatureBase}/detail/:id`, name: 'Detail Group Feature', element: GroupFeatureDetailPage },\n    )
+      { path: groupFeatureBase, name: 'Management Group Feature', element: GroupFeatureManagement },
+      { path: `${groupFeatureBase}/form`, name: 'Form Group Feature', element: GroupFeatureFormPage },
+      { path: `${groupFeatureBase}/form/:id`, name: 'Edit Group Feature', element: GroupFeatureFormPage },
+      { path: `${groupFeatureBase}/detail/:id`, name: 'Detail Group Feature', element: GroupFeatureDetailPage },
+    )
   }
 
   if (featureBase) {
