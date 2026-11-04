@@ -1,13 +1,13 @@
 import React from 'react'
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
-const RoleManagement = React.lazy(() => import('./views/akses/Role/RoleManagement'))
-const RoleFormPage = React.lazy(() => import('./views/akses/Role/RoleForm'))
-const RoleDetailPage = React.lazy(() => import('./views/akses/Role/RoleDetail'))
-const FeatureManagement = React.lazy(() => import('./views/akses/Feature/FeatureManagement'))
-const GroupFeatureManagement = React.lazy(() => import('./views/akses/GroupFeature/GroupFeatureManagement'))
-const GroupFeatureFormPage = React.lazy(() => import('./views/akses/GroupFeature/GroupFeatureForm'))
-const GroupFeatureDetailPage = React.lazy(() => import('./views/akses/GroupFeature/GroupFeatureDetail'))
-const FeatureFormPage = React.lazy(() => import('./views/akses/Feature/FeatureForm'))
+const RoleManagement = React.lazy(() => import('./views/access/Role/RoleManagement'))
+const RoleFormPage = React.lazy(() => import('./views/access/Role/RoleForm'))
+const RoleDetailPage = React.lazy(() => import('./views/access/Role/RoleDetail'))
+const FeatureManagement = React.lazy(() => import('./views/access/Feature/FeatureManagement'))
+const GroupFeatureManagement = React.lazy(() => import('./views/access/GroupFeature/GroupFeatureManagement'))
+const GroupFeatureFormPage = React.lazy(() => import('./views/access/GroupFeature/GroupFeatureForm'))
+const GroupFeatureDetailPage = React.lazy(() => import('./views/access/GroupFeature/GroupFeatureDetail'))
+const FeatureFormPage = React.lazy(() => import('./views/access/Feature/FeatureForm'))
 const Placeholder = ({ title }) => <div className="pt-4"><h2>{title}</h2><p>Halaman ini akan diintegrasikan dengan fitur Sunrise Laundry.</p></div>
 export const routes = [
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
