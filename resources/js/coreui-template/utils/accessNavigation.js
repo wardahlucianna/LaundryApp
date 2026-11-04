@@ -3,7 +3,7 @@ import { apiBase } from '../../services/api'
 const normalize = (value) => String(value || '').trim().toLowerCase()
 
 const normalizePath = (value) => {
-  const path = String(value || '').trim()
+  const path = String(value || '').trim().split(/[?#]/, 1)[0]
   if (!path) return null
   return path.startsWith('/') ? path : `/${path}`
 }
