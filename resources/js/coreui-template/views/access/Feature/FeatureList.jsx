@@ -10,6 +10,10 @@ import {
   CFormInput,
   CFormSelect,
   CRow,
+  CModal,
+  CModalHeader,
+  CModalBody,
+  CModalFooter,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilBasket, cilBuilding, cilCash, cilChartLine, cilFolderOpen, cilPeople, cilPencil, cilPlus, cilReload, cilSearch, cilSettings, cilSpeedometer, cilTags, cilTrash } from '@coreui/icons'
@@ -35,6 +39,8 @@ const FeatureListPage = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
+  const [deleteTarget, setDeleteTarget] = useState(null)
+  const [deleting, setDeleting] = useState(false)
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -122,17 +128,27 @@ const FeatureListPage = () => {
     else setError('Path Manajemen Fitur belum terdaftar di database.')
   }
 
-  const deleteFeature = async (feature) => {
-    if (!window.confirm(`Yakin ingin menghapus fitur "${feature.name}"?\nData fitur akan dihapus dari daftar.`)) return
+  const deleteFeature = (feature) => setDeleteTarget({ type: 'feature', item: feature })
+
+  const deleteGroup = (group) => setDeleteTarget({ type: 'group', item: group })
+
+  const confirmDelete = async () => {
+    if (!deleteTarget) return
+    setDeleting(true)
     setError('')
     setNotice('')
     try {
-      await request(`/permission-features/${feature.id}`, { method: 'DELETE' })
+      const { type, item } = deleteTarget
+      await request(type === 'feature' ? `/permission-features/${item.id}` : `/permission-groups/${item.id}`, { method: 'DELETE' })
       window.dispatchEvent(new Event('sunrise:permissions-updated'))
-      setNotice('Fitur berhasil dihapus.')
-      await loadFeatures()
+      setNotice(type === 'feature' ? 'Fitur berhasil dihapus.' : 'Kelompok fitur berhasil dihapus.')
+      if (type === 'feature') await loadFeatures()
+      else await loadGroups()
+      setDeleteTarget(null)
     } catch (deleteError) {
-      setError(deleteError.message || 'Gagal menghapus fitur.')
+      setError(deleteError.message || 'Gagal menghapus data.')
+    } finally {
+      setDeleting(false)
     }
   }
 
@@ -178,12 +194,7 @@ const FeatureListPage = () => {
     if (basePath) navigate(`${basePath}/group-feature/detail/${group.id}`)
     else setError('Path Manajemen Fitur belum terdaftar di database.')
   }
-  const deleteGroup = async (group) => {
-    if (!window.confirm('Yakin ingin menghapus kelompok fitur ' + group.name + '?')) return
-    setError(''); setNotice('')
-    try { await request('/permission-groups/' + group.id, { method: 'DELETE' }); window.dispatchEvent(new Event('sunrise:permissions-updated')); setNotice('Kelompok fitur berhasil dihapus.'); await loadGroups() }
-    catch (deleteError) { setError(deleteError.message || 'Gagal menghapus group feature.') }
-  }
+
   const applyGroupSearch = () => { setGroupSearch(groupSearchInput.trim()); setGroupPage(1) }
   const resetGroupSearch = () => { setGroupSearchInput(''); setGroupSearch(''); setGroupStatusFilter(''); setGroupPage(1) }
 
@@ -283,6 +294,16 @@ const FeatureListPage = () => {
                   </CCardBody>
                 </CCard>
       )}
+      <CModal visible={Boolean(deleteTarget)} onClose={() => !deleting && setDeleteTarget(null)} alignment="center">
+        <CModalHeader><strong>Konfirmasi Hapus</strong></CModalHeader>
+        <CModalBody>
+          Apakah kamu yakin ingin menghapus {deleteTarget?.type === 'feature' ? 'fitur' : 'kelompok fitur'} <strong>{deleteTarget?.item?.name}</strong>? Data yang dihapus tidak dapat dikembalikan.
+        </CModalBody>
+        <CModalFooter>
+          <CButton color="secondary" variant="outline" size="sm" disabled={deleting} onClick={() => setDeleteTarget(null)}>Batal</CButton>
+          <CButton color="danger" size="sm" disabled={deleting} onClick={confirmDelete}>{deleting ? 'Menghapus...' : 'Ya, Hapus'}</CButton>
+        </CModalFooter>
+      </CModal>
     </MasterPageLayout>
   )
 }
