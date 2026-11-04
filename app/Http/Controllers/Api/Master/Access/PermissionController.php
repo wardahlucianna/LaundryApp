@@ -32,7 +32,7 @@ class PermissionController extends Controller
             'name' => ['required', 'string', 'max:120'],
             'code' => ['required', 'string', 'max:80', 'alpha_dash', 'unique:permissions,code'],
             'path' => ['nullable', 'string', 'max:255'],
-            'permission_feature_id' => ['nullable', 'uuid', 'exists:features,id'],
+            'featureId' => ['nullable', 'uuid', 'exists:features,id'],
             'action_name' => ['nullable', 'string', 'max:80'],
             'is_active' => ['sometimes', 'boolean'],
         ]);
