@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { CAlert } from '@coreui/react'
 import GroupFeatureList from './GroupFeatureList'
 import MasterPageLayout from '../../../components/MasterPageLayout'
+import GlobalPagination from '../../../components/GlobalPagination'
 
 const apiBase = (() => { const base = (import.meta.env.VITE_API_URL || '').replace(/\/$/, ''); return base ? (base.endsWith('/api') ? base : base + '/api') : '/api' })()
 const GroupFeatureManagement = () => {
@@ -10,6 +11,8 @@ const GroupFeatureManagement = () => {
   const [searchInput, setSearchInput] = useState('')
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
+  const [page, setPage] = useState(1)
+  const perPage = 10
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
@@ -42,6 +45,8 @@ const GroupFeatureManagement = () => {
     const matchesStatus = statusFilter === '' || String(Number(Boolean(group.is_active))) === statusFilter
     return matchesSearch && matchesStatus
   })
+  const pagination = { current_page: page, last_page: Math.max(1, Math.ceil(filteredGroups.length / perPage)), total: filteredGroups.length }
+  const paginatedGroups = filteredGroups.slice((page - 1) * perPage, page * perPage)
   const openCreate = () => navigate('/permission-groups/form')
   const openEdit = group => navigate('/permission-groups/form/' + group.id)
   const openDetail = group => navigate('/permission-groups/detail/' + group.id)
@@ -51,13 +56,13 @@ const GroupFeatureManagement = () => {
     try { await request('/permission-groups/' + group.id, { method: 'DELETE' }); setNotice('Group feature berhasil dihapus.'); await loadGroups() }
     catch (e) { setError(e.message || 'Gagal menghapus group feature.') }
   }
-  const applySearch = () => setSearch(searchInput.trim())
-  const resetSearch = () => { setSearchInput(''); setSearch(''); setStatusFilter('') }
+  const applySearch = () => { setSearch(searchInput.trim()); setPage(1) }
+  const resetSearch = () => { setSearchInput(''); setSearch(''); setStatusFilter(''); setPage(1) }
 
   return <MasterPageLayout title="Management Group Feature" className="role-list-page">
     {notice && <CAlert color="success" dismissible onClose={() => setNotice('')}>{notice}</CAlert>}
     {error && <CAlert color="danger" dismissible onClose={() => setError('')}>{error}</CAlert>}
-    <GroupFeatureList groups={filteredGroups} searchInput={searchInput} setSearchInput={setSearchInput} statusFilter={statusFilter} setStatusFilter={setStatusFilter} applySearch={applySearch} resetSearch={resetSearch} loading={loading} onCreate={openCreate} onDetail={openDetail} onEdit={openEdit} onDelete={deleteGroup} />
+    <GroupFeatureList groups={paginatedGroups} pagination={pagination} perPage={perPage} page={page} setPage={setPage} searchInput={searchInput} setSearchInput={setSearchInput} statusFilter={statusFilter} setStatusFilter={(value) => { setStatusFilter(value); setPage(1) }} applySearch={applySearch} resetSearch={resetSearch} loading={loading} onCreate={openCreate} onDetail={openDetail} onEdit={openEdit} onDelete={deleteGroup} />
   </MasterPageLayout>
 }
 export default GroupFeatureManagement
