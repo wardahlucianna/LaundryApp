@@ -355,16 +355,16 @@ const RoleDetailPage = () => {
                                         xs={12}
                                         sm={6}
                                         md={4}
-                                        key={permission.id}
+                                        key={permission.featureId}
                                       >
                                         <CFormCheck
                                           className="fs-6 role-permission-checkbox"
-                                          id={`role-permission-${permission.id}`}
+                                          id={`role-permission-${permission.featureId}`}
                                           label={permission.name}
                                           checked={(role.features || []).some(
                                             (assigned) =>
-                                              String(assigned.id) ===
-                                              String(permission.id),
+                                              String(assigned.featureId) ===
+                                              String(permission.featureId),
                                           )}
                                           disabled
                                         />
