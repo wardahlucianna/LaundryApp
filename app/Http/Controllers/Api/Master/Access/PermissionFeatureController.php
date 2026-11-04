@@ -31,7 +31,7 @@ class PermissionFeatureController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'featureId' => ['required', 'uuid', 'exists:groupFeature,id'],
+            'featureId' => ['required', 'uuid', 'exists:groupFeature,groupFeatureId'],
             'name' => ['required', 'string', 'max:120'],
             'path' => ['nullable', 'string', 'max:255'],
             'ordering' => ['required', 'integer', 'min:0'],
