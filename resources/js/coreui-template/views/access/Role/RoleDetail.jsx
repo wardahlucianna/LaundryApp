@@ -22,6 +22,7 @@ import { cilArrowLeft, cilPencil } from '@coreui/icons'
 import MasterPageLayout from '../../../components/MasterPageLayout'
 
 import { apiBase } from '../../../../services/api'
+import { getAccessFeaturePath } from '../../../utils/accessNavigation'
 
 
 const permissionActionOrder = (permission) => {
@@ -173,13 +174,24 @@ const RoleDetailPage = () => {
     }))
   }
 
-  const goBack = () => {
-    navigate(-1)
+  const goBack = async () => {
+    try {
+      const listPath = await getAccessFeaturePath(['Manajemen Role', 'Management Role'])
+      if (listPath) navigate(listPath)
+      else navigate(-1)
+    } catch {
+      navigate(-1)
+    }
   }
 
-  const openEdit = () => {
+  const openEdit = async () => {
     if (role) {
-      navigate(`/roles/form/${role.id}`)
+      try {
+        const listPath = await getAccessFeaturePath(['Manajemen Role', 'Management Role'])
+        if (listPath) navigate(`${listPath}/form/${role.id}`)
+      } catch {
+        setError('Gagal membaca path Management Role dari database.')
+      }
     }
   }
 
