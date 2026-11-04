@@ -18,6 +18,7 @@ import { getAccessFeaturePath } from '../../../utils/accessNavigation'
 
 
 const GroupFeatureDetail = () => {
+  const getGroupStatus = (item) => Boolean(item.isActive ?? item.is_active)
   const { id } = useParams()
   const navigate = useNavigate()
 
@@ -153,9 +154,9 @@ const GroupFeatureDetail = () => {
                 <CCol xs={12} md={6}>
                   <div className="text-body-secondary small">Status</div>
                   <CBadge
-                    color={group.is_active ? 'success' : 'secondary'}
+                    color={getGroupStatus(group) ? 'success' : 'secondary'}
                   >
-                    {group.is_active ? 'Aktif' : 'Nonaktif'}
+                    {getGroupStatus(group) ? 'Aktif' : 'Nonaktif'}
                   </CBadge>
                 </CCol>
               </CRow>
