@@ -25,7 +25,7 @@ import { cilPencil, cilPlus, cilSearch, cilTrash, cilReload } from '@coreui/icon
 import ConfirmModal from '../../../components/ConfirmModal'
 import GlobalPagination from '../../../components/GlobalPagination'
 
-import MasterPageLayout from '../../../components/MasterPageLayout'
+import MasterPageLayout from '../../../components/layout/MasterPageLayout'
 
 import { apiBase } from '../../../../services/api'
 
@@ -231,36 +231,12 @@ const RoleListPage = () => {
     <MasterPageLayout
       title="Management Role"
       className="role-list-page"
+      notice={notice}
+      error={error}
+      onClearNotice={() => setNotice('')}
+      onClearError={() => setError('')}
     >
-      {notice && (
-        <div
-          className="alert alert-success alert-dismissible"
-          role="alert"
-        >
-          {notice}
-          <button
-            type="button"
-            className="btn-close"
-            aria-label="Tutup"
-            onClick={() => setNotice('')}
-          />
-        </div>
-      )}
 
-      {error && (
-        <div
-          className="alert alert-danger alert-dismissible"
-          role="alert"
-        >
-          {error}
-          <button
-            type="button"
-            className="btn-close"
-            aria-label="Tutup"
-            onClick={() => setError('')}
-          />
-        </div>
-      )}
 
       
             <CCard className="role-panel role-list-panel mb-4">
