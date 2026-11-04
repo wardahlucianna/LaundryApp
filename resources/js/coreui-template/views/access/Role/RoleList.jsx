@@ -136,19 +136,19 @@ const RoleListPage = () => {
   }, [loadRoles])
 
   const openCreate = async () => {
-    const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role', 'Manajemen Peran'])
+    const listPath = await getAccessFeaturePath(['Manajemen Peran', 'Manajemen Peran', 'Manajemen Peran'])
     if (listPath) navigate(`${listPath}/form`)
     else setError('Path Manajemen Peran belum terdaftar di database.')
   }
 
   const openEdit = async (role) => {
-    const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role', 'Manajemen Peran'])
+    const listPath = await getAccessFeaturePath(['Manajemen Peran', 'Manajemen Peran', 'Manajemen Peran'])
     if (listPath) navigate(`${listPath}/form/${role.id}`)
     else setError('Path Manajemen Peran belum terdaftar di database.')
   }
 
   const openDetail = async (role) => {
-    const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role', 'Manajemen Peran'])
+    const listPath = await getAccessFeaturePath(['Manajemen Peran', 'Manajemen Peran', 'Manajemen Peran'])
     if (listPath) navigate(`${listPath}/detail/${role.id}`)
     else setError('Path Manajemen Peran belum terdaftar di database.')
   }
@@ -178,12 +178,12 @@ const RoleListPage = () => {
         method: 'DELETE',
       })
 
-      setNotice('Role berhasil dihapus.')
+      setNotice('Peran berhasil dihapus.')
       setRoleToDelete(null)
 
       await loadRoles()
     } catch (deleteError) {
-      setError(deleteError.message || 'Gagal menghapus role.')
+      setError(deleteError.message || 'Gagal menghapus peran.')
     } finally {
       setDeleting(false)
     }
@@ -274,7 +274,7 @@ const RoleListPage = () => {
                 />
 
                 <CFormSelect
-                  aria-label="Filter status role"
+                  aria-label="Filter status peran"
                   value={statusFilter}
                   onChange={handleStatusChange}
                   style={{ maxWidth: '160px' }}
@@ -316,7 +316,7 @@ const RoleListPage = () => {
           <GlobalTable
             columns={[
               { key: 'number', title: 'No.', width: 60, render: (_role, index) => (pagination.current_page - 1) * perPage + index + 1 },
-              { key: 'name', title: 'Nama Role', render: (role) => <div className="fw-semibold">{role.name}</div> },
+              { key: 'name', title: 'Nama Peran', render: (role) => <div className="fw-semibold">{role.name}</div> },
               { key: 'permissions_count', title: 'Jumlah Hak Akses', className: 'text-center', headerClassName: 'text-center', render: (role) => {
                 const permissionCount = role.permissions_count ?? role.features_count ?? role.role_permissions_count ?? (Array.isArray(role.features) ? role.features.length : null) ?? (Array.isArray(role.permissions) ? role.permissions.length : null)
                 return permissionCount ?? 0
@@ -324,13 +324,13 @@ const RoleListPage = () => {
               { key: 'status', title: 'Status', render: (role) => <CBadge color={role.is_active ? 'success' : 'secondary'}>{role.is_active ? 'Aktif' : 'Nonaktif'}</CBadge> },
               { key: 'actions', title: 'Aksi', width: 170, className: 'text-center', headerClassName: 'text-center', render: (role) => (
                 <div className="table-actions d-inline-flex gap-2">
-                  <CButton color="info" variant="outline" size="sm" onClick={() => openDetail(role)} title="Detail role" aria-label={`Detail ${role.name}`}>
+                  <CButton color="info" variant="outline" size="sm" onClick={() => openDetail(role)} title="Detail peran" aria-label={`Detail ${role.name}`}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                       <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="3" />
                     </svg>
                   </CButton>
-                  <CButton color="primary" variant="outline" size="sm" onClick={() => openEdit(role)} title="Edit role" aria-label={`Edit ${role.name}`}><CIcon icon={cilPencil} size="sm" /></CButton>
-                  <CButton color="danger" variant="outline" size="sm" disabled={String(role.name || '').trim().toUpperCase() === 'SUPER ADMIN'} onClick={() => handleDelete(role)} title="Hapus role" aria-label={`Hapus ${role.name}`}><CIcon icon={cilTrash} size="sm" /></CButton>
+                  <CButton color="primary" variant="outline" size="sm" onClick={() => openEdit(role)} title="Edit peran" aria-label={`Edit ${role.name}`}><CIcon icon={cilPencil} size="sm" /></CButton>
+                  <CButton color="danger" variant="outline" size="sm" disabled={String(role.name || '').trim().toUpperCase() === 'SUPER ADMIN'} onClick={() => handleDelete(role)} title="Hapus peran" aria-label={`Hapus ${role.name}`}><CIcon icon={cilTrash} size="sm" /></CButton>
                 </div>
               ) },
             ]}
@@ -356,7 +356,7 @@ const RoleListPage = () => {
 
       <ConfirmModal
         visible={Boolean(roleToDelete)}
-        title="Konfirmasi Hapus Role"
+        title="Konfirmasi Hapus Peran"
         message={
           roleToDelete
             ? `Yakin ingin menghapus peran "${roleToDelete.name}"?`
