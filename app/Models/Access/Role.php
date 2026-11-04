@@ -7,25 +7,29 @@ use Illuminate\Support\Str;
 
 class Role extends Model
 {
+    protected $table = 'roles';
+    protected $primaryKey = 'rolesId';
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $fillable = ['name', 'is_active'];
-    protected $casts = ['is_active' => 'boolean'];
+    const CREATED_AT = 'createdAt';
+    const UPDATED_AT = 'updatedAt';
+
+    protected $fillable = ['name', 'isActive'];
+    protected $casts = ['isActive' => 'boolean'];
 
     protected static function booted(): void
     {
-        static::creating(function (Role $role) {
-            $role->id ??= (string) Str::uuid();
-        });
+        static::creating(fn (Role $role) => $role->rolesId ??= (string) Str::uuid());
     }
 
     public function features()
     {
-        return $this->belongsToMany(PermissionFeature::class, 'roleFeatures', 'roleId', 'featureId');
+        return $this->belongsToMany(PermissionFeature::class, 'roleFeatures', 'roleId', 'featureId', 'rolesId', 'featureId')
+            ->withPivot('roleFeaturesId', 'createdAt', 'updatedAt');
     }
 
     public function users()
     {
-        return $this->hasMany(User::class);
+        return $this->hasMany(User::class, 'roleId', 'rolesId');
     }
 }
