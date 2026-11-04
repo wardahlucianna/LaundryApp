@@ -33,19 +33,16 @@ apiClient.interceptors.request.use((config) => {
   return config
 })
 
-// A 401 means the current authentication is no longer valid.
-// Clear persisted credentials and return the user to the login page.
+// If authentication is no longer valid, clear persisted auth data
+// and redirect to login. A 403 is a permission issue, not a logout.
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     const status = error.response?.status
     const requestUrl = String(error.config?.url || '').toLowerCase()
-    const isAuthenticationRequest =
-      requestUrl.includes('/login') ||
-      requestUrl.includes('/auth') ||
-      requestUrl.includes('/logout')
+    const isLoginRequest = requestUrl.includes('/auth/login') || requestUrl.includes('/login')
 
-    if (status === 401 && !isAuthenticationRequest) {
+    if (status === 401 && !isLoginRequest) {
       localStorage.removeItem('auth_token')
       localStorage.removeItem('access_token')
       localStorage.removeItem('token')
@@ -53,6 +50,7 @@ apiClient.interceptors.response.use(
       localStorage.removeItem('currentUser')
       localStorage.removeItem('permissions')
       localStorage.removeItem('menus')
+      sessionStorage.removeItem('sunriseLaundryMenus')
 
       if (window.location.pathname !== '/login') {
         window.location.replace('/login')
