@@ -189,12 +189,12 @@ const FeatureListPage = () => {
   }
   const openGroupEdit = async (group) => {
     const basePath = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
-    if (basePath) navigate(`${basePath}/group-feature/form/${group.id}`)
+    if (basePath) navigate(`${basePath}/group-feature/form/${group.groupFeatureId}`)
     else setError('Path Manajemen Fitur belum terdaftar di database.')
   }
   const openGroupDetail = async (group) => {
     const basePath = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
-    if (basePath) navigate(`${basePath}/group-feature/detail/${group.id}`)
+    if (basePath) navigate(`${basePath}/group-feature/detail/${group.groupFeatureId}`)
     else setError('Path Manajemen Fitur belum terdaftar di database.')
   }
 
@@ -202,7 +202,7 @@ const FeatureListPage = () => {
   const resetGroupSearch = () => { setGroupSearchInput(''); setGroupSearch(''); setGroupStatusFilter(''); setGroupPage(1) }
 
   const getGroupName = (feature) => (
-    feature.group?.name || groups.find((group) => group.id === feature.permission_group_id)?.name || '—'
+    feature.group?.name || groups.find((group) => group.groupFeatureId === feature.featureId)?.name || '—'
   )
 
   const columns = [
