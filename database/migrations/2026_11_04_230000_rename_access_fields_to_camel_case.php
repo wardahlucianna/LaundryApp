@@ -35,8 +35,8 @@ return new class extends Migration
     {
         // groupFeature: use an explicit camelCase primary key.
         $this->dropForeignKeysForColumns('features', ['permission_group_id']);
-        Schema::renameColumn('groupFeature', 'id', 'groupFeatureId');
-        Schema::renameColumn('features', 'permission_group_id', 'featureId');
+        Schema::table('groupFeature', function (Blueprint $table) {\n            $table->renameColumn('id', 'groupFeatureId');\n        });
+        Schema::table('features', function (Blueprint $table) {\n            $table->renameColumn('permission_group_id', 'featureId');\n        });
         Schema::table('features', function (Blueprint $table) {
             $table->foreign('featureId')->references('groupFeatureId')->on('groupFeature')->cascadeOnDelete();
             $table->index(['featureId', 'name']);
@@ -45,8 +45,8 @@ return new class extends Migration
         // Role-feature pivot: camelCase table and columns.
         $this->dropForeignKeysForColumns('role_permission_features', ['role_id', 'permission_feature_id']);
         Schema::rename('role_permission_features', 'roleFeatures');
-        Schema::renameColumn('roleFeatures', 'role_id', 'roleId');
-        Schema::renameColumn('roleFeatures', 'permission_feature_id', 'featureId');
+        Schema::table('roleFeatures', function (Blueprint $table) {\n            $table->renameColumn('role_id', 'roleId');\n        });
+        Schema::table('roleFeatures', function (Blueprint $table) {\n            $table->renameColumn('permission_feature_id', 'featureId');\n        });
         Schema::table('roleFeatures', function (Blueprint $table) {
             $table->foreign('roleId')->references('id')->on('roles')->cascadeOnDelete();
             $table->foreign('featureId')->references('id')->on('features')->cascadeOnDelete();
@@ -56,8 +56,8 @@ return new class extends Migration
     public function down(): void
     {
         $this->dropForeignKeysForColumns('roleFeatures', ['roleId', 'featureId']);
-        Schema::renameColumn('roleFeatures', 'roleId', 'role_id');
-        Schema::renameColumn('roleFeatures', 'featureId', 'permission_feature_id');
+        Schema::table('roleFeatures', function (Blueprint $table) {\n            $table->renameColumn('roleId', 'role_id');\n        });
+        Schema::table('roleFeatures', function (Blueprint $table) {\n            $table->renameColumn('featureId', 'permission_feature_id');\n        });
         Schema::rename('roleFeatures', 'role_permission_features');
         Schema::table('role_permission_features', function (Blueprint $table) {
             $table->foreign('role_id')->references('id')->on('roles')->cascadeOnDelete();
@@ -65,8 +65,8 @@ return new class extends Migration
         });
 
         $this->dropForeignKeysForColumns('features', ['featureId']);
-        Schema::renameColumn('features', 'featureId', 'permission_group_id');
-        Schema::renameColumn('groupFeature', 'groupFeatureId', 'id');
+        Schema::table('features', function (Blueprint $table) {\n            $table->renameColumn('featureId', 'permission_group_id');\n        });
+        Schema::table('groupFeature', function (Blueprint $table) {\n            $table->renameColumn('groupFeatureId', 'id');\n        });
         Schema::table('features', function (Blueprint $table) {
             $table->foreign('permission_group_id')->references('id')->on('groupFeature')->cascadeOnDelete();
         });
