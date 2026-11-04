@@ -287,7 +287,7 @@ const FeatureFormPage = () => {
             <CCardBody>
               {loading && (
                 <div className="d-flex align-items-center gap-2 mb-3 text-body-secondary small" role="status">
-                  <CSpinner color="primary" size="sm" />
+                  <CSpinner size="sm" style={{ color: "#F2C94C" }} />
                   <span>Memuat data fitur, input sementara dinonaktifkan...</span>
                 </div>
               )}
