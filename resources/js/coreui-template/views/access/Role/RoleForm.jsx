@@ -237,19 +237,19 @@ const RoleFormPage = () => {
         new Event('sunrise:permissions-updated'),
       )
 
-      const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role', 'Manajemen Peran'])
-      if (!listPath) throw new Error('Path list Manajemen Peran belum terdaftar di database.')
+      const listPath = await getAccessFeaturePath(['Manajemen Peran', 'Manajemen Peran', 'Manajemen Peran'])
+      if (!listPath) throw new Error('Path daftar Manajemen Peran belum terdaftar di database.')
       navigate(listPath, {
         state: {
           notice: id
-            ? 'Role berhasil diperbarui.'
-            : 'Role berhasil ditambahkan.',
+            ? 'Peran berhasil diperbarui.'
+            : 'Peran berhasil ditambahkan.',
         },
       })
     } catch (saveError) {
       setError(
         saveError.message ||
-          'Gagal menyimpan role dan hak akses.',
+          'Gagal menyimpan peran dan hak akses.',
       )
     } finally {
       setSaving(false)
@@ -423,11 +423,11 @@ const RoleFormPage = () => {
                 disabled={saving}
                 onClick={async () => {
                   try {
-                    const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role', 'Manajemen Peran'])
+                    const listPath = await getAccessFeaturePath(['Manajemen Peran', 'Manajemen Peran', 'Manajemen Peran'])
                     if (listPath) navigate(listPath)
-                    else setError('Path Management Role belum terdaftar di database.')
+                    else setError('Path Manajemen Peran belum terdaftar di database.')
                   } catch (navigationError) {
-                    setError(navigationError.message || 'Gagal membaca path Management Role dari database.')
+                    setError(navigationError.message || 'Gagal membaca path Manajemen Peran dari database.')
                   }
                 }}
               >
