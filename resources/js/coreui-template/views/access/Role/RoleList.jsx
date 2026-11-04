@@ -331,7 +331,7 @@ const RoleListPage = () => {
             hover
             responsive
             className="role-table"
-          /> </CTable>
+          />
 
           <GlobalPagination
             currentPage={pagination.current_page}
