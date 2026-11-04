@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Models\Akses\PermissionFeature;
+use App\Models\Access\PermissionFeature;
 
 class EnsurePermission
 {
