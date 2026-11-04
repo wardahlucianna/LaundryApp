@@ -23,7 +23,7 @@ export const routes = [
   { path: '/permission-groups/detail/:id', name: 'Detail Group Feature', element: GroupFeatureDetailPage },
   { path: '/permissions/form', name: 'Form Fitur', element: FeatureFormPage },
   { path: '/permissions/form/:id', name: 'Edit Fitur', element: FeatureFormPage },
-  { path: '/roles', name: 'Manajemen Role', element: RoleManagement },
+  { path: '/roles', name: 'Role List', element: RoleManagement },
   { path: '/roles/list', name: 'List Role', element: RoleManagement },
   { path: '/roles/form', name: 'Form Role', element: RoleFormPage },
   { path: '/roles/form/:id', name: 'Edit Role', element: RoleFormPage },
