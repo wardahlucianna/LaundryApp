@@ -8,46 +8,38 @@ import DocsComponents from './DocsComponents'
 import DocsIcons from './DocsIcons'
 import DocsLink from './DocsLink'
 import DocsExample from './DocsExample'
-import MasterPageLayout from './MasterPageLayout'
-import MasterPageCard from './MasterPageCard'
-import GlobalPagination from './GlobalPagination'
-import GlobalInput from './GlobalInput'
-import GlobalSelect from './GlobalSelect'
-import GlobalTextarea from './GlobalTextarea'
-import GlobalSwitch from './GlobalSwitch'
-import GlobalButton from './GlobalButton'
-import GlobalBadge from './GlobalBadge'
-import GlobalModal from './GlobalModal'
-import GlobalSearch from './GlobalSearch'
-import GlobalTable from './GlobalTable'
-import GlobalForm from './GlobalForm'
-import FormField from './FormField'
-import FormActions from './FormActions'
+import MasterPageLayout from './layout/MasterPageLayout'
+import MasterPageCard from './layout/MasterPageCard'
+import GlobalInput from './form/GlobalInput'
+import GlobalSelect from './form/GlobalSelect'
+import GlobalTextarea from './form/GlobalTextarea'
+import GlobalSwitch from './form/GlobalSwitch'
+import GlobalForm from './form/GlobalForm'
+import FormField from './form/FormField'
+import FormActions from './form/FormActions'
+import GlobalPagination from './data/GlobalPagination'
+import GlobalSearch from './data/GlobalSearch'
+import GlobalTable from './data/GlobalTable'
+import GlobalBadge from './data/GlobalBadge'
+import GlobalModal from './feedback/GlobalModal'
+import GlobalButton from './actions/GlobalButton'
 
 export {
-  AppBreadcrumb,
-  AppContent,
-  AppFooter,
-  AppHeader,
-  AppHeaderDropdown,
-  AppSidebar,
-  DocsComponents,
-  DocsIcons,
-  DocsLink,
-  DocsExample,
+  AppBreadcrumb, AppContent, AppFooter, AppHeader, AppHeaderDropdown, AppSidebar,
+  DocsComponents, DocsIcons, DocsLink, DocsExample,
   MasterPageLayout,
   MasterPageCard,
-  GlobalPagination,
   GlobalInput,
   GlobalSelect,
   GlobalTextarea,
   GlobalSwitch,
-  GlobalButton,
-  GlobalBadge,
-  GlobalModal,
-  GlobalSearch,
-  GlobalTable,
   GlobalForm,
   FormField,
   FormActions,
+  GlobalPagination,
+  GlobalSearch,
+  GlobalTable,
+  GlobalBadge,
+  GlobalModal,
+  GlobalButton,
 }
