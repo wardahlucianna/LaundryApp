@@ -132,7 +132,7 @@ const GroupFeatureForm = () => {
           name: found.name || '',
           icon: found.icon || 'cilFolderOpen',
           ordering: Number(found.ordering) || 1,
-          is_active: Boolean(found.is_active),
+          is_active: Boolean(found.isActive ?? found.is_active),
         })
       })
       .catch((loadError) => {
@@ -197,7 +197,7 @@ const GroupFeatureForm = () => {
         name: values.name.trim(),
         icon: values.icon,
         ordering: Number(values.ordering),
-        is_active: values.is_active,
+        isActive: values.is_active,
       }
 
       const path = id
