@@ -171,7 +171,7 @@ const FeatureListPage = () => {
   const deleteGroup = async (group) => {
     if (!window.confirm('Yakin ingin menghapus group ' + group.name + '?')) return
     setError(''); setNotice('')
-    try { await request('/permission-groups/' + group.id, { method: 'DELETE' }); setNotice('Group feature berhasil dihapus.'); await loadGroups() }
+    try { await request('/permission-groups/' + group.id, { method: 'DELETE' }); window.dispatchEvent(new Event('sunrise:permissions-updated')); setNotice('Group feature berhasil dihapus.'); await loadGroups() }
     catch (deleteError) { setError(deleteError.message || 'Gagal menghapus group feature.') }
   }
   const applyGroupSearch = () => { setGroupSearch(groupSearchInput.trim()); setGroupPage(1) }
