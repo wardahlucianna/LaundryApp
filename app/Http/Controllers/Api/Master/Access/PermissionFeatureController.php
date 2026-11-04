@@ -57,6 +57,15 @@ class PermissionFeatureController extends Controller
 
     public function destroy(PermissionFeature $permissionFeature)
     {
+        $roleCount = $permissionFeature->roles()->count();
+
+        if ($roleCount > 0) {
+            return response()->json([
+                'message' => "Fitur tidak dapat dihapus karena masih terhubung dengan {$roleCount} role permission. Lepaskan relasi fitur dari role terlebih dahulu.",
+                'related_roles_count' => $roleCount,
+            ], 409);
+        }
+
         $permissionFeature->delete();
         return response()->json(['message' => 'Fitur berhasil dihapus.']);
     }
