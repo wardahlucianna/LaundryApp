@@ -349,7 +349,7 @@ const getGroupId = (group) =>
                   </CCol>
                 </CRow>
 
-                <div className="d-flex justify-content-end gap-2 mt-4">
+                <div className="d-flex justify-content-end gap-2 mt-4 pb-3 border-bottom">
                   <CButton
                     color="secondary"
                     size="sm"
