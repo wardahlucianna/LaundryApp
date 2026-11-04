@@ -34,7 +34,7 @@ const resolveFeaturePath = (menuGroups, names) => {
 
 export const buildAccessRoutes = (menuGroups) => {
   const featureBase = resolveFeaturePath(menuGroups, ['Manajemen Fitur', 'Management Fitur'])
-  const roleBase = resolveFeaturePath(menuGroups, ['Manajemen Role', 'Management Role'])
+  const roleBase = resolveFeaturePath(menuGroups, ['Manajemen Role', 'Management Role', 'Manajemen Peran'])
   const dynamicRoutes = []
 
   if (featureBase) {
