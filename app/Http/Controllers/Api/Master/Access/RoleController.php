@@ -53,10 +53,35 @@ class RoleController extends Controller
 
     public function destroy(Role $role)
     {
-        if (strtoupper(trim($role->name)) === 'SUPER ADMIN') throw ValidationException::withMessages(['role' => 'Role SUPERADMIN tidak dapat dihapus.']);
-        if ($role->users()->exists()) throw ValidationException::withMessages(['role' => 'Role masih digunakan oleh pengguna.']);
-        $role->delete();
-        return response()->json(['message' => 'Role berhasil dihapus.']);
+        DB::transaction(function () use ($role) {
+            $role = Role::query()
+                ->whereKey($role->getKey())
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            if (strtoupper(trim($role->name)) === 'SUPER ADMIN') {
+                throw ValidationException::withMessages([
+                    'role' => 'Peran SUPER ADMIN tidak dapat dihapus.',
+                ]);
+            }
+
+            // Check child records before deleting the role.
+            if ($role->users()->exists()) {
+                throw ValidationException::withMessages([
+                    'role' => 'Peran masih digunakan oleh pengguna. Lepaskan peran dari seluruh pengguna terlebih dahulu.',
+                ]);
+            }
+
+            if ($role->features()->exists()) {
+                throw ValidationException::withMessages([
+                    'role' => 'Peran masih memiliki hak akses fitur. Hapus seluruh hak akses fitur terlebih dahulu.',
+                ]);
+            }
+
+            $role->delete();
+        });
+
+        return response()->json(['message' => 'Peran berhasil dihapus.']);
     }
 
     public function syncFeatures(Request $request, Role $role)
