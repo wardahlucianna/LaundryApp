@@ -6,6 +6,7 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilArrowLeft, cilPencil } from '@coreui/icons'
+import MasterPageLayout from '../../../components/MasterPageLayout'
 
 const apiBase = (() => {
   const base = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
@@ -86,14 +87,14 @@ const RoleDetailPage = () => {
   }, [permissions])
 
   return (
-    <div className="role-page-layout mb-4">
-      <div className="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
-        <h2 className="fs-4 mb-0">Management Role</h2>
-        <div className="d-flex align-items-center gap-2">
-          <CButton color="secondary" variant="outline" size="sm" onClick={() => navigate('/roles/list')}><CIcon icon={cilArrowLeft} className="me-1" />Kembali</CButton>
-          {role && <CButton color="primary" size="sm" onClick={() => navigate(`/roles/form/${role.id}`)}><CIcon icon={cilPencil} className="me-1" />Edit Role</CButton>}
-        </div>
-      </div>
+    <MasterPageLayout
+      title="Management Role"
+      className="role-detail-page"
+      headingActions={<>
+        <CButton color="secondary" variant="outline" size="sm" onClick={() => navigate('/roles/list')}><CIcon icon={cilArrowLeft} className="me-1" />Kembali</CButton>
+        {role && <CButton color="primary" size="sm" onClick={() => navigate(`/roles/form/${role.id}`)}><CIcon icon={cilPencil} className="me-1" />Edit Role</CButton>}
+      </>}
+    >
       {error && <CAlert color="danger" dismissible onClose={() => setError('')}>{error}</CAlert>}
       <div className="role-detail-page">
       {loading ? <div className="d-flex align-items-center gap-2 py-4 text-body-secondary"><CSpinner size="sm" />Memuat detail role...</div> : role && (
@@ -186,7 +187,7 @@ const RoleDetailPage = () => {
         </>
       )}
       </div>
-    </div>
+    </MasterPageLayout>
   )
 }
 
