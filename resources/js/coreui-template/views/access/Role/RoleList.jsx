@@ -143,13 +143,13 @@ const RoleListPage = () => {
 
   const openEdit = async (role) => {
     const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role', 'Manajemen Peran'])
-    if (listPath) navigate(`${listPath}/form/${role.id}`)
+    if (listPath) navigate(`${listPath}/form/${role.roleId}`)
     else setError('Path Manajemen Peran belum terdaftar di database.')
   }
 
   const openDetail = async (role) => {
     const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role', 'Manajemen Peran'])
-    if (listPath) navigate(`${listPath}/detail/${role.id}`)
+    if (listPath) navigate(`${listPath}/detail/${role.roleId}`)
     else setError('Path Manajemen Peran belum terdaftar di database.')
   }
 
@@ -174,7 +174,7 @@ const RoleListPage = () => {
     setNotice('')
 
     try {
-      await request(`/roles/${roleToDelete.id}`, {
+      await request(`/roles/${roleToDelete.roleId}`, {
         method: 'DELETE',
       })
 
