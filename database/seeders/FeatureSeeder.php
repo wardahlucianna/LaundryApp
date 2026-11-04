@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Akses\PermissionFeature;
-use App\Models\Akses\PermissionGroup;
-use App\Models\Akses\Role;
+use App\Models\Access\PermissionFeature;
+use App\Models\Access\PermissionGroup;
+use App\Models\Access\Role;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -46,7 +46,7 @@ class FeatureSeeder extends Seeder
                 ['Laporan', 'Laporan', '/reports', 70],
                 ['Pengaturan', 'Manajemen Role', '/roles', 80],
                 ['Pengaturan', 'Manajemen Fitur', '/permissions', 90],
-                ['Pengaturan', 'Hak Akses', '/access', 100],
+                ['Pengaturan', 'Hak Access', '/access', 100],
             ];
 
             $featureModels = [];
