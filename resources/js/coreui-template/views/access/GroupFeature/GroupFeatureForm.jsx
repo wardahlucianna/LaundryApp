@@ -209,7 +209,7 @@ const GroupFeatureForm = () => {
 
       const listPath = await getAccessFeaturePath(['Manajemen Kelompok Fitur', 'Manajemen Group Fitur', 'Management Group Feature', 'Group Feature', 'Feature Group'])
       if (!listPath) throw new Error('Path Management Fitur belum terdaftar di database.')
-      navigate(`${listPath}?view=groups`, {
+      navigate(listPath, {
         state: {
           notice: id
             ? 'Group feature berhasil diperbarui.'
@@ -359,7 +359,7 @@ const GroupFeatureForm = () => {
                   onClick={async () => {
                     try {
                       const listPath = await getAccessFeaturePath(['Manajemen Kelompok Fitur', 'Manajemen Group Fitur', 'Management Group Feature', 'Group Feature', 'Feature Group'])
-                      if (listPath) navigate(`${listPath}?view=groups`)
+                      if (listPath) navigate(listPath)
                       else setError('Path Management Fitur belum terdaftar di database.')
                     } catch (navigationError) {
                       setError(navigationError.message || 'Gagal membaca path Management Fitur dari database.')
