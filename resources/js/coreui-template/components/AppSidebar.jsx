@@ -23,6 +23,7 @@ import { AppSidebarNav } from './AppSidebarNav'
 
 import { logo } from 'src/assets/brand/logo'
 import { sygnet } from 'src/assets/brand/sygnet'
+import { apiBase } from '../../services/api'
 
 const AppSidebar = () => {
   const dispatch = useDispatch()
@@ -65,8 +66,6 @@ const AppSidebar = () => {
     let cancelled = false
     const loadMenus = async () => {
       try {
-        const configuredBase = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
-        const apiBase = configuredBase ? (configuredBase.endsWith('/api') ? configuredBase : `${configuredBase}/api`) : '/api'
         const response = await fetch(`${apiBase}/auth/me/menus`, {
           headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
           credentials: 'include',
