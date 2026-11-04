@@ -40,7 +40,6 @@ const RoleFormPage = () => {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
-  const [validation, setValidation] = useState('')
 
   const request = useCallback(async (path, options = {}) => {
     const token =
@@ -197,11 +196,10 @@ const RoleFormPage = () => {
 
   const save = async (event) => {
     event.preventDefault()
-    setValidation('')
     setError('')
 
     if (!values.name.trim()) {
-      setValidation('Nama role wajib diisi.')
+      setError('Nama role wajib diisi.')
       return
     }
 
@@ -278,10 +276,6 @@ const RoleFormPage = () => {
         </CCardHeader>
 
         <CCardBody>
-          {validation && (
-            <CAlert color="warning">{validation}</CAlert>
-          )}
-
           <CForm onSubmit={save}>
             <CRow className="g-3">
               <CCol xs={12} md={6}>
