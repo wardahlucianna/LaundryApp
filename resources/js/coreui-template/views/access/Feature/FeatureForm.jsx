@@ -31,6 +31,7 @@ const getGroupId = (group) =>
 
   const [feature, setFeature] = useState(null)
   const [groups, setGroups] = useState([])
+  const [groupSearch, setGroupSearch] = useState('')
   const [values, setValues] = useState({
     groupFeatureId: '',
     name: '',
@@ -147,8 +148,16 @@ const getGroupId = (group) =>
 
   const availableGroups = groups.filter((group) =>
     Boolean(group.isActive) ||
-    String(group.groupFeatureId) === String(values.groupFeatureId),
+    String(getGroupId(group)) === String(values.groupFeatureId),
   )
+
+  const filteredGroups = availableGroups.filter((group) => {
+    const matchesSearch = String(group.name || '')
+      .toLocaleLowerCase()
+      .includes(groupSearch.trim().toLocaleLowerCase())
+
+    return matchesSearch || String(getGroupId(group)) === String(values.groupFeatureId)
+  })
 
   const handleGroupChange = (event) => {
     setValues((current) => ({
@@ -272,6 +281,15 @@ const getGroupId = (group) =>
                       Kelompok <span className="text-danger">*</span>
                     </label>
 
+                    <CFormInput
+                      type="search"
+                      placeholder="Cari kelompok fitur..."
+                      value={groupSearch}
+                      onChange={(event) => setGroupSearch(event.target.value)}
+                      className="mb-2"
+                      disabled={formDisabled}
+                      aria-label="Cari kelompok fitur"
+                    />
                     <CFormSelect
                       value={values.groupFeatureId}
                       onChange={handleGroupChange}
@@ -279,7 +297,7 @@ const getGroupId = (group) =>
                       disabled={formDisabled}
                     >
                       <option value="">Pilih Kelompok</option>
-                      {availableGroups.map((group) => (
+                      {filteredGroups.map((group) => (
                         <option key={String(getGroupId(group))} value={String(getGroupId(group))}>
                           {group.name}
                           {!group.isActive ? ' (Nonaktif)' : ''}
@@ -333,7 +351,7 @@ const getGroupId = (group) =>
                       disabled={formDisabled}
                     >
                       <option value="sidebar">Menu Samping</option>
-                      <option value="topbar">Bilah Atas</option>
+                      <option value="topbar">Menu Atas</option>
                     </CFormSelect>
                   </CCol>
 
