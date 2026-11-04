@@ -15,18 +15,49 @@ export const routes = [
   { path: '/transactions', name: 'Transaksi', element: () => <Placeholder title="Transaksi" /> },
   { path: '/reports', name: 'Laporan', element: () => <Placeholder title="Laporan" /> },
   { path: '/settings', name: 'Pengaturan', element: () => <Placeholder title="Pengaturan" /> },
-  { path: '/feature', name: 'Management Fitur', element: FeatureManagement },
-  { path: '/feature/form', name: 'Form Fitur', element: FeatureFormPage },
-  { path: '/feature/form/:id', name: 'Edit Fitur', element: FeatureFormPage },
-  { path: '/permission-groups', name: 'Management Group Feature', element: FeatureManagement },
-  { path: '/permission-groups/form', name: 'Form Group Feature', element: GroupFeatureFormPage },
-  { path: '/permission-groups/form/:id', name: 'Edit Group Feature', element: GroupFeatureFormPage },
-  { path: '/permission-groups/detail/:id', name: 'Detail Group Feature', element: GroupFeatureDetailPage },
-  { path: '/permissions/form', name: 'Form Fitur', element: FeatureFormPage },
-  { path: '/permissions/form/:id', name: 'Edit Fitur', element: FeatureFormPage },
-  { path: '/roles', name: 'Manajemen Role', element: RoleManagement },
-  { path: '/roles/list', name: 'List Role', element: RoleManagement },
-  { path: '/roles/form', name: 'Form Role', element: RoleFormPage },
-  { path: '/roles/form/:id', name: 'Edit Role', element: RoleFormPage },
-  { path: '/roles/detail/:id', name: 'Detail Role', element: RoleDetailPage },
+]
+
+const normalizePath = (value) => {
+  const path = String(value || '').trim()
+  if (!path) return null
+  const leadingSlash = path.startsWith('/') ? path : `/${path}`
+  return leadingSlash.replace(/\\/+$/, '') || '/'
+}
+
+const resolveFeaturePath = (menuGroups, names) => {
+  const candidates = names.map((name) => name.toLowerCase())
+  const features = (menuGroups || []).flatMap((group) => group.items || [])
+  const feature = features.find((item) => candidates.includes(String(item.name || '').trim().toLowerCase()))
+  return normalizePath(feature?.path)
+}
+
+export const buildAccessRoutes = (menuGroups) => {
+  const featureBase = resolveFeaturePath(menuGroups, ['Manajemen Fitur', 'Management Fitur'])
+  const roleBase = resolveFeaturePath(menuGroups, ['Manajemen Role', 'Management Role'])
+  const dynamicRoutes = []
+
+  if (featureBase) {
+    dynamicRoutes.push(
+      { path: featureBase, name: 'Management Fitur', element: FeatureManagement },
+      { path: `${featureBase}/form`, name: 'Form Fitur', element: FeatureFormPage },
+      { path: `${featureBase}/form/:id`, name: 'Edit Fitur', element: FeatureFormPage },
+      { path: `${featureBase}/group-feature/form`, name: 'Form Group Feature', element: GroupFeatureFormPage },
+      { path: `${featureBase}/group-feature/form/:id`, name: 'Edit Group Feature', element: GroupFeatureFormPage },
+      { path: `${featureBase}/group-feature/detail/:id`, name: 'Detail Group Feature', element: GroupFeatureDetailPage },
+    )
+  }
+
+  if (roleBase) {
+    dynamicRoutes.push(
+      { path: roleBase, name: 'Manajemen Role', element: RoleManagement },
+      { path: `${roleBase}/form`, name: 'Form Role', element: RoleFormPage },
+      { path: `${roleBase}/form/:id`, name: 'Edit Role', element: RoleFormPage },
+      { path: `${roleBase}/detail/:id`, name: 'Detail Role', element: RoleDetailPage },
+    )
+  }
+
+  return dynamicRoutes
+}
+
+export const routes = [
 ]
