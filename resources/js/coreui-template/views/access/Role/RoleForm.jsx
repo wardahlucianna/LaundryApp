@@ -23,6 +23,7 @@ import {
 import MasterPageLayout from '../../../components/layout/MasterPageLayout'
 
 import { apiBase } from '../../../../services/api'
+import { getAccessFeaturePath } from '../../../utils/accessNavigation'
 
 
 const RoleFormPage = () => {
@@ -236,7 +237,9 @@ const RoleFormPage = () => {
         new Event('sunrise:permissions-updated'),
       )
 
-      navigate('/roles/list', {
+      const listPath = await getAccessFeaturePath(['Manajemen Role', 'Management Role'])
+      if (!listPath) throw new Error('Path list Management Role belum terdaftar di database.')
+      navigate(listPath, {
         state: {
           notice: id
             ? 'Role berhasil diperbarui.'
@@ -418,7 +421,15 @@ const RoleFormPage = () => {
                 variant="outline"
                 type="button"
                 disabled={saving}
-                onClick={() => navigate(-1)}
+                onClick={async () => {
+                  try {
+                    const listPath = await getAccessFeaturePath(['Manajemen Role', 'Management Role'])
+                    if (listPath) navigate(listPath)
+                    else navigate(-1)
+                  } catch {
+                    navigate(-1)
+                  }
+                }}
               >
                 Batal
               </CButton>
