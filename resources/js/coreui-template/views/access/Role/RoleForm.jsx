@@ -340,6 +340,7 @@ const RoleFormPage = () => {
                   <CCard key={group.name} className="border">
                     <CCardHeader className="py-2">
                       <CButton
+                        type="button"
                         color="link"
                         className="d-flex align-items-center justify-content-between w-100 p-0 text-decoration-none text-body fw-semibold"
                         onClick={() => toggleGroupCollapse(group.name)}
