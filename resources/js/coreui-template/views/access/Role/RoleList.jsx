@@ -310,7 +310,10 @@ const RoleListPage = () => {
             columns={[
               { key: 'number', title: 'No.', width: 60, render: (_role, index) => (pagination.current_page - 1) * perPage + index + 1 },
               { key: 'name', title: 'Nama Role', render: (role) => <div className="fw-semibold">{role.name}</div> },
-              { key: 'permissions_count', title: 'Jumlah Hak Akses', className: 'text-center', headerClassName: 'text-center', render: (role) => {\n                const permissionCount = role.permissions_count ?? role.features_count ?? role.role_permissions_count ?? (Array.isArray(role.features) ? role.features.length : null) ?? (Array.isArray(role.permissions) ? role.permissions.length : null)\n                return permissionCount ?? 0\n              } },
+              { key: 'permissions_count', title: 'Jumlah Hak Akses', className: 'text-center', headerClassName: 'text-center', render: (role) => {
+                const permissionCount = role.permissions_count ?? role.features_count ?? role.role_permissions_count ?? (Array.isArray(role.features) ? role.features.length : null) ?? (Array.isArray(role.permissions) ? role.permissions.length : null)
+                return permissionCount ?? 0
+              } },
               { key: 'status', title: 'Status', render: (role) => <CBadge color={role.is_active ? 'success' : 'secondary'}>{role.is_active ? 'Aktif' : 'Nonaktif'}</CBadge> },
               { key: 'actions', title: 'Aksi', width: 170, className: 'text-center', headerClassName: 'text-center', render: (role) => (
                 <div className="table-actions d-inline-flex gap-2">
