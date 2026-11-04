@@ -25,7 +25,7 @@ const getGroupId = (group) =>
   group?.permissionGroupId ??
   group?.groupId ??
   ''
-\nconst FeatureFormPage = () => {
+  const FeatureFormPage = () => {
   const navigate = useNavigate()
   const { id } = useParams()
 
