@@ -176,7 +176,7 @@ const RoleDetailPage = () => {
 
   const goBack = async () => {
     try {
-      const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role'])
+      const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role', 'Manajemen Peran'])
       if (listPath) navigate(listPath)
       else navigate(-1)
     } catch {
@@ -187,7 +187,7 @@ const RoleDetailPage = () => {
   const openEdit = async () => {
     if (role) {
       try {
-        const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role'])
+        const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role', 'Manajemen Peran'])
         if (listPath) navigate(`${listPath}/form/${role.id}`)
       } catch {
         setError('Gagal membaca path Manajemen Peran dari database.')
