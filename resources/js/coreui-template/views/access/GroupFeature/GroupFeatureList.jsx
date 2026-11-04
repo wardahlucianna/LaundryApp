@@ -4,17 +4,8 @@ import { CAlert } from '@coreui/react'
 
 import MasterPageLayout from '../../../components/MasterPageLayout'
 
-const apiBase = (() => {
-  const base = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
+import { apiBase } from '../../../../services/api'
 
-  if (!base) {
-    return '/api'
-  }
-
-  return base.endsWith('/api')
-    ? base
-    : `${base}/api`
-})()
 
 const GroupFeatureManagement = () => {
   const [groups, setGroups] = useState([])
