@@ -19,7 +19,13 @@ import MasterPageLayout from '../../../components/layout/MasterPageLayout'
 import { apiBase } from '../../../../services/api'
 
 
-const getGroupId = (group) =>\n  group?.id ?? group?.permission_group_id ?? group?.permissionGroupId ?? group?.groupId ?? ''\n\nconst FeatureFormPage = () => {
+const getGroupId = (group) =>
+  group?.id ??
+  group?.permission_group_id ??
+  group?.permissionGroupId ??
+  group?.groupId ??
+  ''
+\nconst FeatureFormPage = () => {
   const navigate = useNavigate()
   const { id } = useParams()
 
@@ -194,7 +200,7 @@ const getGroupId = (group) =>\n  group?.id ?? group?.permission_group_id ?? grou
 
     try {
       const body = {
-        permission_group_id: groupId,
+        permission_group_id: values.permission_group_id,
         name: values.name.trim(),
         path: values.path.trim() || null,
         ordering: Number(values.ordering),
