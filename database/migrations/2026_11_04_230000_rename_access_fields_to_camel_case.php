@@ -1,17 +1,40 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\\Database\\Migrations\\Migration;
+use Illuminate\\Database\\Schema\\Blueprint;
+use Illuminate\\Support\\Facades\\DB;
+use Illuminate\\Support\\Facades\\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Drop foreign keys by their actual database names. Constraint names can
+     * differ between existing databases, so do not rely on Laravel's inferred
+     * name (for example features_permission_group_id_foreign).
+     */
+    private function dropForeignKeysForColumns(string $tableName, array $columnNames): void
+    {
+        $constraints = DB::select(
+            'SELECT DISTINCT c.conname
+             FROM pg_constraint c
+             JOIN pg_class tbl ON tbl.oid = c.conrelid
+             JOIN pg_namespace ns ON ns.oid = tbl.relnamespace
+             JOIN unnest(c.conkey) AS key_col(attnum) ON true
+             JOIN pg_attribute attr ON attr.attrelid = tbl.oid AND attr.attnum = key_col.attnum
+             WHERE c.contype = ? AND ns.nspname = current_schema()
+               AND tbl.relname = ? AND attr.attname IN (' . implode(',', array_fill(0, count($columnNames), '?')) . ')',
+            array_merge(['f', $tableName], $columnNames)
+        );
+
+        foreach ($constraints as $constraint) {
+            DB::statement('ALTER TABLE "' . str_replace('"', '""', $tableName) . '" DROP CONSTRAINT "' . str_replace('"', '""', $constraint->conname) . '"');
+        }
+    }
+
     public function up(): void
     {
         // groupFeature: use an explicit camelCase primary key.
-        Schema::table('features', function (Blueprint $table) {
-            $table->dropForeign(['permission_group_id']);
-        });
+        $this->dropForeignKeysForColumns('features', ['permission_group_id']);
         Schema::renameColumn('groupFeature', 'id', 'groupFeatureId');
         Schema::renameColumn('features', 'permission_group_id', 'featureId');
         Schema::table('features', function (Blueprint $table) {
@@ -20,10 +43,7 @@ return new class extends Migration
         });
 
         // Role-feature pivot: camelCase table and columns.
-        Schema::table('role_permission_features', function (Blueprint $table) {
-            $table->dropForeign(['role_id']);
-            $table->dropForeign(['permission_feature_id']);
-        });
+        $this->dropForeignKeysForColumns('role_permission_features', ['role_id', 'permission_feature_id']);
         Schema::rename('role_permission_features', 'roleFeatures');
         Schema::renameColumn('roleFeatures', 'role_id', 'roleId');
         Schema::renameColumn('roleFeatures', 'permission_feature_id', 'featureId');
@@ -35,10 +55,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::table('roleFeatures', function (Blueprint $table) {
-            $table->dropForeign(['roleId']);
-            $table->dropForeign(['featureId']);
-        });
+        $this->dropForeignKeysForColumns('roleFeatures', ['roleId', 'featureId']);
         Schema::renameColumn('roleFeatures', 'roleId', 'role_id');
         Schema::renameColumn('roleFeatures', 'featureId', 'permission_feature_id');
         Schema::rename('roleFeatures', 'role_permission_features');
@@ -47,9 +64,7 @@ return new class extends Migration
             $table->foreign('permission_feature_id')->references('id')->on('features')->cascadeOnDelete();
         });
 
-        Schema::table('features', function (Blueprint $table) {
-            $table->dropForeign(['featureId']);
-        });
+        $this->dropForeignKeysForColumns('features', ['featureId']);
         Schema::renameColumn('features', 'featureId', 'permission_group_id');
         Schema::renameColumn('groupFeature', 'groupFeatureId', 'id');
         Schema::table('features', function (Blueprint $table) {
