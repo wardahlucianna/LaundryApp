@@ -248,20 +248,26 @@ const GroupFeatureForm = () => {
     >
 
 
-      {loading ? (
-        <div className="d-flex align-items-center gap-2 py-4 text-body-secondary">
-          <CSpinner size="sm" className="me-2" color="warning" />
-          <span>Memuat data kelompok fitur...</span>
-        </div>
-      ) : (
-        <CCard className="role-panel role-form-card mb-4">
-          <CCardHeader>
+      {        <CCard className="role-panel role-form-card mb-4">
+          <CCardHeader
+            className="d-flex align-items-center py-3"
+            style={{
+              backgroundColor: 'var(--cui-tertiary-bg)',
+              borderBottom: '1px solid var(--cui-border-color)',
+            }}
+          >
             <strong className="fs-5">
               {group ? 'Ubah Kelompok Fitur' : 'Tambah Kelompok Fitur'}
             </strong>
           </CCardHeader>
 
           <CCardBody>
+            {loading && (
+              <div className="d-flex align-items-center gap-2 py-3 text-body-secondary">
+                <CSpinner size="sm" color="warning" />
+                <span>Memuat data kelompok fitur...</span>
+              </div>
+            )}
             <CForm onSubmit={save}>
               <CRow className="g-3">
                 <CCol xs={12} md={6}>
@@ -409,7 +415,7 @@ const GroupFeatureForm = () => {
             </CForm>
           </CCardBody>
         </CCard>
-      )}
+      }
     </MasterPageLayout>
   )
 }
