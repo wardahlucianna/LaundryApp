@@ -26,6 +26,18 @@ import { apiBase } from '../../../../services/api'
 import { getAccessFeaturePath } from '../../../utils/accessNavigation'
 
 
+const getRoleActiveStatus = (role) => {
+  const rawStatus = role?.isActive ?? role?.is_active ?? role?.active ?? role?.status
+  if (typeof rawStatus === 'boolean') return rawStatus
+  if (typeof rawStatus === 'number') return rawStatus === 1
+
+  const normalizedStatus = String(rawStatus ?? '').trim().toLowerCase()
+  if (['1', 'true', 'aktif', 'active'].includes(normalizedStatus)) return true
+  if (['0', 'false', 'nonaktif', 'inactive'].includes(normalizedStatus)) return false
+
+  return false
+}
+
 const RoleFormPage = () => {
   const navigate = useNavigate()
   const { id } = useParams()
@@ -105,7 +117,7 @@ const RoleFormPage = () => {
         setValues({
           name: loadedRole?.name || '',
           is_active: loadedRole
-            ? Boolean(loadedRole.is_active)
+            ? getRoleActiveStatus(loadedRole)
             : true,
         })
 
