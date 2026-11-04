@@ -353,7 +353,7 @@ const GroupFeatureForm = () => {
                   variant="outline"
                   type="button"
                   disabled={saving}
-                  onClick={() => navigate('/permission-groups')}
+                  onClick={() => navigate(-1)}
                 >
                   Batal
                 </CButton>
