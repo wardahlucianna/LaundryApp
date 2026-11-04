@@ -32,7 +32,6 @@ const AppSidebar = () => {
 
   const buildNavigation = (groups) => {
     const normalizeMenuPath = (feature) => {
-      if (String(feature.name || '').toLowerCase().includes('manajemen fitur')) return '/permissions'
       const path = String(feature.path || '').trim()
       if (!path) return null
       return path.startsWith('/') ? path : `/${path}`
