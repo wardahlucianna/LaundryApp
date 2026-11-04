@@ -5,6 +5,7 @@ const RoleFormPage = React.lazy(() => import('./views/access/Role/RoleForm'))
 const RoleDetailPage = React.lazy(() => import('./views/access/Role/RoleDetail'))
 const FeatureManagement = React.lazy(() => import('./views/access/Feature/FeatureList'))
 const GroupFeatureFormPage = React.lazy(() => import('./views/access/GroupFeature/GroupFeatureForm'))
+const GroupFeatureManagement = React.lazy(() => import('./views/access/GroupFeature/GroupFeatureList'))
 const GroupFeatureDetailPage = React.lazy(() => import('./views/access/GroupFeature/GroupFeatureDetail'))
 const FeatureFormPage = React.lazy(() => import('./views/access/Feature/FeatureForm'))
 const Placeholder = ({ title }) => <div className="pt-4"><h2>{title}</h2><p>Halaman ini akan diintegrasikan dengan fitur Sunrise Laundry.</p></div>
@@ -35,7 +36,12 @@ const resolveFeaturePath = (menuGroups, names) => {
 export const buildAccessRoutes = (menuGroups) => {
   const featureBase = resolveFeaturePath(menuGroups, ['Manajemen Fitur', 'Management Fitur'])
   const roleBase = resolveFeaturePath(menuGroups, ['Manajemen Role', 'Management Role', 'Manajemen Peran'])
+  const groupFeatureBase = resolveFeaturePath(menuGroups, ['Group Feature', 'Feature Group', 'Management Group Feature', 'Manajemen Group Feature', 'Manajemen Group Fitur'])
   const dynamicRoutes = []
+
+  if (groupFeatureBase) {
+    dynamicRoutes.push({ path: groupFeatureBase, name: 'Management Group Feature', element: GroupFeatureManagement })
+  }
 
   if (featureBase) {
     dynamicRoutes.push(
