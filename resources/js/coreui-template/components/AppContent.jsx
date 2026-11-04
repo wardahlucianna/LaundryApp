@@ -8,10 +8,16 @@ import { apiBase } from '../../services/api'
 
 const AppContent = () => {
   const [accessRoutes, setAccessRoutes] = useState([])
+  const [isLoadingRoutes, setIsLoadingRoutes] = useState(true)
+  const [routeLoadError, setRouteLoadError] = useState('')
 
   useEffect(() => {
     let active = true
     const loadAccessRoutes = async () => {
+      if (active) {
+        setIsLoadingRoutes(true)
+        setRouteLoadError('')
+      }
       try {
         const token = localStorage.getItem('auth_token') || localStorage.getItem('access_token') || localStorage.getItem('token') || ''
         const response = await fetch(`${apiBase}/auth/me/menus`, {
@@ -25,8 +31,13 @@ const AppContent = () => {
         if (!response.ok) throw new Error('Gagal membaca konfigurasi route menu.')
         const payload = await response.json()
         if (active) setAccessRoutes(buildAccessRoutes(payload.data || []))
-      } catch {
-        if (active) setAccessRoutes([])
+      } catch (error) {
+        if (active) {
+          setAccessRoutes([])
+          setRouteLoadError(error.message || 'Gagal memuat menu aplikasi. Silakan coba refresh kembali.')
+        }
+      } finally {
+        if (active) setIsLoadingRoutes(false)
       }
     }
     loadAccessRoutes()
@@ -43,7 +54,20 @@ const AppContent = () => {
     <CContainer className="px-4" lg>
       <Suspense fallback={<CSpinner color="primary" />}>
         <Routes>
-          {[...routes, ...accessRoutes].map((route, idx) => (
+          {isLoadingRoutes ? (
+            <div className="pt-4 d-flex justify-content-center align-items-center" style={{ minHeight: '240px' }}>
+              <div className="text-center">
+                <CSpinner color="primary" />
+                <p className="text-body-secondary mt-3 mb-0">Memuat menu...</p>
+              </div>
+            </div>
+          ) : routeLoadError ? (
+            <div className="pt-4">
+              <h2 className="fs-4 mb-2">Menu gagal dimuat</h2>
+              <p className="text-body-secondary">{routeLoadError}</p>
+              <button type="button" className="btn btn-primary btn-sm" onClick={() => window.dispatchEvent(new Event('focus'))}>Coba Lagi</button>
+            </div>
+          ) : [...routes, ...accessRoutes].map((route, idx) => (
             route.element && (
               <Route
                 key={idx}
