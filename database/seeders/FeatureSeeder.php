@@ -14,12 +14,12 @@ class FeatureSeeder extends Seeder
     {
         DB::transaction(function (): void {
             $groups = [
-                ['name' => 'Beranda', 'description' => 'Ringkasan dan halaman utama aplikasi.', 'icon' => 'cilSpeedometer'],
-                ['name' => 'Transaksi', 'description' => 'Fitur transaksi dan pembayaran laundry.', 'icon' => 'cilCash'],
-                ['name' => 'Operasional', 'description' => 'Pengelolaan pesanan dan proses laundry.', 'icon' => 'cilBasket'],
-                ['name' => 'Master Data', 'description' => 'Pengelolaan data pelanggan dan data pendukung.', 'icon' => 'cilPeople'],
-                ['name' => 'Pengaturan', 'description' => 'Pengaturan role, fitur, dan hak akses pengguna.', 'icon' => 'cilSettings'],
-                ['name' => 'Laporan', 'description' => 'Laporan operasional dan transaksi.', 'icon' => 'cilChartLine'],
+                ['name' => 'Beranda', 'icon' => 'cilSpeedometer'],
+                ['name' => 'Transaksi', 'icon' => 'cilCash'],
+                ['name' => 'Operasional', 'icon' => 'cilBasket'],
+                ['name' => 'Master Data', 'icon' => 'cilPeople'],
+                ['name' => 'Pengaturan', 'icon' => 'cilSettings'],
+                ['name' => 'Laporan', 'icon' => 'cilChartLine'],
             ];
 
             $groupModels = [];
@@ -27,9 +27,8 @@ class FeatureSeeder extends Seeder
                 $group = PermissionGroup::updateOrCreate(
                     ['name' => $groupData['name']],
                     [
-                        'description' => $groupData['description'],
                         'icon' => $groupData['icon'],
-                        'is_active' => true,
+                        'isActive' => true,
                     ],
                 );
                 $groupModels[$groupData['name']] = $group;
@@ -54,11 +53,11 @@ class FeatureSeeder extends Seeder
                 $feature = PermissionFeature::updateOrCreate(
                     ['path' => $path],
                     [
-                        'featureId' => $groupModels[$groupName]->groupFeatureId,
+                        'groupFeatureId' => $groupModels[$groupName]->groupFeatureId,
                         'name' => $name,
                         'ordering' => $ordering,
-                        'menu_type' => 'sidebar',
-                        'is_active' => true,
+                        'menuType' => 'sidebar',
+                        'isActive' => true,
                     ],
                 );
                 $featureModels[$path] = $feature;
@@ -68,25 +67,25 @@ class FeatureSeeder extends Seeder
             foreach (['Super Admin', 'Administrator', 'Kasir', 'Operator Laundry'] as $roleName) {
                 $roles[$roleName] = Role::updateOrCreate(
                     ['name' => $roleName],
-                    ['is_active' => true],
+                    ['isActive' => true],
                 );
             }
 
-            $allFeatureIds = collect($featureModels)->pluck('id')->all();
+            $allFeatureIds = collect($featureModels)->pluck('featureId')->all();
             $adminFeatureIds = collect($featureModels)
                 ->reject(fn (PermissionFeature $feature) => $feature->path === '/access')
-                ->pluck('id')->all();
+                ->pluck('featureId')->all();
 
             $roles['Super Admin']->features()->sync($allFeatureIds);
             $roles['Administrator']->features()->sync($adminFeatureIds);
 
             $roles['Kasir']->features()->sync(collect([
                 '/dashboard', '/transactions', '/orders', '/customers', '/payments',
-            ])->map(fn (string $path) => $featureModels[$path]->id)->all());
+            ])->map(fn (string $path) => $featureModels[$path]->featureId)->all());
 
             $roles['Operator Laundry']->features()->sync(collect([
                 '/dashboard', '/orders', '/process',
-            ])->map(fn (string $path) => $featureModels[$path]->id)->all());
+            ])->map(fn (string $path) => $featureModels[$path]->featureId)->all());
         });
 
         $this->command?->info('Seeder group fitur, fitur, role, dan hak akses berhasil dijalankan.');
