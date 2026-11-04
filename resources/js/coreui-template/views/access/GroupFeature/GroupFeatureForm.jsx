@@ -145,7 +145,7 @@ const GroupFeatureForm = () => {
           ordering: Number(found.ordering) || 1,
           is_active: getGroupActiveStatus(found),
         })
-      }
+      })
       .catch((loadError) => {
         if (active) {
           setLoadFailed(true)
