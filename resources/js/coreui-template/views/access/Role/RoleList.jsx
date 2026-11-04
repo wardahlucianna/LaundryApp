@@ -27,17 +27,8 @@ import GlobalPagination from '../../../components/GlobalPagination'
 
 import MasterPageLayout from '../../../components/MasterPageLayout'
 
-const apiBase = (() => {
-  const configuredBase = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
+import { apiBase } from '../../../../services/api'
 
-  if (!configuredBase) {
-    return '/api'
-  }
-
-  return configuredBase.endsWith('/api')
-    ? configuredBase
-    : `${configuredBase}/api`
-})()
 
 const RoleListPage = () => {
   const [roles, setRoles] = useState([])
