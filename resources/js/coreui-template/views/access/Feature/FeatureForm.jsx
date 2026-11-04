@@ -15,7 +15,7 @@ import {
   CSpinner,
 } from '@coreui/react'
 
-import MasterPageLayout from '../../../components/MasterPageLayout'
+import MasterPageLayout from '../../../components/layout/MasterPageLayout'
 
 import { apiBase } from '../../../../services/api'
 
@@ -266,16 +266,10 @@ const FeatureFormPage = () => {
     <MasterPageLayout
       title="Management Fitur"
       className="role-form-page"
+      error={error}
+      onClearError={() => setError('')}
     >
-      {error && (
-        <CAlert
-          color="danger"
-          dismissible
-          onClose={() => setError('')}
-        >
-          {error}
-        </CAlert>
-      )}
+
 
       <div className="role-form-page">
         {loading ? (
