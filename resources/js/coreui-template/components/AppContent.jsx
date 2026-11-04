@@ -53,42 +53,44 @@ const AppContent = () => {
   return (
     <CContainer className="px-4" lg>
       <Suspense fallback={<CSpinner color="primary" />}>
-        <Routes>
-          {isLoadingRoutes ? (
-            <div className="pt-4 d-flex justify-content-center align-items-center" style={{ minHeight: '240px' }}>
-              <div className="text-center">
-                <CSpinner color="primary" />
-                <p className="text-body-secondary mt-3 mb-0">Memuat menu...</p>
-              </div>
+        {isLoadingRoutes ? (
+          <div className="pt-4 d-flex justify-content-center align-items-center" style={{ minHeight: '240px' }}>
+            <div className="text-center">
+              <CSpinner color="primary" />
+              <p className="text-body-secondary mt-3 mb-0">Memuat menu...</p>
             </div>
-          ) : routeLoadError ? (
-            <div className="pt-4">
-              <h2 className="fs-4 mb-2">Menu gagal dimuat</h2>
-              <p className="text-body-secondary">{routeLoadError}</p>
-              <button type="button" className="btn btn-primary btn-sm" onClick={() => window.dispatchEvent(new Event('focus'))}>Coba Lagi</button>
-            </div>
-          ) : [...routes, ...accessRoutes].map((route, idx) => (
-            route.element && (
-              <Route
-                key={idx}
-                path={route.path}
-                name={route.name}
-                element={<route.element />}
-              />
-            )
-          ))}
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route
-            path="*"
-            element={(
-              <div className="pt-4">
-                <h2 className="fs-4 mb-2">Halaman tidak ditemukan</h2>
-                <p className="text-body-secondary">Path menu belum terdaftar pada aplikasi.</p>
-                <a href="/dashboard">Kembali ke Dashboard</a>
-              </div>
-            )}
-          />
-        </Routes>
+          </div>
+        ) : routeLoadError ? (
+          <div className="pt-4">
+            <h2 className="fs-4 mb-2">Menu gagal dimuat</h2>
+            <p className="text-body-secondary">{routeLoadError}</p>
+            <button type="button" className="btn btn-primary btn-sm" onClick={() => window.dispatchEvent(new Event('focus'))}>Coba Lagi</button>
+          </div>
+        ) : (
+          <Routes>
+            {[...routes, ...accessRoutes].map((route, idx) => (
+              route.element && (
+                <Route
+                  key={idx}
+                  path={route.path}
+                  name={route.name}
+                  element={<route.element />}
+                />
+              )
+            ))}
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route
+              path="*"
+              element={(
+                <div className="pt-4">
+                  <h2 className="fs-4 mb-2">Halaman tidak ditemukan</h2>
+                  <p className="text-body-secondary">Path menu belum terdaftar pada aplikasi.</p>
+                  <a href="/dashboard">Kembali ke Dashboard</a>
+                </div>
+              )}
+            />
+          </Routes>
+        )}
       </Suspense>
     </CContainer>
   )
