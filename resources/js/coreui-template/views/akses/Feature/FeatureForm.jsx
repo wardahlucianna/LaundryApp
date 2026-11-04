@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { CAlert, CButton, CCard, CCardBody, CCardHeader, CCol, CForm, CFormInput, CFormSelect, CFormSwitch, CRow, CSpinner } from '@coreui/react'
+import MasterPageLayout from '../../../components/MasterPageLayout'
 
 const apiBase = (() => {
   const base = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
@@ -99,8 +100,7 @@ const FeatureFormPage = () => {
   }
 
   return (
-    <div className="role-page-layout mb-4">
-      <div className="mb-3"><h2 className="fs-4 mb-1">Management Fitur</h2></div>
+    <MasterPageLayout title="Management Fitur" className="role-form-page">
       {error && <CAlert color="danger" dismissible onClose={() => setError('')}>{error}</CAlert>}
       <div className="role-form-page">
         {loading ? (
@@ -159,7 +159,7 @@ const FeatureFormPage = () => {
           </CCard>
         )}
       </div>
-    </div>
+    </MasterPageLayout>
   )
 }
 
