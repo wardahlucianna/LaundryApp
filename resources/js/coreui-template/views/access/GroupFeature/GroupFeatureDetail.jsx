@@ -91,7 +91,7 @@ const GroupFeatureDetail = () => {
 
   const openEdit = async () => {
     try {
-      const basePath = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
+      const basePath = await getAccessFeaturePath(['Manajemen Kelompok Fitur', 'Manajemen Group Fitur', 'Management Group Feature', 'Group Feature', 'Feature Group'])
       if (basePath) navigate(`${basePath}/group-feature/form/${group.id}`)
       else setError('Path Management Fitur belum terdaftar di database.')
     } catch (navigationError) {
@@ -167,7 +167,7 @@ const GroupFeatureDetail = () => {
                   variant="outline"
                   onClick={async () => {
                   try {
-                    const listPath = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
+                    const listPath = await getAccessFeaturePath(['Manajemen Kelompok Fitur', 'Manajemen Group Fitur', 'Management Group Feature', 'Group Feature', 'Feature Group'])
                     if (listPath) navigate(`${listPath}?view=groups`)
                     else setError('Path Management Fitur belum terdaftar di database.')
                   } catch (navigationError) {
