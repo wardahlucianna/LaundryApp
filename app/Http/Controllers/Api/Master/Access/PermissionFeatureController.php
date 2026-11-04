@@ -11,7 +11,7 @@ class PermissionFeatureController extends Controller
 {
     public function index(Request $request)
     {
-        $query = PermissionFeature::query()->with('group')->orderBy('ordering')->orderBy('name');
+        $query = PermissionFeature::query()->with('group')->withCount('roles')->orderBy('ordering')->orderBy('name');
         if ($search = $request->string('search')->toString()) {
             $query->where(fn ($q) => $q->where('name', 'ilike', "%{$search}%")
                 ->orWhereHas('group', fn ($g) => $g->where('name', 'ilike', "%{$search}%")));
