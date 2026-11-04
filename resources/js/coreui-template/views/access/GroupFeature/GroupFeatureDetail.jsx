@@ -92,7 +92,7 @@ const GroupFeatureDetail = () => {
   const openEdit = async () => {
     try {
       const basePath = await getAccessFeaturePath(['Manajemen Kelompok Fitur', 'Manajemen Group Fitur', 'Manajemen Kelompok Fitur', 'Group Feature', 'Feature Group'])
-      if (basePath) navigate(`${basePath}/form/${group.id}`)
+      if (basePath) navigate(`${basePath}/form/${group.groupFeatureId}`)
       else setError('Path Manajemen Kelompok Fitur belum terdaftar di database.')
     } catch (navigationError) {
       setError(navigationError.message || 'Gagal membaca path Manajemen Kelompok Fitur dari database.')
