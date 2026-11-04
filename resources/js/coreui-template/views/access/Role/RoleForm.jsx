@@ -226,7 +226,7 @@ const RoleFormPage = () => {
         await request(`/roles/${savedRole.id || id}/features`, {
           method: 'PUT',
           body: JSON.stringify({
-            feature_ids: selectedFeatureIds,
+            featureIds: selectedFeatureIds,
           }),
         })
       }
