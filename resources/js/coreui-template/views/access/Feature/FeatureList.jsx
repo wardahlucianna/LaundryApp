@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
-  CAlert,
   CBadge,
   CButton,
   CCard,
@@ -178,10 +177,7 @@ const FeatureListPage = () => {
   ]
 
   return (
-    <MasterPageLayout title="Management Fitur" className="role-list-page">
-      {notice && <CAlert color="success" dismissible onClose={() => setNotice('')}>{notice}</CAlert>}
-      {error && <CAlert color="danger" dismissible onClose={() => setError('')}>{error}</CAlert>}
-
+    <MasterPageLayout title="Management Fitur" className="role-list-page" notice={notice} error={error} onClearNotice={() => setNotice('')} onClearError={() => setError('')}>
       <CCard className="role-panel role-list-panel mb-4">
         <CCardHeader className="d-flex flex-wrap justify-content-between align-items-center gap-2">
           <strong className="fs-5">Daftar Fitur</strong>
