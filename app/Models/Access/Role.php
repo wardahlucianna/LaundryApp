@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 class Role extends Model
 {
     protected $table = 'roles';
-    protected $primaryKey = 'rolesId';
+    protected $primaryKey = 'roleId';
     public $incrementing = false;
     protected $keyType = 'string';
     const CREATED_AT = 'createdAt';
@@ -19,17 +19,17 @@ class Role extends Model
 
     protected static function booted(): void
     {
-        static::creating(fn (Role $role) => $role->rolesId ??= (string) Str::uuid());
+        static::creating(fn (Role $role) => $role->roleId ??= (string) Str::uuid());
     }
 
     public function features()
     {
-        return $this->belongsToMany(PermissionFeature::class, 'roleFeatures', 'roleId', 'featureId', 'rolesId', 'featureId')
+        return $this->belongsToMany(PermissionFeature::class, 'roleFeatures', 'roleId', 'featureId', 'roleId', 'featureId')
             ->withPivot('roleFeaturesId');
     }
 
     public function users()
     {
-        return $this->hasMany(User::class, 'roleId', 'rolesId');
+        return $this->hasMany(User::class, 'roleId', 'roleId');
     }
 }
