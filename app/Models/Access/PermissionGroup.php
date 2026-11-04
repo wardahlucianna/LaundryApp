@@ -11,8 +11,11 @@ class PermissionGroup extends Model
     protected $primaryKey = 'groupFeatureId';
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $fillable = ['name', 'icon', 'ordering', 'is_active'];
-    protected $casts = ['is_active' => 'boolean'];
+    const CREATED_AT = 'createdAt';
+    const UPDATED_AT = 'updatedAt';
+
+    protected $fillable = ['name', 'icon', 'ordering', 'isActive'];
+    protected $casts = ['isActive' => 'boolean'];
 
     protected static function booted(): void
     {
@@ -21,6 +24,6 @@ class PermissionGroup extends Model
 
     public function features()
     {
-        return $this->hasMany(PermissionFeature::class, 'featureId', 'groupFeatureId');
+        return $this->hasMany(PermissionFeature::class, 'groupFeatureId', 'groupFeatureId');
     }
 }
