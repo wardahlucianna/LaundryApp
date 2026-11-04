@@ -27,6 +27,7 @@ import GlobalPagination from '../../../components/data/GlobalPagination'
 
 import MasterPageLayout from '../../../components/layout/MasterPageLayout'
 import { apiBase } from '../../../../services/api'
+import { getAccessFeaturePath } from '../../../utils/accessNavigation'
 
 const RoleListPage = () => {
   const [roles, setRoles] = useState([])
@@ -134,16 +135,22 @@ const RoleListPage = () => {
     loadRoles()
   }, [loadRoles])
 
-  const openCreate = () => {
-    navigate('/roles/form')
+  const openCreate = async () => {
+    const listPath = await getAccessFeaturePath(['Manajemen Role', 'Management Role'])
+    if (listPath) navigate(`${listPath}/form`)
+    else setError('Path Management Role belum terdaftar di database.')
   }
 
-  const openEdit = (role) => {
-    navigate(`/roles/form/${role.id}`)
+  const openEdit = async (role) => {
+    const listPath = await getAccessFeaturePath(['Manajemen Role', 'Management Role'])
+    if (listPath) navigate(`${listPath}/form/${role.id}`)
+    else setError('Path Management Role belum terdaftar di database.')
   }
 
-  const openDetail = (role) => {
-    navigate(`/roles/detail/${role.id}`)
+  const openDetail = async (role) => {
+    const listPath = await getAccessFeaturePath(['Manajemen Role', 'Management Role'])
+    if (listPath) navigate(`${listPath}/detail/${role.id}`)
+    else setError('Path Management Role belum terdaftar di database.')
   }
 
   const handleDelete = (role) => {
