@@ -8,23 +8,28 @@ use Illuminate\Support\Str;
 class PermissionFeature extends Model
 {
     protected $table = 'features';
+    protected $primaryKey = 'featureId';
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $fillable = ['featureId', 'name', 'path', 'ordering', 'menu_type', 'is_active'];
-    protected $casts = ['is_active' => 'boolean'];
+    const CREATED_AT = 'createdAt';
+    const UPDATED_AT = 'updatedAt';
+
+    protected $fillable = ['groupFeatureId', 'name', 'path', 'menuType', 'ordering', 'isActive'];
+    protected $casts = ['isActive' => 'boolean'];
 
     protected static function booted(): void
     {
-        static::creating(fn (PermissionFeature $feature) => $feature->id ??= (string) Str::uuid());
+        static::creating(fn (PermissionFeature $feature) => $feature->featureId ??= (string) Str::uuid());
     }
 
     public function group()
     {
-        return $this->belongsTo(PermissionGroup::class, 'featureId', 'groupFeatureId');
+        return $this->belongsTo(PermissionGroup::class, 'groupFeatureId', 'groupFeatureId');
     }
 
     public function roles()
     {
-        return $this->belongsToMany(Role::class, 'roleFeatures', 'featureId', 'roleId');
+        return $this->belongsToMany(Role::class, 'roleFeatures', 'featureId', 'roleId', 'featureId', 'rolesId')
+            ->withPivot('roleFeaturesId', 'createdAt', 'updatedAt');
     }
 }
