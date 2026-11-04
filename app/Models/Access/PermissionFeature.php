@@ -20,7 +20,7 @@ class PermissionFeature extends Model
 
     public function group()
     {
-        return $this->belongsTo(PermissionGroup::class, 'featureId');
+        return $this->belongsTo(PermissionGroup::class, 'featureId', 'groupFeatureId');
     }
 
     public function roles()
