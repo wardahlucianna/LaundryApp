@@ -118,6 +118,7 @@ const FeatureListPage = () => {
     setNotice('')
     try {
       await request(`/permission-features/${feature.id}`, { method: 'DELETE' })
+      window.dispatchEvent(new Event('sunrise:permissions-updated'))
       setNotice('Fitur berhasil dihapus.')
       await loadFeatures()
     } catch (deleteError) {
