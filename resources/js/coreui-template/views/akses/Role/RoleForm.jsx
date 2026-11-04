@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { CAlert, CButton, CCard, CCardBody, CCardHeader, CCol, CForm, CFormCheck, CFormInput, CFormSwitch, CRow, CSpinner } from '@coreui/react'
+import MasterPageLayout from '../../../components/MasterPageLayout'
 
 const apiBase = (() => { const base = (import.meta.env.VITE_API_URL || '').replace(/\/$/, ''); return base ? (base.endsWith('/api') ? base : `${base}/api`) : '/api' })()
 
@@ -81,8 +82,7 @@ const RoleFormPage = () => {
     finally { setSaving(false) }
   }
 
-  return <div className="role-page-layout mb-4">
-    <div className="mb-3"><h2 className="fs-4 mb-1">Management Role</h2></div>
+  return <MasterPageLayout title="Management Role" className="role-form-page">
     {error && <CAlert color="danger" dismissible onClose={() => setError('')}>{error}</CAlert>}
       <CCard className="role-panel role-form-card mb-4">
         <CCardHeader className="d-flex align-items-center py-3" style={{ backgroundColor: 'var(--cui-tertiary-bg)', borderBottom: '1px solid var(--cui-border-color)' }}><strong className="fs-5">{role ? 'Edit Role' : 'Tambah Role'}</strong></CCardHeader>
@@ -123,7 +123,7 @@ const RoleFormPage = () => {
           </CForm>
         </CCardBody>
       </CCard>
-  </div>
+  </MasterPageLayout>
 }
 
 export default RoleFormPage
