@@ -25,8 +25,6 @@ const FeatureFormPage = () => {
 
   const [feature, setFeature] = useState(null)
   const [groups, setGroups] = useState([])
-  const [groupSearch, setGroupSearch] = useState('')
-  const [groupDropdownOpen, setGroupDropdownOpen] = useState(false)
   const [values, setValues] = useState({
     permission_group_id: '',
     name: '',
@@ -108,14 +106,6 @@ const FeatureFormPage = () => {
             '',
         )
 
-        const selectedGroup = availableGroups.find(
-          (group) => String(group.id) === selectedGroupId,
-        )
-
-        setGroupSearch(
-          selectedGroup?.name || loadedFeature?.group?.name || '',
-        )
-
         setValues({
           permission_group_id: selectedGroupId,
           name: loadedFeature?.name || '',
@@ -144,42 +134,16 @@ const FeatureFormPage = () => {
     }
   }, [id, request])
 
-  const filteredGroups = groups.filter((group) => {
-    const isActiveGroup =
-      Boolean(group.is_active) ||
-      String(group.id) === String(values.permission_group_id)
+  const availableGroups = groups.filter((group) =>
+    Boolean(group.is_active) ||
+    String(group.id) === String(values.permission_group_id),
+  )
 
-    const matchesSearch = group.name
-      .toLowerCase()
-      .includes(groupSearch.trim().toLowerCase())
-
-    return isActiveGroup && matchesSearch
-  })
-
-  const handleGroupSearchChange = (event) => {
-    setGroupSearch(event.target.value)
-    setGroupDropdownOpen(true)
-
+  const handleGroupChange = (event) => {
     setValues((current) => ({
       ...current,
-      permission_group_id: '',
+      permission_group_id: event.target.value,
     }))
-  }
-
-  const handleGroupSearchBlur = () => {
-    setTimeout(() => {
-      setGroupDropdownOpen(false)
-    }, 150)
-  }
-
-  const selectGroup = (group) => {
-    setValues((current) => ({
-      ...current,
-      permission_group_id: String(group.id),
-    }))
-
-    setGroupSearch(group.name)
-    setGroupDropdownOpen(false)
   }
 
   const handleNameChange = (event) => {
@@ -294,47 +258,19 @@ const FeatureFormPage = () => {
                       Kelompok Fitur <span className="text-danger">*</span>
                     </label>
 
-                    <div className="position-relative">
-                      <CFormInput
-                        value={groupSearch}
-                        placeholder="Ketik untuk mencari kelompok fitur..."
-                        autoComplete="off"
-                        required={!values.permission_group_id}
-                        onFocus={() => setGroupDropdownOpen(true)}
-                        onChange={handleGroupSearchChange}
-                        onBlur={handleGroupSearchBlur}
-                      />
-
-                      {groupDropdownOpen && (
-                        <div
-                          className="position-absolute top-100 start-0 w-100 bg-white border rounded shadow-sm mt-1"
-                          style={{
-                            zIndex: 1050,
-                            maxHeight: 220,
-                            overflowY: 'auto',
-                          }}
-                        >
-                          {filteredGroups.map((group) => (
-                            <button
-                              key={group.id}
-                              type="button"
-                              className="dropdown-item text-start px-3 py-2"
-                              onMouseDown={(event) => event.preventDefault()}
-                              onClick={() => selectGroup(group)}
-                            >
-                              {group.name}
-                              {!group.is_active ? ' (Nonaktif)' : ''}
-                            </button>
-                          ))}
-
-                          {filteredGroups.length === 0 && (
-                            <div className="px-3 py-2 text-body-secondary small">
-                              Kelompok fitur tidak ditemukan.
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
+                    <CFormSelect
+                      value={values.permission_group_id}
+                      onChange={handleGroupChange}
+                      required
+                    >
+                      <option value="">Pilih Kelompok Fitur</option>
+                      {availableGroups.map((group) => (
+                        <option key={group.id} value={String(group.id)}>
+                          {group.name}
+                          {!group.is_active ? ' (Nonaktif)' : ''}
+                        </option>
+                      ))}
+                    </CFormSelect>
                   </CCol>
 
                   <CCol xs={12} md={6}>
