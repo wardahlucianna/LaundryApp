@@ -1,11 +1,12 @@
 import React from 'react'
 import { CBadge, CButton, CCard, CCardBody, CCardHeader, CCol, CFormInput, CFormSelect, CRow, CSpinner, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
+import GlobalPagination from '../../../components/GlobalPagination'
 import { cilPencil, cilPlus, cilSearch, cilTrash, cilReload, cilFolderOpen, cilPeople, cilBasket, cilCash, cilSettings, cilChartLine, cilSpeedometer, cilBuilding, cilTags } from '@coreui/icons'
 
 const groupIcons = { cilFolderOpen, cilPeople, cilBasket, cilCash, cilSettings, cilChartLine, cilSpeedometer, cilBuilding, cilTags }
 
-const GroupFeatureList = ({ groups, searchInput, setSearchInput, statusFilter, setStatusFilter, applySearch, resetSearch, loading, onCreate, onDetail, onEdit, onDelete }) => (
+const GroupFeatureList = ({ groups, pagination, perPage, page, setPage, searchInput, setSearchInput, statusFilter, setStatusFilter, applySearch, resetSearch, loading, onCreate, onDetail, onEdit, onDelete }) => (
   <CCard className="role-panel role-list-panel mb-4">
     <CCardHeader className="d-flex flex-wrap justify-content-between align-items-center gap-2">
       <strong className="fs-5">Daftar Group Feature</strong>
@@ -23,9 +24,10 @@ const GroupFeatureList = ({ groups, searchInput, setSearchInput, statusFilter, s
         <CTableBody>
           {loading ? <CTableRow><CTableDataCell colSpan={5} className="text-center py-4"><CSpinner size="sm" className="me-2" />Memuat data...</CTableDataCell></CTableRow>
             : groups.length === 0 ? <CTableRow><CTableDataCell colSpan={5} className="text-center text-body-secondary py-4">Data group feature tidak ditemukan.</CTableDataCell></CTableRow>
-              : groups.map((group, index) => <CTableRow key={group.id}><CTableDataCell>{index + 1}</CTableDataCell><CTableDataCell><CIcon icon={groupIcons[group.icon] || cilFolderOpen} size="xl" /></CTableDataCell><CTableDataCell><div className="fw-semibold">{group.name}</div><div className="small text-body-secondary d-flex align-items-center gap-2">Ordering: {group.ordering ?? 0}<CBadge color={group.is_active ? 'success' : 'secondary'}>{group.is_active ? 'Aktif' : 'Nonaktif'}</CBadge></div></CTableDataCell><CTableDataCell className="text-center">{group.features_count ?? 0}</CTableDataCell><CTableDataCell className="text-center"><div className="table-actions d-inline-flex gap-2"><CButton color="info" variant="outline" size="sm" onClick={() => onDetail(group)} title="Detail"><CIcon icon={cilFolderOpen} size="sm" /></CButton><CButton color="primary" variant="outline" size="sm" onClick={() => onEdit(group)} title="Edit"><CIcon icon={cilPencil} size="sm" /></CButton><CButton color="danger" variant="outline" size="sm" onClick={() => onDelete(group)} title="Hapus"><CIcon icon={cilTrash} size="sm" /></CButton></div></CTableDataCell></CTableRow>)}
+              : groups.map((group, index) => <CTableRow key={group.id}><CTableDataCell>{(page - 1) * perPage + index + 1}</CTableDataCell><CTableDataCell><CIcon icon={groupIcons[group.icon] || cilFolderOpen} size="xl" /></CTableDataCell><CTableDataCell><div className="fw-semibold">{group.name}</div><div className="small text-body-secondary d-flex align-items-center gap-2">Ordering: {group.ordering ?? 0}<CBadge color={group.is_active ? 'success' : 'secondary'}>{group.is_active ? 'Aktif' : 'Nonaktif'}</CBadge></div></CTableDataCell><CTableDataCell className="text-center">{group.features_count ?? 0}</CTableDataCell><CTableDataCell className="text-center"><div className="table-actions d-inline-flex gap-2"><CButton color="info" variant="outline" size="sm" onClick={() => onDetail(group)} title="Detail"><CIcon icon={cilFolderOpen} size="sm" /></CButton><CButton color="primary" variant="outline" size="sm" onClick={() => onEdit(group)} title="Edit"><CIcon icon={cilPencil} size="sm" /></CButton><CButton color="danger" variant="outline" size="sm" onClick={() => onDelete(group)} title="Hapus"><CIcon icon={cilTrash} size="sm" /></CButton></div></CTableDataCell></CTableRow>)}
         </CTableBody>
       </CTable>
+      <GlobalPagination currentPage={pagination.current_page} lastPage={pagination.last_page} total={pagination.total} perPage={perPage} onPageChange={setPage} loading={loading} />
     </CCardBody>
   </CCard>
 )
