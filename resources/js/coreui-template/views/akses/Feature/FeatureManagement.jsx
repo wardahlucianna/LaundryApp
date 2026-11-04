@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { CAlert } from '@coreui/react'
 import FeatureList from './FeatureList'
+import MasterPageLayout from '../../../components/MasterPageLayout'
 
 const apiBase = (() => {
   const base = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
@@ -94,12 +95,11 @@ const FeatureManagement = () => {
   const resetSearch = () => { setSearchInput(''); setStatusFilter(''); setPage(1); setSearch('') }
 
   return (
-    <div className="role-list-page role-page-layout mb-4">
-      <div className="mb-3"><h2 className="fs-4 mb-1">Management Fitur</h2></div>
+    <MasterPageLayout title="Management Fitur" className="role-list-page">
       {notice && <CAlert color="success" dismissible onClose={() => setNotice('')}>{notice}</CAlert>}
       {error && <CAlert color="danger" dismissible onClose={() => setError('')}>{error}</CAlert>}
       <FeatureList features={features} groups={groups} searchInput={searchInput} setSearchInput={setSearchInput} statusFilter={statusFilter} setStatusFilter={changeStatusFilter} applySearch={applySearch} resetSearch={resetSearch} pagination={pagination} loading={loading} page={page} setPage={setPage} onCreate={openCreate} onEdit={openEdit} onDelete={deleteFeature} />
-    </div>
+    </MasterPageLayout>
   )
 }
 
