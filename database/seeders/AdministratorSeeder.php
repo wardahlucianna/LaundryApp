@@ -10,10 +10,11 @@ class AdministratorSeeder extends Seeder
 {
     public function run(): void
     {
-        $role = Role::where('code', 'ADMIN')->first();
+        // Roles table uses roleId/name; no legacy code column.
+        $role = Role::where('name', 'Administrator')->first();
 
         if (!$role) {
-            $this->command?->error('Role ADMIN tidak ditemukan. Jalankan FeatureSeeder terlebih dahulu.');
+            $this->command?->error('Role Administrator tidak ditemukan. Jalankan RoleSeeder terlebih dahulu.');
             return;
         }
 
@@ -32,11 +33,11 @@ class AdministratorSeeder extends Seeder
         User::updateOrCreate(
             ['username' => 'administrator'],
             [
-                'role_id' => $role->id,
-                'full_name' => 'Administrator',
+                'roleId' => $role->roleId,
+                'fullName' => 'Administrator',
                 'email' => 'administrator@sunrise.local',
                 'password' => $password,
-                'is_active' => true,
+                'isActive' => true,
             ],
         );
 
