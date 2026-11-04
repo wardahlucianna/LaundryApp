@@ -25,7 +25,7 @@ class Role extends Model
     public function features()
     {
         return $this->belongsToMany(PermissionFeature::class, 'roleFeatures', 'roleId', 'featureId', 'roleId', 'featureId')
-            ->withPivot('roleFeaturesId');
+            ->withPivot('roleFeatureId');
     }
 
     public function users()
