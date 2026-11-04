@@ -19,7 +19,7 @@ class PermissionGroupController extends Controller
             'name' => ['required', 'string', 'max:120'],
             'icon' => ['required', 'string', 'max:80'],
             'ordering' => ['required', 'integer', 'min:1'],
-            'is_active' => ['sometimes', 'boolean'],
+            'isActive' => ['sometimes', 'boolean'],
         ]);
         return response()->json(['data' => PermissionGroup::create($data)], 201);
     }
@@ -30,7 +30,7 @@ class PermissionGroupController extends Controller
             'name' => ['sometimes', 'required', 'string', 'max:120'],
             'icon' => ['sometimes', 'required', 'string', 'max:80'],
             'ordering' => ['sometimes', 'required', 'integer', 'min:1'],
-            'is_active' => ['sometimes', 'boolean'],
+            'isActive' => ['sometimes', 'boolean'],
         ]);
         $permissionGroup->update($data);
         return response()->json(['data' => $permissionGroup->fresh()]);
