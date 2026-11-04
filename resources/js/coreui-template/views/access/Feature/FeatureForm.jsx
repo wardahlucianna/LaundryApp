@@ -265,7 +265,7 @@ const getGroupId = (group) =>
                 <CRow className="g-3">
                   <CCol xs={12} md={6}>
                     <label className="form-label">
-                      Kelompok Fitur <span className="text-danger">*</span>
+                      Kelompok <span className="text-danger">*</span>
                     </label>
 
                     <CFormSelect
@@ -273,7 +273,7 @@ const getGroupId = (group) =>
                       onChange={handleGroupChange}
                       required
                     >
-                      <option value="">Pilih Kelompok Fitur</option>
+                      <option value="">Pilih Kelompok</option>
                       {availableGroups.map((group) => (
                         <option key={String(getGroupId(group))} value={String(getGroupId(group))}>
                           {group.name}
