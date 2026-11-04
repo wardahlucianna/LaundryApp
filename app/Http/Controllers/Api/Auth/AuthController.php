@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Access\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -40,28 +41,47 @@ class AuthController extends Controller
 
     public function menus(Request $request)
     {
-        $user = $request->user()->load('role.features');
-        $allowedFeatureIds = $this->featureIds($user);
-        $groups = \App\Models\Access\PermissionGroup::query()
-            ->where('isActive', true)
-            ->with(['features' => fn ($query) => $query
-                ->where('isActive', true)
-                ->where('menuType', 'sidebar')
-                ->whereNotNull('path')
-                ->where('path', '<>', '')
-                ->orderBy('ordering')])
-            ->orderBy('ordering')
-            ->orderBy('name')
-            ->get()
-            ->map(function ($group) use ($allowedFeatureIds) {
-                $items = $group->features
-                    ->filter(fn ($feature) => in_array($feature->featureId, $allowedFeatureIds, true))
-                    ->map(fn ($feature) => ['id' => $feature->featureId, 'name' => $feature->name, 'path' => $feature->path])
-                    ->values();
-                return ['id' => $group->groupFeatureId, 'name' => $group->name, 'icon' => $group->icon, 'items' => $items];
-            })
-            ->filter(fn ($group) => $group['items']->isNotEmpty())
+        $user = $request->user();
+
+        // Read the access pivot explicitly to avoid Eloquent relation/key mismatch
+        // after the camelCase primary/foreign-key migrations.
+        $menuRows = DB::table('roleFeatures')
+            ->join('features', 'features.featureId', '=', 'roleFeatures.featureId')
+            ->join('groupFeature', 'groupFeature.groupFeatureId', '=', 'features.groupFeatureId')
+            ->where('roleFeatures.roleId', $user->roleId)
+            ->where('features.isActive', true)
+            ->where('groupFeature.isActive', true)
+            ->where('features.menuType', 'sidebar')
+            ->whereNotNull('features.path')
+            ->where('features.path', '<>', '')
+            ->orderBy('groupFeature.ordering')
+            ->orderBy('groupFeature.name')
+            ->orderBy('features.ordering')
+            ->orderBy('features.name')
+            ->select([
+                'groupFeature.groupFeatureId as groupId',
+                'groupFeature.name as groupName',
+                'groupFeature.icon as groupIcon',
+                'features.featureId as featureId',
+                'features.name as featureName',
+                'features.path as featurePath',
+            ])
+            ->get();
+
+        $groups = $menuRows
+            ->groupBy('groupId')
+            ->map(fn ($items) => [
+                'id' => $items->first()->groupId,
+                'name' => $items->first()->groupName,
+                'icon' => $items->first()->groupIcon,
+                'items' => $items->map(fn ($item) => [
+                    'id' => $item->featureId,
+                    'name' => $item->featureName,
+                    'path' => $item->featurePath,
+                ])->values(),
+            ])
             ->values();
+
         return response()->json(['data' => $groups]);
     }
 
