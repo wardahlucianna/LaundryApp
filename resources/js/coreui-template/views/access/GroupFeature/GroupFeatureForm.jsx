@@ -28,6 +28,7 @@ import {
 import MasterPageLayout from '../../../components/layout/MasterPageLayout'
 
 import { apiBase } from '../../../../services/api'
+import { getAccessFeaturePath } from '../../../utils/accessNavigation'
 
 
 const iconOptions = [
@@ -206,7 +207,9 @@ const GroupFeatureForm = () => {
       // Refresh the sidebar menu so the selected group icon is reflected.
       window.dispatchEvent(new Event('sunrise:permissions-updated'))
 
-      navigate('/permission-groups', {
+      const listPath = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
+      if (!listPath) throw new Error('Path Management Fitur belum terdaftar di database.')
+      navigate(`${listPath}?view=groups`, {
         state: {
           notice: id
             ? 'Group feature berhasil diperbarui.'
@@ -353,7 +356,15 @@ const GroupFeatureForm = () => {
                   variant="outline"
                   type="button"
                   disabled={saving}
-                  onClick={() => navigate(-1)}
+                  onClick={async () => {
+                    try {
+                      const listPath = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
+                      if (listPath) navigate(`${listPath}?view=groups`)
+                      else navigate(-1)
+                    } catch {
+                      navigate(-1)
+                    }
+                  }}
                 >
                   Batal
                 </CButton>
