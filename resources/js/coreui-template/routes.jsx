@@ -19,7 +19,7 @@ export const routes = [
 ]
 
 const normalizePath = (value) => {
-  const path = String(value || '').trim()
+  const path = String(value || '').trim().split(/[?#]/, 1)[0]
   if (!path) return null
   const leadingSlash = path.startsWith('/') ? path : `/${path}`
   const trimmed = leadingSlash.endsWith('/') ? leadingSlash.slice(0, -1) : leadingSlash
