@@ -82,7 +82,7 @@ const GroupFeatureList = () => {
     setDeleting(true)
     setError(''); setNotice(''); setDeleteError('')
     try {
-      await request(`/permission-groups/${deleteTarget.id}`, { method: 'DELETE' })
+      await request(`/permission-groups/${deleteTarget.groupFeatureId}`, { method: 'DELETE' })
       window.dispatchEvent(new Event('sunrise:permissions-updated'))
       setNotice('Kelompok fitur berhasil dihapus.')
       await loadGroups()
@@ -118,7 +118,7 @@ const GroupFeatureList = () => {
               </div>
             </div>
           </CCol></CRow>
-          <GlobalTable columns={columns} rows={rows} rowKey="id" loading={loading} emptyMessage="Data kelompok fitur tidak ditemukan." hover responsive className="role-table" />
+          <GlobalTable columns={columns} rows={rows} rowKey="groupFeatureId" loading={loading} emptyMessage="Data kelompok fitur tidak ditemukan." hover responsive className="role-table" />
           <GlobalPagination currentPage={pagination.current_page} lastPage={pagination.last_page} total={pagination.total} perPage={perPage} onPageChange={setPage} loading={loading} />
         </CCardBody>
       </CCard>
