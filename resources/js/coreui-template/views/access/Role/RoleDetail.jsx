@@ -174,7 +174,7 @@ const RoleDetailPage = () => {
   }
 
   const goBack = () => {
-    navigate('/roles/list')
+    navigate(-1)
   }
 
   const openEdit = () => {
