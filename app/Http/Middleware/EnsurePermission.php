@@ -13,12 +13,11 @@ class EnsurePermission
      * Route permission labels are legacy action codes. Access is now granted
      * through role_permission_features, so map those labels to their feature.
      */
-    private function featureNameFor(string $permissionCode): ?string
+    private function featureNamesFor(string $permissionCode): ?array
     {
         return match (strtoupper($permissionCode)) {
             'FEATURE_VIEW', 'FEATURE_CREATE', 'FEATURE_UPDATE', 'FEATURE_DELETE' => 'Manajemen Fitur',
-            'ROLE_VIEW', 'ROLE_MANAGE' => 'Manajemen Role',
-            'ACCESS_MANAGE' => 'Manajemen Role',
+            'ROLE_VIEW', 'ROLE_MANAGE', 'ACCESS_MANAGE' => ['Management Role', 'Manajemen Role', 'Manajemen Peran'],
             default => null,
         };
     }
@@ -36,10 +35,10 @@ class EnsurePermission
             return $next($request);
         }
 
-        $featureName = $this->featureNameFor($permissionCode);
-        $feature = $featureName
+        $featureNames = $this->featureNamesFor($permissionCode);
+        $feature = $featureNames
             ? PermissionFeature::query()
-                ->where('name', $featureName)
+                ->whereIn('name', $featureNames)
                 ->where('is_active', true)
                 ->first()
             : null;
