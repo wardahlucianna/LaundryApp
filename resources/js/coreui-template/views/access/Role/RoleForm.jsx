@@ -110,7 +110,7 @@ const RoleFormPage = () => {
         })
 
         setSelectedFeatureIds(
-          (loadedRole?.features || []).map((feature) => feature.id),
+          (loadedRole?.features || []).map((feature) => feature.featureId),
         )
       } catch (loadError) {
         if (active) {
@@ -223,7 +223,7 @@ const RoleFormPage = () => {
         values.name.trim().toUpperCase() === 'SUPER ADMIN'
 
       if (!isSuperAdmin) {
-        await request(`/roles/${savedRole.id || id}/features`, {
+        await request(`/roles/${savedRole.roleId || id}/features`, {
           method: 'PUT',
           body: JSON.stringify({
             featureIds: selectedFeatureIds,
