@@ -274,7 +274,7 @@ const RoleFormPage = () => {
           }}
         >
           <strong className="fs-5">
-            {role ? 'Ubah Peran' : 'Tambah Peran'}
+            {id ? 'Ubah Peran' : 'Tambah Peran'}
           </strong>
         </CCardHeader>
 
