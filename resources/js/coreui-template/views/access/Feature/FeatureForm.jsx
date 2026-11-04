@@ -275,22 +275,22 @@ const FeatureFormPage = () => {
 
 
       <div className="role-form-page">
-        {loading ? (
-          <div className="d-flex align-items-center gap-2 py-4 text-body-secondary">
-            <CSpinner color="primary" size="sm" />
-            <span>Memuat data fitur...</span>
-          </div>
-        ) : (
-          <CCard className="role-panel role-form-card mb-4">
+        <CCard className="role-panel role-form-card mb-4">
             <CCardHeader>
               <div>
                 <strong className="fs-5">
-                  {feature ? 'Edit Fitur' : 'Tambah Fitur'}
+                  {id ? 'Ubah Fitur' : 'Tambah Fitur'}
                 </strong>
               </div>
             </CCardHeader>
 
             <CCardBody>
+              {loading && (
+                <div className="d-flex align-items-center gap-2 mb-3 text-body-secondary small" role="status">
+                  <CSpinner color="primary" size="sm" />
+                  <span>Memuat data fitur, input sementara dinonaktifkan...</span>
+                </div>
+              )}
               <CForm onSubmit={save}>
                 <CRow className="g-3">
                   <CCol xs={12} md={6}>
@@ -475,7 +475,6 @@ const FeatureFormPage = () => {
               </CForm>
             </CCardBody>
           </CCard>
-        )}
       </div>
     </MasterPageLayout>
   )
