@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { CAlert } from '@coreui/react'
 
 import MasterPageLayout from '../../../components/MasterPageLayout'
 
 import { apiBase } from '../../../../services/api'
 
 import {
+  CAlert,
   CBadge,
   CButton,
   CCard,
@@ -26,20 +26,20 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import {
-  cilPencil,
-  cilPlus,
-  cilSearch,
-  cilTrash,
-  cilReload,
+  cilBasket,
+  cilBuilding,
+  cilCash,
+  cilChartLine,
   cilFolderOpen,
   cilPeople,
-  cilBasket,
-  cilCash,
+  cilPencil,
+  cilPlus,
+  cilReload,
+  cilSearch,
   cilSettings,
-  cilChartLine,
   cilSpeedometer,
-  cilBuilding,
   cilTags,
+  cilTrash,
 } from '@coreui/icons'
 
 import GlobalPagination from '../../../components/GlobalPagination'
