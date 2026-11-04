@@ -176,7 +176,7 @@ const RoleManagement = () => {
 
   return (
     <MasterPageLayout
-      title="Management Role"
+      title="Role List"
       className="role-list-page"
     >
       {notice && (
