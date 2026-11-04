@@ -2,6 +2,8 @@ import axios from 'axios'
 
 const configuredBase = (import.meta.env.VITE_API_URL || '').replace(/\\/$/, '')
 
+export const apiOrigin = configuredBase.endsWith('/api') ? configuredBase.slice(0, -4) : configuredBase
+
 export const apiBase = !configuredBase
   ? '/api'
   : configuredBase.endsWith('/api')
