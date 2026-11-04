@@ -207,7 +207,7 @@ const GroupFeatureForm = () => {
       // Refresh the sidebar menu so the selected group icon is reflected.
       window.dispatchEvent(new Event('sunrise:permissions-updated'))
 
-      const listPath = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
+      const listPath = await getAccessFeaturePath(['Manajemen Kelompok Fitur', 'Manajemen Group Fitur', 'Management Group Feature', 'Group Feature', 'Feature Group'])
       if (!listPath) throw new Error('Path Management Fitur belum terdaftar di database.')
       navigate(`${listPath}?view=groups`, {
         state: {
@@ -358,7 +358,7 @@ const GroupFeatureForm = () => {
                   disabled={saving}
                   onClick={async () => {
                     try {
-                      const listPath = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
+                      const listPath = await getAccessFeaturePath(['Manajemen Kelompok Fitur', 'Manajemen Group Fitur', 'Management Group Feature', 'Group Feature', 'Feature Group'])
                       if (listPath) navigate(`${listPath}?view=groups`)
                       else setError('Path Management Fitur belum terdaftar di database.')
                     } catch (navigationError) {
