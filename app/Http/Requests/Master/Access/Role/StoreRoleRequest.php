@@ -11,6 +11,14 @@ class StoreRoleRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        // The FE sends snake_case; the Role model/database use camelCase.
+        if ($this->has('is_active') && !$this->has('isActive')) {
+            $this->merge(['isActive' => $this->input('is_active')]);
+        }
+    }
+
     public function rules(): array
     {
         return [
