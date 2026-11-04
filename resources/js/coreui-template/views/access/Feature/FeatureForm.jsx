@@ -22,10 +22,22 @@ import { getAccessFeaturePath } from '../../../utils/accessNavigation'
 
 const getGroupId = (group) =>
   group?.groupFeatureId ??
-  group?.groupFeatureId ??
   group?.groupId ??
   ''
-  const FeatureFormPage = () => {
+
+const getFeatureActiveStatus = (feature) => {
+  const rawStatus = feature?.isActive ?? feature?.is_active ?? feature?.active ?? feature?.status
+  if (typeof rawStatus === 'boolean') return rawStatus
+  if (typeof rawStatus === 'number') return rawStatus === 1
+
+  const normalizedStatus = String(rawStatus ?? '').trim().toLowerCase()
+  if (['1', 'true', 'aktif', 'active'].includes(normalizedStatus)) return true
+  if (['0', 'false', 'nonaktif', 'inactive'].includes(normalizedStatus)) return false
+
+  return false
+}
+
+const FeatureFormPage = () => {
   const navigate = useNavigate()
   const { id } = useParams()
 
@@ -57,12 +69,13 @@ const getGroupId = (group) =>
 
     const response = await fetch(`${apiBase}${path}`, {
       ...options,
+      credentials: 'include',
       headers: {
         Accept: 'application/json',
         ...(options.body
           ? { 'Content-Type': 'application/json' }
           : {}),
-        Authorization: `Bearer ${token}`,
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...(options.headers || {}),
       },
     })
@@ -104,17 +117,20 @@ const getGroupId = (group) =>
           return
         }
 
-        const availableGroups = groupsPayload.data || []
-        const loadedFeature = featurePayload
-          ? featurePayload.data || featurePayload
-          : null
+        const availableGroups = Array.isArray(groupsPayload.data)
+          ? groupsPayload.data
+          : Array.isArray(groupsPayload)
+            ? groupsPayload
+            : []
+        const loadedFeature = featurePayload?.data?.data || featurePayload?.data || featurePayload || null
 
         setGroups(availableGroups)
         setFeature(loadedFeature)
 
         const selectedGroupId = String(
-          loadedFeature?.groupFeatureId ||
-            loadedFeature?.group?.groupFeatureId ||
+          loadedFeature?.groupFeatureId ??
+            loadedFeature?.group?.groupFeatureId ??
+            loadedFeature?.group?.groupId ??
             '',
         )
 
@@ -125,7 +141,7 @@ const getGroupId = (group) =>
           ordering: loadedFeature?.ordering ?? 0,
           menuType: loadedFeature?.menuType || 'sidebar',
           isActive: loadedFeature
-            ? Boolean(loadedFeature.isActive)
+            ? getFeatureActiveStatus(loadedFeature)
             : true,
         })
       } catch (loadError) {
