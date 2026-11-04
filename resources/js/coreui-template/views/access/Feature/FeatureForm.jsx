@@ -32,6 +32,7 @@ const getGroupId = (group) =>
   const [feature, setFeature] = useState(null)
   const [groups, setGroups] = useState([])
   const [groupSearch, setGroupSearch] = useState('')
+  const [groupDropdownOpen, setGroupDropdownOpen] = useState(false)
   const [values, setValues] = useState({
     groupFeatureId: '',
     name: '',
@@ -281,29 +282,71 @@ const getGroupId = (group) =>
                       Kelompok <span className="text-danger">*</span>
                     </label>
 
-                    <CFormInput
-                      type="search"
-                      placeholder="Cari kelompok fitur..."
-                      value={groupSearch}
-                      onChange={(event) => setGroupSearch(event.target.value)}
-                      className="mb-2"
-                      disabled={formDisabled}
-                      aria-label="Cari kelompok fitur"
-                    />
-                    <CFormSelect
-                      value={values.groupFeatureId}
-                      onChange={handleGroupChange}
-                      required
-                      disabled={formDisabled}
-                    >
-                      <option value="">Pilih Kelompok</option>
-                      {filteredGroups.map((group) => (
-                        <option key={String(getGroupId(group))} value={String(getGroupId(group))}>
-                          {group.name}
-                          {!group.isActive ? ' (Nonaktif)' : ''}
-                        </option>
-                      ))}
-                    </CFormSelect>
+                    <div className="position-relative">
+                      <CButton
+                        type="button"
+                        color="secondary"
+                        variant="outline"
+                        className="d-flex align-items-center justify-content-between w-100 text-start"
+                        aria-label="Pilih kelompok fitur"
+                        aria-expanded={groupDropdownOpen}
+                        disabled={formDisabled}
+                        onClick={() => {
+                          setGroupDropdownOpen((open) => !open)
+                          setGroupSearch('')
+                        }}
+                      >
+                        <span className={values.groupFeatureId ? '' : 'text-body-secondary'}>
+                          {availableGroups.find((group) => String(getGroupId(group)) === String(values.groupFeatureId))?.name || 'Pilih Kelompok'}
+                        </span>
+                        <span className="text-body-secondary">▾</span>
+                      </CButton>
+
+                      {groupDropdownOpen && (
+                        <div
+                          className="position-absolute start-0 end-0 mt-1 p-2 bg-body border rounded shadow"
+                          style={{ zIndex: 1050, maxHeight: '280px', overflowY: 'auto' }}
+                          role="listbox"
+                          aria-label="Pilihan kelompok fitur"
+                        >
+                          <CFormInput
+                            type="search"
+                            placeholder="Cari kelompok fitur..."
+                            value={groupSearch}
+                            onChange={(event) => setGroupSearch(event.target.value)}
+                            className="mb-2"
+                            autoFocus
+                            disabled={formDisabled}
+                            aria-label="Cari kelompok fitur"
+                          />
+                          {filteredGroups.length ? filteredGroups.map((group) => (
+                            <CButton
+                              key={String(getGroupId(group))}
+                              type="button"
+                              color={String(getGroupId(group)) === String(values.groupFeatureId) ? 'primary' : 'secondary'}
+                              variant={String(getGroupId(group)) === String(values.groupFeatureId) ? 'outline' : 'ghost'}
+                              className="d-block w-100 text-start mb-1"
+                              role="option"
+                              aria-selected={String(getGroupId(group)) === String(values.groupFeatureId)}
+                              disabled={formDisabled}
+                              onClick={() => {
+                                setValues((current) => ({
+                                  ...current,
+                                  groupFeatureId: String(getGroupId(group)),
+                                }))
+                                setGroupDropdownOpen(false)
+                                setGroupSearch('')
+                              }}
+                            >
+                              {group.name}{!group.isActive ? ' (Nonaktif)' : ''}
+                            </CButton>
+                          )) : (
+                            <div className="small text-body-secondary p-2">Kelompok fitur tidak ditemukan.</div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                    <input type="hidden" name="groupFeatureId" value={values.groupFeatureId} required />
                   </CCol>
 
                   <CCol xs={12} md={6}>
