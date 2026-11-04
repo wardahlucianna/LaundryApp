@@ -19,7 +19,7 @@ import MasterPageLayout from '../../../components/layout/MasterPageLayout'
 import { apiBase } from '../../../../services/api'
 
 
-const FeatureFormPage = () => {
+const getGroupId = (group) =>\n  group?.id ?? group?.permission_group_id ?? group?.permissionGroupId ?? group?.groupId ?? ''\n\nconst FeatureFormPage = () => {
   const navigate = useNavigate()
   const { id } = useParams()
 
@@ -194,7 +194,7 @@ const FeatureFormPage = () => {
 
     try {
       const body = {
-        permission_group_id: Number(values.permission_group_id),
+        permission_group_id: groupId,
         name: values.name.trim(),
         path: values.path.trim() || null,
         ordering: Number(values.ordering),
@@ -265,7 +265,7 @@ const FeatureFormPage = () => {
                     >
                       <option value="">Pilih Kelompok Fitur</option>
                       {availableGroups.map((group) => (
-                        <option key={group.id} value={String(group.id)}>
+                        <option key={String(getGroupId(group))} value={String(getGroupId(group))}>
                           {group.name}
                           {!group.is_active ? ' (Nonaktif)' : ''}
                         </option>
