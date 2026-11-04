@@ -352,7 +352,7 @@ const RoleFormPage = () => {
 
             {loading ? (
               <div className="d-flex align-items-center gap-2 py-3 text-body-secondary">
-                <CSpinner size="sm" />
+                <CSpinner size="sm" color="warning" />
                 <span>Memuat checklist hak akses fitur...</span>
               </div>
             ) : features.length === 0 ? (
