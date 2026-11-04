@@ -12,7 +12,7 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $table = 'users';
-    protected $primaryKey = 'usersId';
+    protected $primaryKey = 'userId';
     public $incrementing = false;
     protected $keyType = 'string';
     const CREATED_AT = 'createdAt';
@@ -32,7 +32,7 @@ class User extends Authenticatable
 
     protected static function booted(): void
     {
-        static::creating(fn (User $user) => $user->usersId ??= (string) Str::uuid());
+        static::creating(fn (User $user) => $user->userId ??= (string) Str::uuid());
     }
 
     public function role()
