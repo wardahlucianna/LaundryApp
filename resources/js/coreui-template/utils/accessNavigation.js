@@ -1,4 +1,4 @@
-import { apiBase } from '../../../services/api'
+import { apiBase } from '../../services/api'
 
 const normalize = (value) => String(value || '').trim().toLowerCase()
 
