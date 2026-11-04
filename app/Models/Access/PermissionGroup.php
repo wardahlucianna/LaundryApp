@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 
 class PermissionGroup extends Model
 {
+    protected $table = 'groupFeature';
     public $incrementing = false;
     protected $keyType = 'string';
     protected $fillable = ['name', 'icon', 'ordering', 'is_active'];
@@ -19,6 +20,6 @@ class PermissionGroup extends Model
 
     public function features()
     {
-        return $this->hasMany(PermissionFeature::class);
+        return $this->hasMany(PermissionFeature::class, 'permission_group_id');
     }
 }
