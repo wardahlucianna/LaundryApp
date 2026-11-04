@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import {
-  CAlert,
   CBadge,
   CButton,
   CCard,
@@ -97,17 +96,9 @@ const GroupFeatureDetail = () => {
     <MasterPageLayout
       title="Management Group Feature"
       className="role-detail-page"
+      error={error}
+      onClearError={() => setError('')}
     >
-      {error && (
-        <CAlert
-          color="danger"
-          dismissible
-          onClose={() => setError('')}
-        >
-          {error}
-        </CAlert>
-      )}
-
       {loading ? (
         <div className="d-flex align-items-center gap-2 py-4 text-body-secondary">
           <CSpinner size="sm" color="primary" />
