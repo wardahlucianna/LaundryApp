@@ -116,7 +116,7 @@ const RoleFormPage = () => {
         if (active) {
           setError(
             loadError.message ||
-              'Gagal memuat data role dan fitur.',
+              'Gagal memuat data peran dan fitur.',
           )
         }
       } finally {
@@ -200,7 +200,7 @@ const RoleFormPage = () => {
     setError('')
 
     if (!values.name.trim()) {
-      setError('Nama role wajib diisi.')
+      setError('Nama peran wajib diisi.')
       return
     }
 
@@ -237,8 +237,8 @@ const RoleFormPage = () => {
         new Event('sunrise:permissions-updated'),
       )
 
-      const listPath = await getAccessFeaturePath(['Manajemen Role', 'Management Role'])
-      if (!listPath) throw new Error('Path list Management Role belum terdaftar di database.')
+      const listPath = await getAccessFeaturePath(['Manajemen Role', 'Manajemen Peran'])
+      if (!listPath) throw new Error('Path list Manajemen Peran belum terdaftar di database.')
       navigate(listPath, {
         state: {
           notice: id
@@ -258,7 +258,7 @@ const RoleFormPage = () => {
 
   return (
     <MasterPageLayout
-      title="Management Role"
+      title="Manajemen Peran"
       className="role-form-page"
       error={error}
       onClearError={() => setError('')}
@@ -274,7 +274,7 @@ const RoleFormPage = () => {
           }}
         >
           <strong className="fs-5">
-            {role ? 'Edit Role' : 'Tambah Role'}
+            {role ? 'Edit Peran' : 'Tambah Peran'}
           </strong>
         </CCardHeader>
 
@@ -283,7 +283,7 @@ const RoleFormPage = () => {
             <CRow className="g-3">
               <CCol xs={12} md={6}>
                 <CFormInput
-                  label="Nama Role"
+                  label="Nama Peran"
                   value={values.name}
                   onChange={handleNameChange}
                   required
@@ -423,7 +423,7 @@ const RoleFormPage = () => {
                 disabled={saving}
                 onClick={async () => {
                   try {
-                    const listPath = await getAccessFeaturePath(['Manajemen Role', 'Management Role'])
+                    const listPath = await getAccessFeaturePath(['Manajemen Role', 'Manajemen Peran'])
                     if (listPath) navigate(listPath)
                     else navigate(-1)
                   } catch {
