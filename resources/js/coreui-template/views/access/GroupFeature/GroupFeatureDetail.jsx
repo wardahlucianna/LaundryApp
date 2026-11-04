@@ -14,6 +14,7 @@ import {
 import MasterPageLayout from '../../../components/layout/MasterPageLayout'
 
 import { apiBase } from '../../../../services/api'
+import { getAccessFeaturePath } from '../../../utils/accessNavigation'
 
 
 const GroupFeatureDetail = () => {
@@ -88,8 +89,14 @@ const GroupFeatureDetail = () => {
     }
   }, [id, request])
 
-  const openEdit = () => {
-    navigate(`/permission-groups/form/${group.id}`)
+  const openEdit = async () => {
+    try {
+      const basePath = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
+      if (basePath) navigate(`${basePath}/group-feature/form/${group.id}`)
+      else setError('Path Management Fitur belum terdaftar di database.')
+    } catch (navigationError) {
+      setError(navigationError.message || 'Gagal membaca path Management Fitur dari database.')
+    }
   }
 
   return (
@@ -158,7 +165,15 @@ const GroupFeatureDetail = () => {
                   color="secondary"
                   size="sm"
                   variant="outline"
-                  onClick={() => navigate(-1)}
+                  onClick={async () => {
+                  try {
+                    const listPath = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
+                    if (listPath) navigate(`${listPath}?view=groups`)
+                    else navigate(-1)
+                  } catch {
+                    navigate(-1)
+                  }
+                }}
                 >
                   Kembali
                 </CButton>
