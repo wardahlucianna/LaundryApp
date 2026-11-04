@@ -200,10 +200,16 @@ const RoleFormPage = () => {
     }))
   }
 
-  const handleStatusChange = (event) => {
+  const handleStatusChange = (eventOrChecked) => {
+    // CoreUI may pass a change event; normalize to the actual switch value.
+    const checked =
+      typeof eventOrChecked === 'boolean'
+        ? eventOrChecked
+        : Boolean(eventOrChecked?.target?.checked)
+
     setValues((current) => ({
       ...current,
-      is_active: event.target.checked,
+      is_active: checked,
     }))
   }
 
