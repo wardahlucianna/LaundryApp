@@ -18,6 +18,7 @@ import GlobalSearch from './data/GlobalSearch'
 import GlobalTable from './data/GlobalTable'
 import GlobalBadge from './data/GlobalBadge'
 import GlobalModal from './feedback/GlobalModal'
+import FeedbackAlert from './feedback/FeedbackAlert'
 import GlobalButton from './actions/GlobalButton'
 
 export {
@@ -36,5 +37,6 @@ export {
   GlobalTable,
   GlobalBadge,
   GlobalModal,
+  FeedbackAlert,
   GlobalButton,
 }
