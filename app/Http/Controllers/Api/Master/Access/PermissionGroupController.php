@@ -13,6 +13,11 @@ class PermissionGroupController extends Controller
         return response()->json(PermissionGroup::query()->withCount('features')->orderBy('ordering')->orderBy('name')->paginate(100));
     }
 
+    public function show(PermissionGroup $permissionGroup)
+    {
+        return response()->json(['data' => $permissionGroup->fresh()]);
+    }
+
     public function store(Request $request)
     {
         $data = $request->validate([
