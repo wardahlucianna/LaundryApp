@@ -276,7 +276,7 @@ const getGroupId = (group) =>
                       {availableGroups.map((group) => (
                         <option key={String(getGroupId(group))} value={String(getGroupId(group))}>
                           {group.name}
-                          {!group.is_active ? ' (Nonaktif)' : ''}
+                          {!group.isActive ? ' (Nonaktif)' : ''}
                         </option>
                       ))}
                     </CFormSelect>
@@ -340,8 +340,8 @@ const getGroupId = (group) =>
                         className={`role-status-switch ${
                           values.isActive ? 'is-active' : 'is-inactive'
                         }`}
-                        label={values.is_active ? 'Aktif' : 'Nonaktif'}
-                        checked={values.is_active}
+                        label={values.isActive ? 'Aktif' : 'Nonaktif'}
+                        checked={values.isActive}
                         onChange={handleStatusChange}
                       />
                     </div>
