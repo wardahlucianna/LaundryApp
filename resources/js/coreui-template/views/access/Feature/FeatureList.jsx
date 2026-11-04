@@ -44,7 +44,7 @@ const FeatureListPage = () => {
   useEffect(() => {
     if (!isGroupFeatureRoute) return
     let active = true
-    getAccessFeaturePath(['Manajemen Kelompok Fitur', 'Manajemen Group Fitur', 'Management Group Feature', 'Group Feature', 'Feature Group'])
+    getAccessFeaturePath(['Manajemen Kelompok Fitur', 'Manajemen Group Fitur', 'Manajemen Kelompok Fitur', 'Kelompok Fitur', 'Kelompok Fitur'])
       .then((path) => { if (active && path) setGroupFeatureTarget(path) })
       .catch(() => { if (active) setError('Path Manajemen Kelompok Fitur belum terdaftar di database.') })
     return () => { active = false }
@@ -112,14 +112,14 @@ const FeatureListPage = () => {
   }, [loadFeatures])
 
   const openCreate = async () => {
-    const featureRouteBase = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
+    const featureRouteBase = await getAccessFeaturePath(['Manajemen Fitur', 'Manajemen Fitur'])
     if (featureRouteBase) navigate(`${featureRouteBase}/form`)
-    else setError('Path Management Fitur belum terdaftar di database.')
+    else setError('Path Manajemen Fitur belum terdaftar di database.')
   }
   const openEdit = async (feature) => {
-    const featureRouteBase = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
+    const featureRouteBase = await getAccessFeaturePath(['Manajemen Fitur', 'Manajemen Fitur'])
     if (featureRouteBase) navigate(`${featureRouteBase}/form/${feature.id}`)
-    else setError('Path Management Fitur belum terdaftar di database.')
+    else setError('Path Manajemen Fitur belum terdaftar di database.')
   }
 
   const deleteFeature = async (feature) => {
@@ -164,24 +164,24 @@ const FeatureListPage = () => {
   const groupPagination = { current_page: groupPage, last_page: Math.max(1, Math.ceil(filteredGroups.length / groupPerPage)), total: filteredGroups.length }
   const paginatedGroups = filteredGroups.slice((groupPage - 1) * groupPerPage, groupPage * groupPerPage)
   const openGroupCreate = async () => {
-    const basePath = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
+    const basePath = await getAccessFeaturePath(['Manajemen Fitur', 'Manajemen Fitur'])
     if (basePath) navigate(`${basePath}/group-feature/form`)
-    else setError('Path Management Fitur belum terdaftar di database.')
+    else setError('Path Manajemen Fitur belum terdaftar di database.')
   }
   const openGroupEdit = async (group) => {
-    const basePath = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
+    const basePath = await getAccessFeaturePath(['Manajemen Fitur', 'Manajemen Fitur'])
     if (basePath) navigate(`${basePath}/group-feature/form/${group.id}`)
-    else setError('Path Management Fitur belum terdaftar di database.')
+    else setError('Path Manajemen Fitur belum terdaftar di database.')
   }
   const openGroupDetail = async (group) => {
-    const basePath = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
+    const basePath = await getAccessFeaturePath(['Manajemen Fitur', 'Manajemen Fitur'])
     if (basePath) navigate(`${basePath}/group-feature/detail/${group.id}`)
-    else setError('Path Management Fitur belum terdaftar di database.')
+    else setError('Path Manajemen Fitur belum terdaftar di database.')
   }
   const deleteGroup = async (group) => {
-    if (!window.confirm('Yakin ingin menghapus group ' + group.name + '?')) return
+    if (!window.confirm('Yakin ingin menghapus kelompok fitur ' + group.name + '?')) return
     setError(''); setNotice('')
-    try { await request('/permission-groups/' + group.id, { method: 'DELETE' }); window.dispatchEvent(new Event('sunrise:permissions-updated')); setNotice('Group feature berhasil dihapus.'); await loadGroups() }
+    try { await request('/permission-groups/' + group.id, { method: 'DELETE' }); window.dispatchEvent(new Event('sunrise:permissions-updated')); setNotice('Kelompok fitur berhasil dihapus.'); await loadGroups() }
     catch (deleteError) { setError(deleteError.message || 'Gagal menghapus group feature.') }
   }
   const applyGroupSearch = () => { setGroupSearch(groupSearchInput.trim()); setGroupPage(1) }
@@ -204,13 +204,13 @@ const FeatureListPage = () => {
       render: (feature) => (
         <div>
           <div className="fw-semibold">{feature.name}</div>
-          <small className="text-body-secondary">Ordering: {feature.ordering ?? 0}</small>
+          <small className="text-body-secondary">Urutan: {feature.ordering ?? 0}</small>
         </div>
       ),
     },
     { key: 'group', title: 'Kelompok', render: (feature) => getGroupName(feature) },
     { key: 'path', title: 'Path', render: (feature) => <small>{feature.path || '—'}</small> },
-    { key: 'menu_type', title: 'Jenis Menu', render: (feature) => feature.menu_type === 'topbar' ? 'Topbar' : 'Sidebar' },
+    { key: 'menu_type', title: 'Jenis Menu', render: (feature) => feature.menu_type === 'topbar' ? 'Bilah Atas' : 'Menu Samping' },
     {
       key: 'status',
       title: 'Status',
@@ -238,9 +238,9 @@ const FeatureListPage = () => {
   if (isGroupFeatureRoute) return groupFeatureTarget ? <Navigate to={groupFeatureTarget} replace /> : null
 
   return (
-    <MasterPageLayout title={"Management Fitur"} className="role-list-page" notice={notice} error={error} onClearNotice={() => setNotice('')} onClearError={() => setError('')}>
+    <MasterPageLayout title={"Manajemen Fitur"} className="role-list-page" notice={notice} error={error} onClearNotice={() => setNotice('')} onClearError={() => setError('')}>
       {isGroupFeatureRoute ? (
-        <CCard className="role-panel role-list-panel mb-4"><CCardHeader className="d-flex flex-wrap justify-content-between align-items-center gap-2"><strong className="fs-5">Daftar Group Feature</strong><CButton color="primary" size="sm" className="role-compact-button" onClick={openGroupCreate}><CIcon icon={cilPlus} size="sm" className="me-1"/>Tambah Group</CButton></CCardHeader><CCardBody><CRow className="mb-3"><CCol xs={12}><div className="d-flex flex-wrap flex-lg-nowrap align-items-center gap-2 w-100"><CFormInput placeholder="Cari nama group" value={groupSearchInput} onChange={(event)=>setGroupSearchInput(event.target.value)} onKeyDown={(event)=>event.key==="Enter"&&applyGroupSearch()} aria-label="Cari group feature" className="flex-grow-1"/><CFormSelect aria-label="Filter status group" value={groupStatusFilter} onChange={(event)=>{setGroupStatusFilter(event.target.value);setGroupPage(1)}} style={{maxWidth:"160px"}} options={[{label:"Semua Status",value:""},{label:"Aktif",value:"1"},{label:"Nonaktif",value:"0"}]}/><CButton color="primary" size="sm" className="role-compact-button role-search-button" onClick={applyGroupSearch}><CIcon icon={cilSearch} size="sm" className="me-1"/>Cari</CButton><CButton color="secondary" variant="outline" size="sm" className="role-compact-button role-reset-button" onClick={resetGroupSearch}><CIcon icon={cilReload} size="sm" className="me-1"/>Reset</CButton></div></CCol></CRow><GlobalTable columns={[{key:"number",title:"No.",width:60,render:(_group,index)=>(groupPage-1)*groupPerPage+index+1},{key:"icon",title:"Icon",render:(group)=><CIcon icon={groupIcons[group.icon]||cilFolderOpen} size="xl"/>},{key:"name",title:"Nama Group",render:(group)=><div><div className="fw-semibold">{group.name}</div><small className="text-body-secondary">Ordering: {group.ordering??0}</small></div>},{key:"status",title:"Status",render:(group)=><CBadge color={group.is_active?"success":"secondary"}>{group.is_active?"Aktif":"Nonaktif"}</CBadge>},{key:"features_count",title:"Jumlah Fitur",className:"text-center",headerClassName:"text-center",render:(group)=>group.features_count??0},{key:"actions",title:"Aksi",width:150,className:"text-center",headerClassName:"text-center",render:(group)=><div className="table-actions d-inline-flex gap-2"><CButton color="info" variant="outline" size="sm" onClick={()=>openGroupDetail(group)} title="Detail"><CIcon icon={cilFolderOpen} size="sm"/></CButton><CButton color="primary" variant="outline" size="sm" onClick={()=>openGroupEdit(group)} title="Edit"><CIcon icon={cilPencil} size="sm"/></CButton><CButton color="danger" variant="outline" size="sm" onClick={()=>deleteGroup(group)} title="Hapus"><CIcon icon={cilTrash} size="sm"/></CButton></div>}] } rows={paginatedGroups} rowKey="id" loading={loading} emptyMessage="Data group feature tidak ditemukan." hover responsive className="role-table"/><GlobalPagination currentPage={groupPagination.current_page} lastPage={groupPagination.last_page} total={groupPagination.total} perPage={groupPerPage} onPageChange={setGroupPage} loading={loading}/></CCardBody></CCard>
+        <CCard className="role-panel role-list-panel mb-4"><CCardHeader className="d-flex flex-wrap justify-content-between align-items-center gap-2"><strong className="fs-5">Daftar Kelompok Fitur</strong><CButton color="primary" size="sm" className="role-compact-button" onClick={openGroupCreate}><CIcon icon={cilPlus} size="sm" className="me-1"/>Tambah Group</CButton></CCardHeader><CCardBody><CRow className="mb-3"><CCol xs={12}><div className="d-flex flex-wrap flex-lg-nowrap align-items-center gap-2 w-100"><CFormInput placeholder="Cari nama kelompok" value={groupSearchInput} onChange={(event)=>setGroupSearchInput(event.target.value)} onKeyDown={(event)=>event.key==="Enter"&&applyGroupSearch()} aria-label="Cari kelompok fitur" className="flex-grow-1"/><CFormSelect aria-label="Filter status group" value={groupStatusFilter} onChange={(event)=>{setGroupStatusFilter(event.target.value);setGroupPage(1)}} style={{maxWidth:"160px"}} options={[{label:"Semua Status",value:""},{label:"Aktif",value:"1"},{label:"Nonaktif",value:"0"}]}/><CButton color="primary" size="sm" className="role-compact-button role-search-button" onClick={applyGroupSearch}><CIcon icon={cilSearch} size="sm" className="me-1"/>Cari</CButton><CButton color="secondary" variant="outline" size="sm" className="role-compact-button role-reset-button" onClick={resetGroupSearch}><CIcon icon={cilReload} size="sm" className="me-1"/>Reset</CButton></div></CCol></CRow><GlobalTable columns={[{key:"number",title:"No.",width:60,render:(_group,index)=>(groupPage-1)*groupPerPage+index+1},{key:"icon",title:"Ikon",render:(group)=><CIcon icon={groupIcons[group.icon]||cilFolderOpen} size="xl"/>},{key:"name",title:"Nama Kelompok",render:(group)=><div><div className="fw-semibold">{group.name}</div><small className="text-body-secondary">Urutan: {group.ordering??0}</small></div>},{key:"status",title:"Status",render:(group)=><CBadge color={group.is_active?"success":"secondary"}>{group.is_active?"Aktif":"Nonaktif"}</CBadge>},{key:"features_count",title:"Jumlah Fitur",className:"text-center",headerClassName:"text-center",render:(group)=>group.features_count??0},{key:"actions",title:"Aksi",width:150,className:"text-center",headerClassName:"text-center",render:(group)=><div className="table-actions d-inline-flex gap-2"><CButton color="info" variant="outline" size="sm" onClick={()=>openGroupDetail(group)} title="Detail"><CIcon icon={cilFolderOpen} size="sm"/></CButton><CButton color="primary" variant="outline" size="sm" onClick={()=>openGroupEdit(group)} title="Edit"><CIcon icon={cilPencil} size="sm"/></CButton><CButton color="danger" variant="outline" size="sm" onClick={()=>deleteGroup(group)} title="Hapus"><CIcon icon={cilTrash} size="sm"/></CButton></div>}] } rows={paginatedGroups} rowKey="id" loading={loading} emptyMessage="Data group feature tidak ditemukan." hover responsive className="role-table"/><GlobalPagination currentPage={groupPagination.current_page} lastPage={groupPagination.last_page} total={groupPagination.total} perPage={groupPerPage} onPageChange={setGroupPage} loading={loading}/></CCardBody></CCard>
       ) : (
         <CCard className="role-panel role-list-panel mb-4">
                   <CCardHeader className="d-flex flex-wrap justify-content-between align-items-center gap-2">
