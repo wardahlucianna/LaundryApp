@@ -1,36 +1,311 @@
 import React from 'react'
 import {
-  CBadge, CButton, CCard, CCardBody, CCardHeader, CCol, CFormInput, CFormSelect,
-  CRow, CSpinner, CTable, CTableBody, CTableDataCell, CTableHead,
-  CTableHeaderCell, CTableRow,
+  CBadge,
+  CButton,
+  CCard,
+  CCardBody,
+  CCardHeader,
+  CCol,
+  CFormInput,
+  CFormSelect,
+  CRow,
+  CSpinner,
+  CTable,
+  CTableBody,
+  CTableDataCell,
+  CTableHead,
+  CTableHeaderCell,
+  CTableRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import ConfirmModal from '../../../components/ConfirmModal'
-import GlobalPagination from '../../../components/GlobalPagination'
 import { cilPencil, cilPlus, cilSearch, cilTrash, cilReload } from '@coreui/icons'
 
-const RoleList = ({ roles, searchInput, setSearchInput, search, setSearch, statusFilter, setStatusFilter, page, setPage, pagination, loading, loadRoles, onCreate, onDetail, onEdit, onDelete, roleToDelete, deleting, onConfirmDelete, onCancelDelete }) => {
+import ConfirmModal from '../../../components/ConfirmModal'
+import GlobalPagination from '../../../components/GlobalPagination'
+
+const RoleList = ({
+  roles,
+  searchInput,
+  setSearchInput,
+  search,
+  setSearch,
+  statusFilter,
+  setStatusFilter,
+  page,
+  setPage,
+  pagination,
+  loading,
+  loadRoles,
+  onCreate,
+  onDetail,
+  onEdit,
+  onDelete,
+  roleToDelete,
+  deleting,
+  onConfirmDelete,
+  onCancelDelete,
+}) => {
   const perPage = 10
-  const showingStart = pagination.total === 0 ? 0 : (pagination.current_page - 1) * perPage + 1
-  const showingEnd = Math.min(pagination.current_page * perPage, pagination.total)
-  const applySearch = () => { const nextSearch = searchInput.trim(); setPage(1); if (nextSearch === search) loadRoles(); else setSearch(nextSearch) }
-  const resetSearch = () => { setSearchInput(''); setStatusFilter(''); if (search === '' && statusFilter === '' && page === 1) loadRoles(); else { setSearch(''); setPage(1) } }
-  return <>
-    <CCard className="role-panel role-list-panel mb-4">
-      <CCardHeader className="d-flex flex-wrap justify-content-between align-items-center gap-2"><div><strong className="fs-5">Daftar Role</strong></div><CButton color="primary" size="sm" className="role-compact-button" onClick={onCreate}><CIcon icon={cilPlus} size="sm" className="me-1" />Tambah Role</CButton></CCardHeader>
-      <CCardBody>
-        <CRow className="mb-3"><CCol xs={12}><div className="d-flex flex-wrap flex-lg-nowrap align-items-center gap-2 w-100">
-          <CFormInput placeholder="Cari nama role" value={searchInput} onChange={(event) => setSearchInput(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter') applySearch() }} aria-label="Cari role" className="flex-grow-1" /><CFormSelect aria-label="Filter status role" value={statusFilter} onChange={(event) => { setStatusFilter(event.target.value); setPage(1) }} style={{ maxWidth: "160px" }} options={[{ label: "Semua Status", value: "" }, { label: "Aktif", value: "1" }, { label: "Nonaktif", value: "0" }]} />
-          <CButton color="primary" size="sm" aria-label="Cari" title="Cari" className="role-search-button role-compact-button" onClick={applySearch}><CIcon icon={cilSearch} size="sm" />Cari</CButton>
-          <CButton color="secondary" variant="outline" size="sm" aria-label="Reset filter" title="Reset filter" className="role-reset-button role-compact-button" onClick={resetSearch}><CIcon icon={cilReload} size="sm" />Reset</CButton>
-        </div></CCol></CRow>
-        <CTable hover responsive align="middle" className="role-table"><CTableHead><CTableRow><CTableHeaderCell style={{ width: '60px' }}>No.</CTableHeaderCell><CTableHeaderCell>Nama Role</CTableHeaderCell><CTableHeaderCell className="text-center">Jumlah Hak Akses</CTableHeaderCell><CTableHeaderCell>Status</CTableHeaderCell><CTableHeaderCell className="text-center" style={{ width: '170px' }}>Aksi</CTableHeaderCell></CTableRow></CTableHead>
-          <CTableBody>{loading ? <CTableRow><CTableDataCell colSpan={5} className="text-center py-4"><CSpinner size="sm" className="me-2" />Memuat data...</CTableDataCell></CTableRow> : roles.length === 0 ? <CTableRow><CTableDataCell colSpan={5} className="text-center text-body-secondary py-4">Data role tidak ditemukan.</CTableDataCell></CTableRow> : roles.map((role, index) => <CTableRow key={role.id}><CTableDataCell>{(pagination.current_page - 1) * perPage + index + 1}</CTableDataCell><CTableDataCell><div className="fw-semibold">{role.name}</div></CTableDataCell><CTableDataCell className="text-center">{role.permissions_count ?? 0}</CTableDataCell><CTableDataCell><CBadge color={role.is_active ? 'success' : 'secondary'}>{role.is_active ? 'Aktif' : 'Nonaktif'}</CBadge></CTableDataCell><CTableDataCell className="text-center"><div className="table-actions d-inline-flex gap-2"><CButton color="info" variant="outline" size="sm" onClick={() => onDetail(role)} title="Detail role" aria-label={`Detail ${role.name}`}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="3" /></svg></CButton><CButton color="primary" variant="outline" size="sm" onClick={() => onEdit(role)} title="Edit role" aria-label={`Edit ${role.name}`}><CIcon icon={cilPencil} size="sm" /></CButton><CButton color="danger" variant="outline" size="sm" disabled={String(role.name || '').trim().toUpperCase() === 'SUPER ADMIN'} onClick={() => onDelete(role)} title="Hapus role" aria-label={`Hapus ${role.name}`}><CIcon icon={cilTrash} size="sm" /></CButton></div></CTableDataCell></CTableRow>)}</CTableBody>
-        </CTable>
-        <GlobalPagination currentPage={pagination.current_page} lastPage={pagination.last_page} total={pagination.total} perPage={perPage} onPageChange={setPage} loading={loading} />
-      </CCardBody>
-    </CCard>
-    <ConfirmModal visible={Boolean(roleToDelete)} title="Konfirmasi Hapus Role" message={roleToDelete ? `Yakin ingin menghapus role "${roleToDelete.name}"?` : ''} confirmText="Hapus" cancelText="Batal" color="danger" loading={deleting} onConfirm={onConfirmDelete} onCancel={onCancelDelete} />
-  </>
+
+  const applySearch = () => {
+    const nextSearch = searchInput.trim()
+
+    setPage(1)
+
+    if (nextSearch === search) {
+      loadRoles()
+      return
+    }
+
+    setSearch(nextSearch)
+  }
+
+  const resetSearch = () => {
+    setSearchInput('')
+    setStatusFilter('')
+
+    if (search === '' && statusFilter === '' && page === 1) {
+      loadRoles()
+      return
+    }
+
+    setSearch('')
+    setPage(1)
+  }
+
+  const handleStatusChange = (event) => {
+    setStatusFilter(event.target.value)
+    setPage(1)
+  }
+
+  const handleSearchKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      applySearch()
+    }
+  }
+
+  return (
+    <>
+      <CCard className="role-panel role-list-panel mb-4">
+        <CCardHeader className="d-flex flex-wrap justify-content-between align-items-center gap-2">
+          <div>
+            <strong className="fs-5">Daftar Role</strong>
+          </div>
+
+          <CButton
+            color="primary"
+            size="sm"
+            className="role-compact-button"
+            onClick={onCreate}
+          >
+            <CIcon icon={cilPlus} size="sm" className="me-1" />
+            Tambah Role
+          </CButton>
+        </CCardHeader>
+
+        <CCardBody>
+          <CRow className="mb-3">
+            <CCol xs={12}>
+              <div className="d-flex flex-wrap flex-lg-nowrap align-items-center gap-2 w-100">
+                <CFormInput
+                  placeholder="Cari nama role"
+                  value={searchInput}
+                  onChange={(event) => setSearchInput(event.target.value)}
+                  onKeyDown={handleSearchKeyDown}
+                  aria-label="Cari role"
+                  className="flex-grow-1"
+                />
+
+                <CFormSelect
+                  aria-label="Filter status role"
+                  value={statusFilter}
+                  onChange={handleStatusChange}
+                  style={{ maxWidth: '160px' }}
+                  options={[
+                    { label: 'Semua Status', value: '' },
+                    { label: 'Aktif', value: '1' },
+                    { label: 'Nonaktif', value: '0' },
+                  ]}
+                />
+
+                <CButton
+                  color="primary"
+                  size="sm"
+                  aria-label="Cari"
+                  title="Cari"
+                  className="role-search-button role-compact-button"
+                  onClick={applySearch}
+                >
+                  <CIcon icon={cilSearch} size="sm" />
+                  Cari
+                </CButton>
+
+                <CButton
+                  color="secondary"
+                  variant="outline"
+                  size="sm"
+                  aria-label="Reset filter"
+                  title="Reset filter"
+                  className="role-reset-button role-compact-button"
+                  onClick={resetSearch}
+                >
+                  <CIcon icon={cilReload} size="sm" />
+                  Reset
+                </CButton>
+              </div>
+            </CCol>
+          </CRow>
+
+          <CTable hover responsive align="middle" className="role-table">
+            <CTableHead>
+              <CTableRow>
+                <CTableHeaderCell style={{ width: '60px' }}>
+                  No.
+                </CTableHeaderCell>
+                <CTableHeaderCell>Nama Role</CTableHeaderCell>
+                <CTableHeaderCell className="text-center">
+                  Jumlah Hak Akses
+                </CTableHeaderCell>
+                <CTableHeaderCell>Status</CTableHeaderCell>
+                <CTableHeaderCell
+                  className="text-center"
+                  style={{ width: '170px' }}
+                >
+                  Aksi
+                </CTableHeaderCell>
+              </CTableRow>
+            </CTableHead>
+
+            <CTableBody>
+              {loading ? (
+                <CTableRow>
+                  <CTableDataCell
+                    colSpan={5}
+                    className="text-center py-4"
+                  >
+                    <CSpinner size="sm" className="me-2" />
+                    Memuat data...
+                  </CTableDataCell>
+                </CTableRow>
+              ) : roles.length === 0 ? (
+                <CTableRow>
+                  <CTableDataCell
+                    colSpan={5}
+                    className="text-center text-body-secondary py-4"
+                  >
+                    Data role tidak ditemukan.
+                  </CTableDataCell>
+                </CTableRow>
+              ) : (
+                roles.map((role, index) => (
+                  <CTableRow key={role.id}>
+                    <CTableDataCell>
+                      {(pagination.current_page - 1) * perPage + index + 1}
+                    </CTableDataCell>
+
+                    <CTableDataCell>
+                      <div className="fw-semibold">{role.name}</div>
+                    </CTableDataCell>
+
+                    <CTableDataCell className="text-center">
+                      {role.permissions_count ?? 0}
+                    </CTableDataCell>
+
+                    <CTableDataCell>
+                      <CBadge
+                        color={role.is_active ? 'success' : 'secondary'}
+                      >
+                        {role.is_active ? 'Aktif' : 'Nonaktif'}
+                      </CBadge>
+                    </CTableDataCell>
+
+                    <CTableDataCell className="text-center">
+                      <div className="table-actions d-inline-flex gap-2">
+                        <CButton
+                          color="info"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => onDetail(role)}
+                          title="Detail role"
+                          aria-label={`Detail ${role.name}`}
+                        >
+                          <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.8"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            aria-hidden="true"
+                          >
+                            <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z" />
+                            <circle cx="12" cy="12" r="3" />
+                          </svg>
+                        </CButton>
+
+                        <CButton
+                          color="primary"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => onEdit(role)}
+                          title="Edit role"
+                          aria-label={`Edit ${role.name}`}
+                        >
+                          <CIcon icon={cilPencil} size="sm" />
+                        </CButton>
+
+                        <CButton
+                          color="danger"
+                          variant="outline"
+                          size="sm"
+                          disabled={
+                            String(role.name || '').trim().toUpperCase() ===
+                            'SUPER ADMIN'
+                          }
+                          onClick={() => onDelete(role)}
+                          title="Hapus role"
+                          aria-label={`Hapus ${role.name}`}
+                        >
+                          <CIcon icon={cilTrash} size="sm" />
+                        </CButton>
+                      </div>
+                    </CTableDataCell>
+                  </CTableRow>
+                ))
+              )}
+            </CTableBody>
+          </CTable>
+
+          <GlobalPagination
+            currentPage={pagination.current_page}
+            lastPage={pagination.last_page}
+            total={pagination.total}
+            perPage={perPage}
+            onPageChange={setPage}
+            loading={loading}
+          />
+        </CCardBody>
+      </CCard>
+
+      <ConfirmModal
+        visible={Boolean(roleToDelete)}
+        title="Konfirmasi Hapus Role"
+        message={
+          roleToDelete
+            ? `Yakin ingin menghapus role "${roleToDelete.name}"?`
+            : ''
+        }
+        confirmText="Hapus"
+        cancelText="Batal"
+        color="danger"
+        loading={deleting}
+        onConfirm={onConfirmDelete}
+        onCancel={onCancelDelete}
+      />
+    </>
+  )
 }
+
 export default RoleList
