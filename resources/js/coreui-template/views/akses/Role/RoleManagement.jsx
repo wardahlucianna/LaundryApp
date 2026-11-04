@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import RoleList from './RoleList'
+import MasterPageLayout from '../../../components/MasterPageLayout'
 
 const apiBase = (() => {
   const configuredBase = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
@@ -101,11 +102,7 @@ const RoleManagement = () => {
   }
 
   return (
-    <div className="role-list-page">
-      <div className="role-page-layout mb-4">
-        <div className="mb-3">
-          <h2 className="fs-4 mb-1">Management Role</h2>
-        </div>
+    <MasterPageLayout title="Management Role" className="role-list-page">
         {notice && <div className="alert alert-success alert-dismissible" role="alert">
           {notice}<button type="button" className="btn-close" aria-label="Tutup" onClick={() => setNotice('')} />
         </div>}
@@ -134,8 +131,7 @@ const RoleManagement = () => {
           onConfirmDelete={confirmDelete}
           onCancelDelete={() => setRoleToDelete(null)}
         />
-      </div>
-    </div>
+    </MasterPageLayout>
   )
 }
 
