@@ -22,8 +22,7 @@ import { getAccessFeaturePath } from '../../../utils/accessNavigation'
 
 const getGroupId = (group) =>
   group?.groupFeatureId ??
-  group?.featureId ??
-  group?.featureId ??
+  group?.groupFeatureId ??
   group?.groupId ??
   ''
   const FeatureFormPage = () => {
@@ -33,12 +32,12 @@ const getGroupId = (group) =>
   const [feature, setFeature] = useState(null)
   const [groups, setGroups] = useState([])
   const [values, setValues] = useState({
-    featureId: '',
+    groupFeatureId: '',
     name: '',
     path: '',
     ordering: 0,
-    menu_type: 'sidebar',
-    is_active: true,
+    menuType: 'sidebar',
+    isActive: true,
   })
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -108,19 +107,19 @@ const getGroupId = (group) =>
         setFeature(loadedFeature)
 
         const selectedGroupId = String(
-          loadedFeature?.featureId ||
+          loadedFeature?.groupFeatureId ||
             loadedFeature?.group?.groupFeatureId ||
             '',
         )
 
         setValues({
-          featureId: selectedGroupId,
+          groupFeatureId: selectedGroupId,
           name: loadedFeature?.name || '',
           path: loadedFeature?.path || '',
           ordering: loadedFeature?.ordering ?? 0,
-          menu_type: loadedFeature?.menu_type || 'sidebar',
-          is_active: loadedFeature
-            ? Boolean(loadedFeature.is_active)
+          menuType: loadedFeature?.menuType || 'sidebar',
+          isActive: loadedFeature
+            ? Boolean(loadedFeature.isActive)
             : true,
         })
       } catch (loadError) {
@@ -142,14 +141,14 @@ const getGroupId = (group) =>
   }, [id, request])
 
   const availableGroups = groups.filter((group) =>
-    Boolean(group.is_active) ||
-    String(group.groupFeatureId) === String(values.featureId),
+    Boolean(group.isActive) ||
+    String(group.groupFeatureId) === String(values.groupFeatureId),
   )
 
   const handleGroupChange = (event) => {
     setValues((current) => ({
       ...current,
-      featureId: event.target.value,
+      groupFeatureId: event.target.value,
     }))
   }
 
@@ -177,14 +176,14 @@ const getGroupId = (group) =>
   const handleMenuTypeChange = (event) => {
     setValues((current) => ({
       ...current,
-      menu_type: event.target.value,
+      menuType: event.target.value,
     }))
   }
 
   const handleStatusChange = (event) => {
     setValues((current) => ({
       ...current,
-      is_active: event.target.checked,
+      isActive: event.target.checked,
     }))
   }
 
@@ -201,12 +200,12 @@ const getGroupId = (group) =>
 
     try {
       const body = {
-        featureId: values.featureId,
+        groupFeatureId: values.groupFeatureId,
         name: values.name.trim(),
         path: values.path.trim() || null,
         ordering: Number(values.ordering),
-        menu_type: values.menu_type,
-        is_active: values.is_active,
+        menuType: values.menuType,
+        isActive: values.isActive,
       }
 
       const path = id
@@ -339,7 +338,7 @@ const getGroupId = (group) =>
 
                       <CFormSwitch
                         className={`role-status-switch ${
-                          values.is_active ? 'is-active' : 'is-inactive'
+                          values.isActive ? 'is-active' : 'is-inactive'
                         }`}
                         label={values.is_active ? 'Aktif' : 'Nonaktif'}
                         checked={values.is_active}
