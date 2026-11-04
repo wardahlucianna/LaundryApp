@@ -263,52 +263,57 @@ const RoleListPage = () => {
         <CCardBody>
           <CRow className="mb-3">
             <CCol xs={12}>
-              <div className="d-flex flex-wrap flex-lg-nowrap align-items-center gap-2 w-100">
-                <CFormInput
-                  placeholder="Cari nama peran"
-                  value={searchInput}
-                  onChange={(event) => setSearchInput(event.target.value)}
-                  onKeyDown={handleSearchKeyDown}
-                  aria-label="Cari peran"
-                  className="flex-grow-1"
-                />
+              <div className="d-flex flex-column gap-2 w-100">
+                <div className="d-flex flex-column flex-md-row align-items-stretch align-items-md-center gap-2 w-100">
+                  <CFormInput
+                    placeholder="Cari nama peran"
+                    value={searchInput}
+                    onChange={(event) => setSearchInput(event.target.value)}
+                    onKeyDown={handleSearchKeyDown}
+                    aria-label="Cari peran"
+                    className="flex-grow-1 w-auto"
+                    style={{ minWidth: 0 }}
+                  />
 
-                <CFormSelect
-                  aria-label="Filter status peran"
-                  value={statusFilter}
-                  onChange={handleStatusChange}
-                  style={{ maxWidth: '160px' }}
-                  options={[
-                    { label: 'Semua Status', value: '' },
-                    { label: 'Aktif', value: '1' },
-                    { label: 'Nonaktif', value: '0' },
-                  ]}
-                />
+                  <CFormSelect
+                    aria-label="Filter status peran"
+                    value={statusFilter}
+                    onChange={handleStatusChange}
+                    style={{ width: '160px', maxWidth: '160px' }}
+                    options={[
+                      { label: 'Semua Status', value: '' },
+                      { label: 'Aktif', value: '1' },
+                      { label: 'Nonaktif', value: '0' },
+                    ]}
+                  />
+                </div>
 
-                <CButton
-                  color="primary"
-                  size="sm"
-                  aria-label="Cari"
-                  title="Cari"
-                  className="role-search-button role-compact-button"
-                  onClick={applySearch}
-                >
-                  <CIcon icon={cilSearch} size="sm" />
-                  Cari
-                </CButton>
+                <div className="d-flex flex-wrap align-items-center justify-content-start gap-2 pb-3 border-bottom">
+                  <CButton
+                    color="primary"
+                    size="sm"
+                    aria-label="Cari"
+                    title="Cari"
+                    className="role-search-button role-compact-button"
+                    onClick={applySearch}
+                  >
+                    <CIcon icon={cilSearch} size="sm" className="me-1" />
+                    Cari
+                  </CButton>
 
-                <CButton
-                  color="secondary"
-                  variant="outline"
-                  size="sm"
-                  aria-label="Reset filter"
-                  title="Reset filter"
-                  className="role-reset-button role-compact-button"
-                  onClick={resetSearch}
-                >
-                  <CIcon icon={cilReload} size="sm" />
-                  Reset
-                </CButton>
+                  <CButton
+                    color="secondary"
+                    variant="outline"
+                    size="sm"
+                    aria-label="Reset filter"
+                    title="Reset filter"
+                    className="role-reset-button role-compact-button"
+                    onClick={resetSearch}
+                  >
+                    <CIcon icon={cilReload} size="sm" className="me-1" />
+                    Reset
+                  </CButton>
+                </div>
               </div>
             </CCol>
           </CRow>
