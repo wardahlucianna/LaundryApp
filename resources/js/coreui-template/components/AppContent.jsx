@@ -56,7 +56,7 @@ const AppContent = () => {
           )
         }
       } finally {
-        if (active && showLoading && !hasLoadedRoutes) setIsLoadingRoutes(false)
+        if (active && showLoading) setIsLoadingRoutes(false)
       }
     }
 
