@@ -42,6 +42,9 @@ const getGroupId = (group) =>
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+  const [loadFailed, setLoadFailed] = useState(false)
+
+  const formDisabled = loading || saving || loadFailed
 
   const request = useCallback(async (path, options = {}) => {
     const token =
@@ -83,6 +86,7 @@ const getGroupId = (group) =>
     let active = true
 
     setLoading(true)
+    setLoadFailed(false)
     setError('')
 
     const load = async () => {
@@ -124,6 +128,7 @@ const getGroupId = (group) =>
         })
       } catch (loadError) {
         if (active) {
+          setLoadFailed(true)
           setError(loadError.message || 'Gagal memuat data fitur.')
         }
       } finally {
@@ -271,6 +276,7 @@ const getGroupId = (group) =>
                       value={values.groupFeatureId}
                       onChange={handleGroupChange}
                       required
+                      disabled={formDisabled}
                     >
                       <option value="">Pilih Kelompok</option>
                       {availableGroups.map((group) => (
@@ -290,6 +296,7 @@ const getGroupId = (group) =>
                       onChange={handleNameChange}
                       required
                       maxLength={120}
+                      disabled={formDisabled}
                     />
                   </CCol>
 
@@ -300,6 +307,7 @@ const getGroupId = (group) =>
                       value={values.path}
                       onChange={handlePathChange}
                       maxLength={255}
+                      disabled={formDisabled}
                     />
                   </CCol>
 
@@ -312,6 +320,7 @@ const getGroupId = (group) =>
                       value={values.ordering}
                       onChange={handleOrderingChange}
                       required
+                      disabled={formDisabled}
                     />
                   </CCol>
 
@@ -321,6 +330,7 @@ const getGroupId = (group) =>
                       value={values.menuType}
                       onChange={handleMenuTypeChange}
                       required
+                      disabled={formDisabled}
                     >
                       <option value="sidebar">Menu Samping</option>
                       <option value="topbar">Bilah Atas</option>
@@ -343,6 +353,7 @@ const getGroupId = (group) =>
                         label={values.isActive ? 'Aktif' : 'Nonaktif'}
                         checked={values.isActive}
                         onChange={handleStatusChange}
+                        disabled={formDisabled}
                       />
                     </div>
                   </CCol>
@@ -354,7 +365,7 @@ const getGroupId = (group) =>
                     size="sm"
                     variant="outline"
                     type="button"
-                    disabled={saving}
+                    disabled={formDisabled}
                     onClick={async () => {
                       try {
                         const listPath = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
@@ -372,7 +383,7 @@ const getGroupId = (group) =>
                     color="primary"
                     size="sm"
                     type="submit"
-                    disabled={saving}
+                    disabled={formDisabled}
                   >
                     {saving ? (
                       <>
