@@ -88,7 +88,7 @@ class RoleController extends Controller
     {
         $data = $request->validate([
             'feature_ids' => ['present', 'array'],
-            'feature_ids.*' => ['uuid', 'exists:permission_features,id'],
+            'feature_ids.*' => ['uuid', 'exists:features,id'],
         ]);
         if (strtoupper(trim($role->name)) === 'SUPER ADMIN') throw ValidationException::withMessages(['role' => 'Hak akses SUPERADMIN selalu penuh.']);
         DB::transaction(fn () => $role->features()->sync($data['feature_ids']));
