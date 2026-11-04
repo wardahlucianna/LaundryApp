@@ -106,12 +106,18 @@ const GroupFeatureList = () => {
       <CCard className="role-panel role-list-panel mb-4">
         <CCardHeader className="d-flex flex-wrap justify-content-between align-items-center gap-2"><strong className="fs-5">Daftar Kelompok Fitur</strong><CButton color="primary" size="sm" className="role-compact-button" onClick={() => goTo('/form')}><CIkon icon={cilPlus} size="sm" className="me-1" />Tambah Kelompok Fitur</CButton></CCardHeader>
         <CCardBody>
-          <CRow className="mb-3"><CCol xs={12}><div className="d-flex flex-wrap flex-lg-nowrap align-items-center gap-2 w-100">
-            <CFormInput placeholder="Cari nama kelompok fitur" value={searchInput} onChange={(event) => setSearchInput(event.target.value)} onKeyDown={(event) => event.key === 'Enter' && applySearch()} aria-label="Cari kelompok fitur" className="flex-grow-1" />
-            <CFormSelect aria-label="Filter status kelompok fitur" value={statusFilter} onChange={(event) => { setStatusFilter(event.target.value); setPage(1) }} style={{ maxWidth: '160px' }} options={[{ label: 'Semua Status', value: '' }, { label: 'Aktif', value: '1' }, { label: 'Nonaktif', value: '0' }]} />
-            <CButton color="primary" size="sm" className="role-compact-button role-search-button" onClick={applySearch}><CIkon icon={cilSearch} size="sm" className="me-1" />Cari</CButton>
-            <CButton color="secondary" variant="outline" size="sm" className="role-compact-button role-reset-button" onClick={resetSearch}><CIkon icon={cilReload} size="sm" className="me-1" />Reset</CButton>
-          </div></CCol></CRow>
+          <CRow className="mb-3"><CCol xs={12}>
+            <div className="d-flex flex-column gap-2 w-100">
+              <div className="d-flex flex-wrap align-items-center gap-2 w-100">
+                <CFormInput placeholder="Cari nama kelompok fitur" value={searchInput} onChange={(event) => setSearchInput(event.target.value)} onKeyDown={(event) => event.key === 'Enter' && applySearch()} aria-label="Cari kelompok fitur" className="flex-grow-1" />
+                <CFormSelect aria-label="Filter status kelompok fitur" value={statusFilter} onChange={(event) => { setStatusFilter(event.target.value); setPage(1) }} style={{ maxWidth: '160px' }} options={[{ label: 'Semua Status', value: '' }, { label: 'Aktif', value: '1' }, { label: 'Nonaktif', value: '0' }]} />
+              </div>
+              <div className="d-flex flex-wrap align-items-center justify-content-start gap-2">
+                <CButton color="primary" size="sm" className="role-compact-button role-search-button" onClick={applySearch}><CIkon icon={cilSearch} size="sm" className="me-1" />Cari</CButton>
+                <CButton color="secondary" variant="outline" size="sm" className="role-compact-button role-reset-button" onClick={resetSearch}><CIkon icon={cilReload} size="sm" className="me-1" />Reset</CButton>
+              </div>
+            </div>
+          </CCol></CRow>
           <GlobalTable columns={columns} rows={rows} rowKey="id" loading={loading} emptyMessage="Data kelompok fitur tidak ditemukan." hover responsive className="role-table" />
           <GlobalPagination currentPage={pagination.current_page} lastPage={pagination.last_page} total={pagination.total} perPage={perPage} onPageChange={setPage} loading={loading} />
         </CCardBody>
