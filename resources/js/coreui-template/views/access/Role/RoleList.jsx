@@ -136,19 +136,19 @@ const RoleListPage = () => {
   }, [loadRoles])
 
   const openCreate = async () => {
-    const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role'])
+    const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role', 'Manajemen Peran'])
     if (listPath) navigate(`${listPath}/form`)
     else setError('Path Manajemen Peran belum terdaftar di database.')
   }
 
   const openEdit = async (role) => {
-    const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role'])
+    const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role', 'Manajemen Peran'])
     if (listPath) navigate(`${listPath}/form/${role.id}`)
     else setError('Path Manajemen Peran belum terdaftar di database.')
   }
 
   const openDetail = async (role) => {
-    const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role'])
+    const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role', 'Manajemen Peran'])
     if (listPath) navigate(`${listPath}/detail/${role.id}`)
     else setError('Path Manajemen Peran belum terdaftar di database.')
   }
