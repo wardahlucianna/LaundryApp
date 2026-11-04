@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\Api\Master\Akses\PermissionController;
-use App\Http\Controllers\Api\Master\Akses\PermissionFeatureController;
-use App\Http\Controllers\Api\Master\Akses\PermissionGroupController;
-use App\Http\Controllers\Api\Master\Akses\RoleController;
+use App\Http\Controllers\Api\Master\Access\PermissionController;
+use App\Http\Controllers\Api\Master\Access\PermissionFeatureController;
+use App\Http\Controllers\Api\Master\Access\PermissionGroupController;
+use App\Http\Controllers\Api\Master\Access\RoleController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->group(function () {
