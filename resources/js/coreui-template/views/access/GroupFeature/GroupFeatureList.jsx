@@ -96,8 +96,9 @@ const GroupFeatureList = () => {
   const columns = [
     { key: 'number', title: 'No.', width: '60px', render: (_group, index) => (page - 1) * perPage + index + 1 },
     { key: 'icon', title: 'Ikon', render: (group) => <CIkon icon={groupIkons[group.icon] || cilFolderOpen} size="xl" /> },
-    { key: 'name', title: 'Nama Kelompok', render: (group) => <div><div className="fw-semibold">{group.name}</div><div className="small text-body-secondary d-flex align-items-center gap-2"><span>Urutan: {group.ordering ?? 0}</span><CBadge color={group.is_active ? 'success' : 'secondary'}>{group.is_active ? 'Aktif' : 'Nonaktif'}</CBadge></div></div> },
+    { key: 'name', title: 'Nama Kelompok', render: (group) => <div><div className="fw-semibold">{group.name}</div><small className="text-body-secondary">Urutan: {group.ordering ?? 0}</small></div> },
     { key: 'features_count', title: 'Jumlah Fitur', className: 'text-center', headerClassName: 'text-center', render: (group) => group.features_count ?? 0 },
+    { key: 'status', title: 'Status', className: 'text-center', headerClassName: 'text-center', render: (group) => <CBadge color={group.is_active ? 'success' : 'secondary'}>{group.is_active ? 'Aktif' : 'Nonaktif'}</CBadge> },
     { key: 'actions', title: 'Aksi', width: '100px', className: 'text-center', headerClassName: 'text-center', render: (group) => <div className="table-actions d-inline-flex gap-2"><CButton color="primary" variant="outline" size="sm" onClick={() => goTo(`/form/${group.groupFeatureId}`)} title="Edit"><CIkon icon={cilPencil} size="sm" /></CButton><CButton color="danger" variant="outline" size="sm" onClick={() => deleteGroup(group)} title="Hapus"><CIkon icon={cilTrash} size="sm" /></CButton></div> },
   ]
 
