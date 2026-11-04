@@ -188,7 +188,7 @@ const RoleDetailPage = () => {
     if (role) {
       try {
         const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role', 'Manajemen Peran'])
-        if (listPath) navigate(`${listPath}/form/${role.id}`)
+        if (listPath) navigate(`${listPath}/form/${role.roleId}`)
       } catch {
         setError('Gagal membaca path Manajemen Peran dari database.')
       }
