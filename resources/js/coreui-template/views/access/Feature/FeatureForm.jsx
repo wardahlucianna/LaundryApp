@@ -191,7 +191,7 @@ const getGroupId = (group) =>
     event.preventDefault()
     setError('')
 
-    if (!values.featureId || !values.name.trim()) {
+    if (!values.groupFeatureId || !values.name.trim()) {
       setError('Kelompok fitur dan nama fitur wajib diisi.')
       return
     }
