@@ -112,7 +112,7 @@ const GroupFeatureForm = () => {
     request('/permission-groups?per_page=100')
       .then((payload) => {
         const found = (payload.data || []).find(
-          (item) => String(item.id) === String(id),
+          (item) => String(item.groupFeatureId) === String(id),
         )
 
         if (!found) {
