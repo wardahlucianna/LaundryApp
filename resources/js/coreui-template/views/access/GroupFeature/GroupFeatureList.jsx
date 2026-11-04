@@ -6,7 +6,6 @@ import MasterPageLayout from '../../../components/layout/MasterPageLayout'
 import { apiBase } from '../../../../services/api'
 
 import {
-  CAlert,
   CBadge,
   CButton,
   CCard,
@@ -213,27 +212,11 @@ const GroupFeatureManagement = () => {
     <MasterPageLayout
       title="Management Group Feature"
       className="role-list-page"
+      notice={notice}
+      error={error}
+      onClearNotice={() => setNotice('')}
+      onClearError={() => setError('')}
     >
-      {notice && (
-        <CAlert
-          color="success"
-          dismissible
-          onClose={() => setNotice('')}
-        >
-          {notice}
-        </CAlert>
-      )}
-
-      {error && (
-        <CAlert
-          color="danger"
-          dismissible
-          onClose={() => setError('')}
-        >
-          {error}
-        </CAlert>
-      )}
-
       <GroupFeatureList
         groups={paginatedGroups}
         pagination={pagination}
