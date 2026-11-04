@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { CAlert } from '@coreui/react'
 import GroupFeatureList from './GroupFeatureList'
+import MasterPageLayout from '../../../components/MasterPageLayout'
 
 const apiBase = (() => { const base = (import.meta.env.VITE_API_URL || '').replace(/\/$/, ''); return base ? (base.endsWith('/api') ? base : base + '/api') : '/api' })()
 const GroupFeatureManagement = () => {
@@ -53,11 +54,10 @@ const GroupFeatureManagement = () => {
   const applySearch = () => setSearch(searchInput.trim())
   const resetSearch = () => { setSearchInput(''); setSearch(''); setStatusFilter('') }
 
-  return <div className="role-list-page role-page-layout mb-4">
-    <div className="mb-3"><h2 className="fs-4 mb-1">Management Group Feature</h2></div>
+  return <MasterPageLayout title="Management Group Feature" className="role-list-page">
     {notice && <CAlert color="success" dismissible onClose={() => setNotice('')}>{notice}</CAlert>}
     {error && <CAlert color="danger" dismissible onClose={() => setError('')}>{error}</CAlert>}
     <GroupFeatureList groups={filteredGroups} searchInput={searchInput} setSearchInput={setSearchInput} statusFilter={statusFilter} setStatusFilter={setStatusFilter} applySearch={applySearch} resetSearch={resetSearch} loading={loading} onCreate={openCreate} onDetail={openDetail} onEdit={openEdit} onDelete={deleteGroup} />
-  </div>
+  </MasterPageLayout>
 }
 export default GroupFeatureManagement
