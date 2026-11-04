@@ -31,7 +31,7 @@ class PermissionFeatureController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'permission_group_id' => ['required', 'uuid', 'exists:permission_groups,id'],
+            'permission_group_id' => ['required', 'uuid', 'exists:groupFeature,id'],
             'name' => ['required', 'string', 'max:120'],
             'path' => ['nullable', 'string', 'max:255'],
             'ordering' => ['required', 'integer', 'min:0'],
@@ -44,7 +44,7 @@ class PermissionFeatureController extends Controller
     public function update(Request $request, PermissionFeature $permissionFeature)
     {
         $data = $request->validate([
-            'permission_group_id' => ['sometimes', 'required', 'uuid', 'exists:permission_groups,id'],
+            'permission_group_id' => ['sometimes', 'required', 'uuid', 'exists:groupFeature,id'],
             'name' => ['sometimes', 'required', 'string', 'max:120'],
             'path' => ['nullable', 'string', 'max:255'],
             'ordering' => ['sometimes', 'required', 'integer', 'min:0'],
