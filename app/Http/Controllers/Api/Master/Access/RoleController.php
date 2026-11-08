@@ -63,8 +63,10 @@ class RoleController extends Controller
 
         // FE detail hanya membutuhkan identitas role, jumlah pengguna,
         // ID fitur yang diberikan, dan ringkasan fitur aktif untuk tampilan.
-        $assignedFeatureIds = $role->features()
-            ->pluck('features.featureId')
+        $assignedFeatureIds = DB::table('roleFeatures')
+            ->where('roleId', $role->roleId)
+            ->pluck('featureId')
+            ->map(fn ($featureId) => strtolower((string) $featureId))
             ->values();
 
         $availableFeatures = PermissionFeature::query()
