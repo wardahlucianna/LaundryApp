@@ -83,9 +83,10 @@ class RoleController extends Controller
                 'name' => $role->name,
                 'isActive' => $role->isActive,
                 'users_count' => $usersCount,
+                'featureIds' => $assignedFeatureIds->all(),
                 'features' => $assignedFeatureIds->map(fn ($featureId) => [
                     'featureId' => $featureId,
-                ]),
+                ])->all(),
                 'availableFeatures' => $availableFeatures,
             ],
         ]);
