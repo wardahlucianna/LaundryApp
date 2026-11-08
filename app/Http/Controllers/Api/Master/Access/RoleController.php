@@ -25,7 +25,21 @@ class RoleController extends Controller
 
     public function store(StoreRoleRequest $request)
     {
-        return response()->json(['data' => Role::create($request->validated())], 201);
+        $data = $request->validated();
+        $featureIds = $data['featureIds'] ?? [];
+        unset($data['featureIds']);
+
+        $role = DB::transaction(function () use ($data, $featureIds) {
+            $role = Role::create($data);
+
+            if (strtoupper(trim($role->name)) !== 'SUPER ADMIN') {
+                $role->features()->sync($featureIds);
+            }
+
+            return $role->load('features');
+        });
+
+        return response()->json(['data' => $role], 201);
     }
 
     public function featureOptions()
@@ -79,8 +93,25 @@ class RoleController extends Controller
 
     public function update(UpdateRoleRequest $request, Role $role)
     {
-        $role->update($request->validated());
-        return response()->json(['data' => $role->fresh()]);
+        $data = $request->validated();
+        $featureIds = $data['featureIds'] ?? null;
+        unset($data['featureIds']);
+
+        $updatedRole = DB::transaction(function () use ($role, $data, $featureIds) {
+            $role->update($data);
+
+            if ($featureIds !== null) {
+                if (strtoupper(trim($role->name)) === 'SUPER ADMIN') {
+                    throw ValidationException::withMessages(['role' => 'Hak akses SUPER ADMIN selalu penuh.']);
+                }
+
+                $role->features()->sync($featureIds);
+            }
+
+            return $role->fresh()->load('features');
+        });
+
+        return response()->json(['data' => $updatedRole]);
     }
 
     public function destroy(Role $role)
