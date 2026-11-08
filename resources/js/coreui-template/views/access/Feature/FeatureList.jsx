@@ -30,6 +30,7 @@ const pendingFeatureListGetRequests = new Map()
 
 const FeatureListPage = () => {
   const [features, setFeatures] = useState([])
+  const [groups, setGroups] = useState([])
   const [groupSearchInput, setGroupSearchInput] = useState('')
   const [groupSearch, setGroupSearch] = useState('')
   const [groupStatusFilter, setGroupStatusFilter] = useState('')
@@ -98,15 +99,15 @@ const FeatureListPage = () => {
     return pendingRequest
   }, [])
 
-  useEffect(() => {
-    if (!isGroupFeatureRoute) return
-    loadGroups().catch((loadError) => setError(loadError.message || 'Gagal memuat kelompok fitur.'))
-  }, [isGroupFeatureRoute, loadGroups])
-
   const loadGroups = useCallback(async () => {
     const payload = await request('/permission-groups?per_page=100')
     setGroups(payload.data || [])
   }, [request])
+
+  useEffect(() => {
+    if (!isGroupFeatureRoute) return
+    loadGroups().catch((loadError) => setError(loadError.message || 'Gagal memuat kelompok fitur.'))
+  }, [isGroupFeatureRoute, loadGroups])
 
   const loadFeatures = useCallback(async () => {
     setLoading(true)
