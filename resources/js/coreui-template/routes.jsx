@@ -107,6 +107,9 @@ export const buildAccessRoutes = (menuGroups) => {
       { path: featureBase, name: 'Management Fitur', element: FeatureManagement },
       { path: `${featureBase}/form`, name: 'Form Fitur', element: FeatureFormPage },
       { path: `${featureBase}/form/:id`, name: 'Edit Fitur', element: FeatureFormPage },
+      // Keep the detail URL valid for existing menu links; the feature form
+      // loads the selected record by ID and avoids a PageNotFound fallback.
+      { path: `${featureBase}/detail/:id`, name: 'Detail Fitur', element: FeatureFormPage },
       { path: `${featureBase}/group-feature/form`, name: 'Form Group Feature', element: GroupFeatureFormPage },
       { path: `${featureBase}/group-feature/form/:id`, name: 'Edit Group Feature', element: GroupFeatureFormPage },
       { path: `${featureBase}/group-feature/detail/:id`, name: 'Detail Group Feature', element: GroupFeatureDetailPage },
