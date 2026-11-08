@@ -215,16 +215,16 @@ const PosisiListPage = () => {
 
   const applySearch = () => {
     const nextSearch = searchInput.trim()
+    const nextStatus = statusInput
 
-    setPage(1)
-
-    if (nextSearch === search) {
+    if (nextSearch === search && nextStatus === statusFilter && page === 1) {
       loadPosisis()
       return
     }
 
+    setPage(1)
     setSearch(nextSearch)
-    setStatusFilter(statusInput)
+    setStatusFilter(nextStatus)
   }
 
   const resetSearch = () => {
