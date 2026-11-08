@@ -1,8 +1,8 @@
 import React from 'react'
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
-const PosisiManagement = React.lazy(() => import('./views/access/Posisi/PosisiList'))
-const PosisiFormPage = React.lazy(() => import('./views/access/Posisi/PosisiForm'))
-const PosisiDetailPage = React.lazy(() => import('./views/access/Posisi/PosisiDetail'))
+const PosisiManagement = React.lazy(() => import('./views/access/Role/RoleList'))
+const PosisiFormPage = React.lazy(() => import('./views/access/Role/RoleForm'))
+const PosisiDetailPage = React.lazy(() => import('./views/access/Role/RoleDetail'))
 const FeatureManagement = React.lazy(() => import('./views/access/Feature/FeatureList'))
 const GroupFeatureFormPage = React.lazy(() => import('./views/access/GroupFeature/GroupFeatureForm'))
 const GroupFeatureManagement = React.lazy(() => import('./views/access/GroupFeature/GroupFeatureList'))
@@ -65,12 +65,14 @@ export const buildAccessRoutes = (menuGroups) => {
       'Management Position',
       'Position Management',
       'Posisi',
-      'Position Management',
-      'Posisi',
-      'Posisis',
-      'Manajemen Posisi',
-      'Pengelolaan Posisi',
-      'Posisi',
+      'Manajemen Role',
+      'Management Role',
+      'Role Management',
+      'Role',
+      'Roles',
+      'Manajemen Peran',
+      'Pengelolaan Peran',
+      'Peran',
     ],
     ['/roles', '/role', '/management-role', '/manajemen-role', '/peran', '/posisi'],
   )
