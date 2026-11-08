@@ -106,7 +106,9 @@ const GroupFeatureList = () => {
     setError(''); setNotice(''); setDeleteError('')
     try {
       await request(`/permission-groups/${deleteTarget.groupFeatureId}`, { method: 'DELETE' })
-      window.dispatchEvent(new Event('sunrise:permissions-updated'))
+      window.dispatchEvent(new CustomEvent('sunrise:permissions-updated', {
+        detail: { type: 'delete-group', groupFeatureId: deleteTarget.groupFeatureId },
+      }))
       setNotice('Kelompok fitur berhasil dihapus.')
       await loadGroups()
       setDeleteTarget(null)
