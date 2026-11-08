@@ -49,6 +49,7 @@ const PosisiListPage = () => {
   const [roles, setPosisis] = useState([])
   const [search, setSearch] = useState('')
   const [searchInput, setSearchInput] = useState('')
+  const [statusInput, setStatusInput] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
   const [page, setPage] = useState(1)
   const [pagination, setPagination] = useState({
@@ -223,10 +224,12 @@ const PosisiListPage = () => {
     }
 
     setSearch(nextSearch)
+    setStatusFilter(statusInput)
   }
 
   const resetSearch = () => {
     setSearchInput('')
+    setStatusInput('')
     setStatusFilter('')
 
     if (search === '' && statusFilter === '' && page === 1) {
@@ -239,13 +242,12 @@ const PosisiListPage = () => {
   }
 
   const handleStatusChange = (event) => {
-    setStatusFilter(event.target.value)
-    setPage(1)
+    setStatusInput(event.target.value)
   }
 
   const handleSearchKeyDown = (event) => {
     if (event.key === 'Enter') {
-      applySearch()
+      event.preventDefault()
     }
   }
 
@@ -294,7 +296,7 @@ const PosisiListPage = () => {
 
                   <CFormSelect
                     aria-label="Filter status posisi"
-                    value={statusFilter}
+                    value={statusInput}
                     onChange={handleStatusChange}
                     style={{ width: '160px', maxWidth: '160px' }}
                     options={[
