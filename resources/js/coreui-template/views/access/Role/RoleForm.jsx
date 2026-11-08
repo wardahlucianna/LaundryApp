@@ -120,17 +120,20 @@ const RoleFormPage = () => {
 
     const load = async () => {
       try {
-        const [featuresPayload, rolePayload] = await Promise.all([
-          request('/roles/features/options'),
-          id ? request(`/roles/${id}`) : Promise.resolve(null),
-        ])
+        // Saat edit, endpoint detail role sudah membawa daftar fitur aktif
+        // dan fitur yang terpilih. Form cukup melakukan satu request.
+        const payload = id
+          ? await request(`/roles/${id}`)
+          : await request('/roles/features/options')
 
         if (!active) {
           return
         }
 
-        const loadedRole = rolePayload?.data || rolePayload
-        const availableFeatures = featuresPayload.data || []
+        const loadedRole = id ? (payload.data || payload) : null
+        const availableFeatures = id
+          ? (loadedRole?.availableFeatures || [])
+          : (payload.data || [])
 
         setFeatures(availableFeatures)
         setCollapsedGroups(
