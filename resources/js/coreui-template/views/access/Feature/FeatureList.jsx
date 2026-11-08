@@ -158,7 +158,11 @@ const FeatureListPage = () => {
     try {
       const { type, item } = deleteTarget
       await request(type === 'feature' ? `/permission-features/${item.featureId}` : `/permission-groups/${item.groupFeatureId}`, { method: 'DELETE' })
-      window.dispatchEvent(new Event('sunrise:permissions-updated'))
+      window.dispatchEvent(new CustomEvent('sunrise:permissions-updated', {
+        detail: type === 'feature'
+          ? { type: 'delete-feature', featureId: item.featureId }
+          : { type: 'delete-group', groupFeatureId: item.groupFeatureId },
+      }))
       setNotice(type === 'feature' ? 'Fitur berhasil dihapus.' : 'Kelompok fitur berhasil dihapus.')
       if (type === 'feature') await loadFeatures()
       else await loadGroups()
