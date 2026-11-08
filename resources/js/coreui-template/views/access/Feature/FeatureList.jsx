@@ -30,7 +30,6 @@ const pendingFeatureListGetRequests = new Map()
 
 const FeatureListPage = () => {
   const [features, setFeatures] = useState([])
-  const [groups, setGroups] = useState([])
   const [groupSearchInput, setGroupSearchInput] = useState('')
   const [groupSearch, setGroupSearch] = useState('')
   const [groupStatusFilter, setGroupStatusFilter] = useState('')
@@ -99,10 +98,10 @@ const FeatureListPage = () => {
     return pendingRequest
   }, [])
 
-  const loadGroups = useCallback(async () => {
-    const payload = await request('/permission-groups?per_page=100')
-    setGroups(payload.data || [])
-  }, [request])
+  useEffect(() => {
+    if (!isGroupFeatureRoute) return
+    loadGroups().catch((loadError) => setError(loadError.message || 'Gagal memuat kelompok fitur.'))
+  }, [isGroupFeatureRoute, loadGroups])
 
   const loadFeatures = useCallback(async () => {
     setLoading(true)
@@ -124,10 +123,6 @@ const FeatureListPage = () => {
       setLoading(false)
     }
   }, [page, search, statusFilter, request])
-
-  useEffect(() => {
-    loadGroups().catch((loadError) => setError(loadError.message || 'Gagal memuat kelompok fitur.'))
-  }, [loadGroups])
 
   useEffect(() => {
     loadFeatures()
@@ -215,9 +210,7 @@ const FeatureListPage = () => {
   const applyGroupSearch = () => { setGroupSearch(groupSearchInput.trim()); setGroupPage(1) }
   const resetGroupSearch = () => { setGroupSearchInput(''); setGroupSearch(''); setGroupStatusFilter(''); setGroupPage(1) }
 
-  const getGroupName = (feature) => (
-    feature.group?.name || groups.find((group) => group.groupFeatureId === feature.groupFeatureId)?.name || '—'
-  )
+  const getGroupName = (feature) => feature.group?.name || '—'
 
   const columns = [
     {
@@ -272,7 +265,7 @@ const FeatureListPage = () => {
         <CCard className="role-panel role-list-panel mb-4">
                   <CCardHeader className="d-flex flex-wrap justify-content-between align-items-center gap-2">
                     <strong className="fs-5">Daftar Fitur</strong>
-                    <CButton color="primary" size="sm" className="role-compact-button" onClick={openCreate} disabled={groups.length === 0}>
+                    <CButton color="primary" size="sm" className="role-compact-button" onClick={openCreate} >
                       <CIcon icon={cilPlus} size="sm" className="me-1" />Tambah Fitur
                     </CButton>
                   </CCardHeader>
