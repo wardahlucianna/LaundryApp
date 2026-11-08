@@ -13,6 +13,30 @@ class PermissionGroupController extends Controller
         return response()->json(PermissionGroup::query()->withCount('features')->orderBy('ordering')->orderBy('name')->paginate(100));
     }
 
+    public function options(Request $request)
+    {
+        $selectedId = $request->query('selectedId');
+
+        $groups = PermissionGroup::query()
+            ->select('groupFeatureId', 'name', 'isActive', 'ordering')
+            ->where(function ($query) use ($selectedId) {
+                $query->where('isActive', true);
+                if ($selectedId) {
+                    $query->orWhere('groupFeatureId', $selectedId);
+                }
+            })
+            ->orderBy('ordering')
+            ->orderBy('name')
+            ->get()
+            ->map(fn (PermissionGroup $group) => [
+                'groupFeatureId' => $group->groupFeatureId,
+                'name' => $group->name,
+                'isActive' => $group->isActive,
+            ]);
+
+        return response()->json(['data' => $groups]);
+    }
+
     public function show(PermissionGroup $permissionGroup)
     {
         return response()->json(['data' => $permissionGroup->fresh()]);
