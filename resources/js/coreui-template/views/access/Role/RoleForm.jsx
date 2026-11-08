@@ -137,7 +137,7 @@ const PosisiFormPage = () => {
 
         // Simpan ke state hanya field yang dipakai checklist dan pengurutan.
         const availableFeatures = rawAvailableFeatures.map((feature) => ({
-          featureId: feature.featureId,
+          featureId: String(feature.featureId ?? feature.id ?? '').trim().toLowerCase(),
           name: feature.name,
           ordering: feature.ordering,
           group: feature.group
@@ -166,7 +166,9 @@ const PosisiFormPage = () => {
         })
 
         setSelectedFeatureIds(
-          (loadedPosisi?.features || []).map((feature) => feature.featureId),
+          (loadedPosisi?.features || []).map((feature) =>
+            String(feature.featureId ?? feature.id ?? feature ?? '').trim().toLowerCase(),
+          ).filter(Boolean),
         )
       } catch (loadError) {
         if (active) {
@@ -228,10 +230,10 @@ const PosisiFormPage = () => {
   const toggleFeature = (featureId, checked) => {
     setSelectedFeatureIds((current) => {
       if (checked) {
-        return [...new Set([...current, featureId])]
+        return [...new Set([...current, String(featureId).trim().toLowerCase()])]
       }
 
-      return current.filter((item) => item !== featureId)
+      return current.filter((item) => item !== String(featureId).trim().toLowerCase())
     })
   }
 
@@ -464,7 +466,7 @@ const PosisiFormPage = () => {
                                 id={`role-feature-${feature.featureId}`}
                                 label={feature.name}
                                 checked={selectedFeatureIds.includes(
-                                  feature.featureId,
+                                  String(feature.featureId).trim().toLowerCase(),
                                 )}
                                 disabled={formDisabled}
                                 onChange={(event) =>
