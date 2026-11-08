@@ -44,7 +44,11 @@ const AppSidebar = () => {
         component: CNavItem,
         name: feature.name,
         to: normalizeMenuPath(feature),
-      })).filter((item) => Boolean(item.to))
+      })).filter((item) => {
+        if (!item.to) return false
+        // Take out the Manajemen Peran menu from the sidebar navigation.
+        return item.to !== '/roles' && item.to !== '/role'
+      })
       if ((group.name === 'Beranda' || group.name === 'Dashboard') && children.length === 1) items.push({ ...children[0], icon })
       else if (children.length) items.push({ component: CNavGroup, name: group.name, icon, items: children })
     })
