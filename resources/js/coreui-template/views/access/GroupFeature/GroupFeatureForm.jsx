@@ -219,8 +219,9 @@ const GroupFeatureForm = () => {
         body: JSON.stringify(body),
       })
 
-      // Refresh route/sidebar only for a new group or changed menu metadata.
-      const menuConfigurationChanged = !id || [
+      // A newly created group has no features yet, so it cannot affect menu routes.
+      // Refresh routes/sidebar only when an existing group's menu metadata changes.
+      const menuConfigurationChanged = Boolean(id) && [
         ['name', String(group?.name ?? ''), body.name],
         ['icon', String(group?.icon ?? 'cilFolderOpen'), body.icon],
         ['ordering', Number(group?.ordering ?? 1), Number(body.ordering)],
