@@ -23,7 +23,6 @@ import { AppSidebarNav } from './AppSidebarNav'
 
 import { logo } from 'src/assets/brand/logo'
 import { sygnet } from 'src/assets/brand/sygnet'
-import { apiBase } from '../../services/api'
 
 const AppSidebar = () => {
   const dispatch = useDispatch()
