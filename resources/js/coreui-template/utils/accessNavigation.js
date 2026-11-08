@@ -1,5 +1,3 @@
-import { apiBase } from '../../services/api'
-
 const normalize = (value) => String(value || '').trim().toLowerCase()
 
 const normalizePath = (value) => {
@@ -42,7 +40,7 @@ const resolvePathFromGroups = (groups, featureNames = []) => {
 /**
  * Resolve access-management route from the menu payload already loaded by
  * AppContent. This avoids making an extra menus API request when clicking
- * Create/Edit/Detail buttons. Fetch only if the cache is unavailable.
+ * Create/Edit/Detail buttons. Never fetch menus from this navigation helper.
  */
 export const getAccessFeaturePath = async (featureNames = []) => {
   try {
@@ -52,31 +50,18 @@ export const getAccessFeaturePath = async (featureNames = []) => {
       if (cachedPath) return cachedPath
     }
   } catch {
-    // Invalid or stale cache: continue by fetching fresh menu data.
+    // Invalid cache: use canonical routes below without requesting menus.
   }
 
-  const token =
-    localStorage.getItem('auth_token') ||
-    localStorage.getItem('access_token') ||
-    localStorage.getItem('token') ||
-    ''
+  const candidates = featureNames.map(normalize).filter(Boolean)
+  const isGroupFeatureRequest = candidates.some((candidate) =>
+    ['kelompok fitur', 'kelompok feature', 'group fitur', 'group feature', 'feature group', 'permission group'].some((alias) => candidate.includes(alias)),
+  )
+  const isRoleRequest = candidates.some((candidate) =>
+    ['role', 'peran'].some((alias) => candidate === alias || candidate.includes(alias)),
+  )
 
-  const response = await fetch(`${apiBase}/auth/me/menus`, {
-    headers: {
-      Accept: 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      'X-Requested-With': 'XMLHttpRequest',
-    },
-    credentials: 'include',
-  })
-
-  if (!response.ok) {
-    throw new Error('Gagal membaca path menu dari database.')
-  }
-
-  const payload = await response.json()
-  const groups = payload.data || []
-  sessionStorage.setItem('sunriseLaundryMenus', JSON.stringify(groups))
-
-  return resolvePathFromGroups(groups, featureNames)
+  if (isGroupFeatureRequest) return '/feature-group'
+  if (isRoleRequest) return '/roles'
+  return '/feature'
 }
