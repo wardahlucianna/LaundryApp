@@ -58,7 +58,20 @@ export const buildAccessRoutes = (menuGroups) => {
     ],
     ['/feature'],
   )
-  const roleBase = resolveFeaturePath(menuGroups, ['Manajemen Role', 'Management Role', 'Manajemen Peran'])
+  const roleBase = resolveFeaturePath(
+    menuGroups,
+    [
+      'Manajemen Role',
+      'Management Role',
+      'Role Management',
+      'Role',
+      'Roles',
+      'Manajemen Peran',
+      'Pengelolaan Peran',
+      'Peran',
+    ],
+    ['/roles', '/role', '/management-role', '/manajemen-role', '/peran'],
+  )
   const groupFeatureBase = resolveFeaturePath(
     menuGroups,
     [
