@@ -43,7 +43,11 @@ const AppContent = () => {
 
         const payload = await response.json()
         if (active) {
-          setAccessRoutes(buildAccessRoutes(payload.data || []))
+          const groups = payload.data || []
+          setAccessRoutes(buildAccessRoutes(groups))
+          // Share the same menu response with the sidebar; avoid a second API request.
+          sessionStorage.setItem('sunriseLaundryMenus', JSON.stringify(groups))
+          window.dispatchEvent(new CustomEvent('sunrise:menus-loaded', { detail: groups }))
           setRouteLoadError('')
           hasLoadedRoutes = true
         }
