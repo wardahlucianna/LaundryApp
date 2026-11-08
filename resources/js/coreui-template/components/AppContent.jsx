@@ -74,7 +74,29 @@ const AppContent = () => {
     }
 
     loadAccessRoutes({ showLoading: true })
-    const refreshAccessRoutes = () => {
+    const refreshAccessRoutes = (event) => {
+      const change = event?.detail
+      // Apply deletion to the cached menu tree locally. A menu API round-trip
+      // is unnecessary when the only change is removing an existing item.
+      if (change?.type === 'delete-feature' || change?.type === 'delete-group') {
+        try {
+          const cachedGroups = JSON.parse(sessionStorage.getItem('sunriseLaundryMenus') || '[]')
+          const updatedGroups = change.type === 'delete-feature'
+            ? cachedGroups.map((group) => ({
+                ...group,
+                items: (group.items || []).filter((item) => item.featureId !== change.featureId),
+              })).filter((group) => (group.items || []).length > 0)
+            : cachedGroups.filter((group) => group.groupFeatureId !== change.groupFeatureId)
+
+          setAccessRoutes(buildAccessRoutes(updatedGroups))
+          sessionStorage.setItem('sunriseLaundryMenus', JSON.stringify(updatedGroups))
+          window.dispatchEvent(new CustomEvent('sunrise:menus-loaded', { detail: updatedGroups }))
+          return
+        } catch {
+          // If local cache cannot be updated, fall back to fresh API data.
+        }
+      }
+
       pendingMenusRequest = null
       loadAccessRoutes()
     }
