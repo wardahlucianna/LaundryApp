@@ -30,7 +30,7 @@ import MasterPageLayout from '../../../components/layout/MasterPageLayout'
 import { apiBase } from '../../../../services/api'
 import { getAccessFeaturePath } from '../../../utils/accessNavigation'
 
-const getRoleActiveStatus = (role) => {
+const getPosisiActiveStatus = (role) => {
   const rawStatus = role?.isActive ?? role?.is_active ?? role?.active ?? role?.status
   if (typeof rawStatus === 'boolean') return rawStatus
   if (typeof rawStatus === 'number') return rawStatus === 1
@@ -45,8 +45,8 @@ const getRoleActiveStatus = (role) => {
 // Deduplicate in-flight GET requests across React StrictMode effect remounts.
 const pendingAccessGetRequests = new Map()
 
-const RoleListPage = () => {
-  const [roles, setRoles] = useState([])
+const PosisiListPage = () => {
+  const [roles, setPosisis] = useState([])
   const [search, setSearch] = useState('')
   const [searchInput, setSearchInput] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
@@ -59,7 +59,7 @@ const RoleListPage = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
-  const [roleToDelete, setRoleToDelete] = useState(null)
+  const [roleToDelete, setPosisiToDelete] = useState(null)
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState('')
 
@@ -112,7 +112,7 @@ const RoleListPage = () => {
     return pendingRequest
   }, [])
 
-  const loadRoles = useCallback(async () => {
+  const loadPosisis = useCallback(async () => {
     setLoading(true)
     setError('')
 
@@ -132,7 +132,7 @@ const RoleListPage = () => {
 
       const payload = await request(`/roles?${params.toString()}`)
 
-      setRoles(payload.data || [])
+      setPosisis(payload.data || [])
       setPagination({
         current_page: payload.current_page || 1,
         last_page: payload.last_page || 1,
@@ -146,37 +146,37 @@ const RoleListPage = () => {
   }, [page, search, statusFilter, request])
 
   useEffect(() => {
-    loadRoles()
-  }, [loadRoles])
+    loadPosisis()
+  }, [loadPosisis])
 
   const openCreate = async () => {
-    const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role', 'Manajemen Peran'])
+    const listPath = await getAccessFeaturePath(['Management Position', 'Manajemen Posisi', 'Manajemen Posisi'])
     if (listPath) navigate(`${listPath}/form`)
-    else setError('Path Manajemen Peran belum terdaftar di database.')
+    else setError('Path Manajemen Posisi belum terdaftar di database.')
   }
 
   const openEdit = async (role) => {
-    const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role', 'Manajemen Peran'])
+    const listPath = await getAccessFeaturePath(['Management Position', 'Manajemen Posisi', 'Manajemen Posisi'])
     if (listPath) navigate(`${listPath}/form/${role.roleId}`)
-    else setError('Path Manajemen Peran belum terdaftar di database.')
+    else setError('Path Manajemen Posisi belum terdaftar di database.')
   }
 
   const openDetail = async (role) => {
-    const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role', 'Manajemen Peran'])
+    const listPath = await getAccessFeaturePath(['Management Position', 'Manajemen Posisi', 'Manajemen Posisi'])
     if (listPath) navigate(`${listPath}/detail/${role.roleId}`)
-    else setError('Path Manajemen Peran belum terdaftar di database.')
+    else setError('Path Manajemen Posisi belum terdaftar di database.')
   }
 
   const handleDelete = (role) => {
     const roleName = String(role.name || '').trim().toUpperCase()
 
     if (roleName === 'SUPER ADMIN') {
-      setError('Peran Super Admin tidak dapat dihapus.')
+      setError('Posisi Super Admin tidak dapat dihapus.')
       return
     }
 
     setDeleteError('')
-    setRoleToDelete(role)
+    setPosisiToDelete(role)
   }
 
   const confirmDelete = async () => {
@@ -194,12 +194,12 @@ const RoleListPage = () => {
         method: 'DELETE',
       })
 
-      setNotice('Peran berhasil dihapus.')
-      setRoleToDelete(null)
+      setNotice('Posisi berhasil dihapus.')
+      setPosisiToDelete(null)
 
-      await loadRoles()
+      await loadPosisis()
     } catch (requestError) {
-      setDeleteError(requestError.message || 'Gagal menghapus peran.')
+      setDeleteError(requestError.message || 'Gagal menghapus posisi.')
     } finally {
       setDeleting(false)
     }
@@ -207,7 +207,7 @@ const RoleListPage = () => {
 
   const cancelDelete = () => {
     setDeleteError('')
-    setRoleToDelete(null)
+    setPosisiToDelete(null)
   }
 
   const perPage = 10
@@ -218,7 +218,7 @@ const RoleListPage = () => {
     setPage(1)
 
     if (nextSearch === search) {
-      loadRoles()
+      loadPosisis()
       return
     }
 
@@ -230,7 +230,7 @@ const RoleListPage = () => {
     setStatusFilter('')
 
     if (search === '' && statusFilter === '' && page === 1) {
-      loadRoles()
+      loadPosisis()
       return
     }
 
@@ -251,7 +251,7 @@ const RoleListPage = () => {
 
   return (
     <MasterPageLayout
-      title="Manajemen Peran"
+      title="Manajemen Posisi"
       className="role-list-page"
       notice={notice}
       error={error}
@@ -263,7 +263,7 @@ const RoleListPage = () => {
       <CCard className="role-panel role-list-panel mb-4">
         <CCardHeader className="d-flex flex-wrap justify-content-between align-items-center gap-2">
           <div>
-            <strong className="fs-5">Daftar Peran</strong>
+            <strong className="fs-5">Daftar Posisi</strong>
           </div>
 
           <CButton
@@ -273,7 +273,7 @@ const RoleListPage = () => {
             onClick={openCreate}
           >
             <CIcon icon={cilPlus} size="sm" className="me-1" />
-            Tambah Peran
+            Tambah Posisi
           </CButton>
         </CCardHeader>
 
@@ -283,17 +283,17 @@ const RoleListPage = () => {
               <div className="d-flex flex-column gap-2 w-100">
                 <div className="d-flex flex-column flex-md-row align-items-stretch align-items-md-center gap-2 w-100">
                   <CFormInput
-                    placeholder="Cari nama peran"
+                    placeholder="Cari nama posisi"
                     value={searchInput}
                     onChange={(event) => setSearchInput(event.target.value)}
                     onKeyDown={handleSearchKeyDown}
-                    aria-label="Cari peran"
+                    aria-label="Cari posisi"
                     className="flex-grow-1 w-auto"
                     style={{ minWidth: 0 }}
                   />
 
                   <CFormSelect
-                    aria-label="Filter status peran"
+                    aria-label="Filter status posisi"
                     value={statusFilter}
                     onChange={handleStatusChange}
                     style={{ width: '160px', maxWidth: '160px' }}
@@ -338,12 +338,12 @@ const RoleListPage = () => {
           <GlobalTable
             columns={[
               { key: 'number', title: 'No.', width: 60, render: (_role, index) => (pagination.current_page - 1) * perPage + index + 1 },
-              { key: 'name', title: 'Nama Peran', render: (role) => <div className="fw-semibold">{role.name}</div> },
+              { key: 'name', title: 'Nama Posisi', render: (role) => <div className="fw-semibold">{role.name}</div> },
               { key: 'permissions_count', title: 'Jumlah Hak Akses', className: 'text-center', headerClassName: 'text-center', render: (role) => {
                 const permissionCount = role.permissions_count ?? role.features_count ?? role.role_permissions_count ?? (Array.isArray(role.features) ? role.features.length : null) ?? (Array.isArray(role.permissions) ? role.permissions.length : null)
                 return permissionCount ?? 0
               } },
-              { key: 'status', title: 'Status', render: (role) => { const isActive = getRoleActiveStatus(role); return <CBadge color={isActive ? 'success' : 'secondary'}>{isActive ? 'Aktif' : 'Nonaktif'}</CBadge> } },
+              { key: 'status', title: 'Status', render: (role) => { const isActive = getPosisiActiveStatus(role); return <CBadge color={isActive ? 'success' : 'secondary'}>{isActive ? 'Aktif' : 'Nonaktif'}</CBadge> } },
               { key: 'actions', title: 'Aksi', width: 170, className: 'text-center', headerClassName: 'text-center', render: (role) => (
                 <div className="table-actions d-inline-flex gap-2">
                   <CButton color="info" variant="outline" size="sm" onClick={() => openDetail(role)} title="Detail peran" aria-label={`Detail ${role.name}`}>
@@ -378,11 +378,11 @@ const RoleListPage = () => {
 
       <ConfirmModal
         visible={Boolean(roleToDelete)}
-        title="Konfirmasi Hapus Peran"
+        title="Konfirmasi Hapus Posisi"
         message={
           <>
             {deleteError && <CAlert color="danger" className="mb-3">{deleteError}</CAlert>}
-            {roleToDelete ? `Yakin ingin menghapus peran "${roleToDelete.name}"?` : ''}
+            {roleToDelete ? `Yakin ingin menghapus posisi "${roleToDelete.name}"?` : ''}
           </>
         }
         confirmText="Hapus"
@@ -396,4 +396,4 @@ const RoleListPage = () => {
   )
 }
 
-export default RoleListPage
+export default PosisiListPage
