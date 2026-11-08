@@ -10,31 +10,20 @@ export const apiBase = !configuredBase
     ? configuredBase
     : configuredBase + '/api'
 
+// LaundryApp uses session/cookie authentication.
+// Do not attach Authorization: Bearer tokens from localStorage.
 const apiClient = axios.create({
   baseURL: apiBase,
   withCredentials: true,
+  withXSRFToken: true,
   headers: {
     Accept: 'application/json',
     'X-Requested-With': 'XMLHttpRequest',
   },
 })
 
-apiClient.interceptors.request.use((config) => {
-  const token =
-    localStorage.getItem('auth_token') ||
-    localStorage.getItem('access_token') ||
-    localStorage.getItem('token') ||
-    ''
-
-  if (token) {
-    config.headers.Authorization = 'Bearer ' + token
-  }
-
-  return config
-})
-
-// If authentication is no longer valid, clear persisted auth data
-// and redirect to login. A 403 is a permission issue, not a logout.
+// If the session is no longer valid, clear cached user/menu data and redirect.
+// A 403 is a permission issue, not a logout.
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
