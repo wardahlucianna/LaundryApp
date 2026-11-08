@@ -41,7 +41,18 @@ class RoleController extends Controller
 
     public function show(Role $role)
     {
-        return response()->json(['data' => $role->load('features.group')->loadCount('users')]);
+        $role->load('features.group')->loadCount('users');
+
+        $availableFeatures = PermissionFeature::query()
+            ->with('group')
+            ->where('isActive', true)
+            ->orderBy('ordering')
+            ->orderBy('name')
+            ->get();
+
+        $role->setAttribute('availableFeatures', $availableFeatures);
+
+        return response()->json(['data' => $role]);
     }
 
     public function update(UpdateRoleRequest $request, Role $role)
