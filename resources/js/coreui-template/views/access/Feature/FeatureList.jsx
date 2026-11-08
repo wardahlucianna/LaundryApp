@@ -33,10 +33,12 @@ const FeatureListPage = () => {
   const [groups, setGroups] = useState([])
   const [groupSearchInput, setGroupSearchInput] = useState('')
   const [groupSearch, setGroupSearch] = useState('')
+  const [groupStatusInput, setGroupStatusInput] = useState('')
   const [groupStatusFilter, setGroupStatusFilter] = useState('')
   const [groupPage, setGroupPage] = useState(1)
   const [searchInput, setSearchInput] = useState('')
   const [search, setSearch] = useState('')
+  const [statusInput, setStatusInput] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
   const [page, setPage] = useState(1)
   const [pagination, setPagination] = useState({ current_page: 1, last_page: 1, total: 0 })
@@ -177,16 +179,12 @@ const FeatureListPage = () => {
   const applySearch = () => {
     setPage(1)
     setSearch(searchInput.trim())
-  }
-
-  const changeStatusFilter = (value) => {
-    setStatusFilter(value)
-    setPage(1)
-    setSearch(searchInput.trim())
+    setStatusFilter(statusInput)
   }
 
   const resetSearch = () => {
     setSearchInput('')
+    setStatusInput('')
     setStatusFilter('')
     setPage(1)
     setSearch('')
@@ -217,8 +215,8 @@ const FeatureListPage = () => {
     else setError('Path Manajemen Fitur belum terdaftar di database.')
   }
 
-  const applyGroupSearch = () => { setGroupSearch(groupSearchInput.trim()); setGroupPage(1) }
-  const resetGroupSearch = () => { setGroupSearchInput(''); setGroupSearch(''); setGroupStatusFilter(''); setGroupPage(1) }
+  const applyGroupSearch = () => { setGroupSearch(groupSearchInput.trim()); setGroupStatusFilter(groupStatusInput); setGroupPage(1) }
+  const resetGroupSearch = () => { setGroupSearchInput(''); setGroupSearch(''); setGroupStatusInput(''); setGroupStatusFilter(''); setGroupPage(1) }
 
   const getGroupName = (feature) => feature.group?.name || '—'
 
@@ -270,7 +268,7 @@ const FeatureListPage = () => {
   return (
     <MasterPageLayout title={"Manajemen Fitur"} className="role-list-page" notice={notice} error={error} onClearNotice={() => setNotice('')} onClearError={() => setError('')}>
       {isGroupFeatureRoute ? (
-        <CCard className="role-panel role-list-panel mb-4"><CCardHeader className="d-flex flex-wrap justify-content-between align-items-center gap-2"><strong className="fs-5">Daftar Kelompok Fitur</strong><CButton color="primary" size="sm" className="role-compact-button" onClick={openGroupCreate}><CIcon icon={cilPlus} size="sm" className="me-1"/>Tambah Group</CButton></CCardHeader><CCardBody><CRow className="mb-3"><CCol xs={12}><div className="d-flex flex-wrap flex-lg-nowrap align-items-center gap-2 w-100"><CFormInput placeholder="Cari nama kelompok" value={groupSearchInput} onChange={(event)=>setGroupSearchInput(event.target.value)} onKeyDown={(event)=>event.key==="Enter"&&applyGroupSearch()} aria-label="Cari kelompok fitur" className="flex-grow-1"/><CFormSelect aria-label="Filter status group" value={groupStatusFilter} onChange={(event)=>{setGroupStatusFilter(event.target.value);setGroupPage(1)}} style={{maxWidth:"160px"}} options={[{label:"Semua Status",value:""},{label:"Aktif",value:"1"},{label:"Nonaktif",value:"0"}]}/><CButton color="primary" size="sm" className="role-compact-button role-search-button" onClick={applyGroupSearch}><CIcon icon={cilSearch} size="sm" className="me-1"/>Cari</CButton><CButton color="secondary" variant="outline" size="sm" className="role-compact-button role-reset-button" onClick={resetGroupSearch}><CIcon icon={cilReload} size="sm" className="me-1"/>Reset</CButton></div></CCol></CRow><GlobalTable columns={[{key:"number",title:"No.",width:60,render:(_group,index)=>(groupPage-1)*groupPerPage+index+1},{key:"icon",title:"Ikon",render:(group)=><CIcon icon={groupIcons[group.icon]||cilFolderOpen} size="xl"/>},{key:"name",title:"Nama Kelompok",render:(group)=><div><div className="fw-semibold">{group.name}</div><small className="text-body-secondary">Urutan: {group.ordering??0}</small></div>},{key:"features_count",title:"Jumlah Fitur",className:"text-center",headerClassName:"text-center",render:(group)=>group.features_count??0},{key:"status",title:"Status",className:"text-center",headerClassName:"text-center",render:(group)=><CBadge color={group.isActive?"success":"secondary"}>{group.isActive?"Aktif":"Nonaktif"}</CBadge>},{key:"actions",title:"Aksi",width:150,className:"text-center",headerClassName:"text-center",render:(group)=><div className="table-actions d-inline-flex gap-2"><CButton color="primary" variant="outline" size="sm" onClick={()=>openGroupEdit(group)} title="Edit"><CIcon icon={cilPencil} size="sm"/></CButton><CButton color="danger" variant="outline" size="sm" onClick={()=>deleteGroup(group)} title="Hapus"><CIcon icon={cilTrash} size="sm"/></CButton></div>}] } rows={paginatedGroups} rowKey="groupFeatureId" loading={loading} emptyMessage="Data group feature tidak ditemukan." hover responsive className="role-table"/><GlobalPagination currentPage={groupPagination.current_page} lastPage={groupPagination.last_page} total={groupPagination.total} perPage={groupPerPage} onPageChange={setGroupPage} loading={loading}/></CCardBody></CCard>
+        <CCard className="role-panel role-list-panel mb-4"><CCardHeader className="d-flex flex-wrap justify-content-between align-items-center gap-2"><strong className="fs-5">Daftar Kelompok Fitur</strong><CButton color="primary" size="sm" className="role-compact-button" onClick={openGroupCreate}><CIcon icon={cilPlus} size="sm" className="me-1"/>Tambah Group</CButton></CCardHeader><CCardBody><CRow className="mb-3"><CCol xs={12}><div className="d-flex flex-wrap flex-lg-nowrap align-items-center gap-2 w-100"><CFormInput placeholder="Cari nama kelompok" value={groupSearchInput} onChange={(event)=>setGroupSearchInput(event.target.value)} onKeyDown={(event)=>event.key==="Enter"&&event.preventDefault()} aria-label="Cari kelompok fitur" className="flex-grow-1"/><CFormSelect aria-label="Filter status group" value={groupStatusInput} onChange={(event)=>setGroupStatusInput(event.target.value)} style={{maxWidth:"160px"}} options={[{label:"Semua Status",value:""},{label:"Aktif",value:"1"},{label:"Nonaktif",value:"0"}]}/><CButton color="primary" size="sm" className="role-compact-button role-search-button" onClick={applyGroupSearch}><CIcon icon={cilSearch} size="sm" className="me-1"/>Cari</CButton><CButton color="secondary" variant="outline" size="sm" className="role-compact-button role-reset-button" onClick={resetGroupSearch}><CIcon icon={cilReload} size="sm" className="me-1"/>Reset</CButton></div></CCol></CRow><GlobalTable columns={[{key:"number",title:"No.",width:60,render:(_group,index)=>(groupPage-1)*groupPerPage+index+1},{key:"icon",title:"Ikon",render:(group)=><CIcon icon={groupIcons[group.icon]||cilFolderOpen} size="xl"/>},{key:"name",title:"Nama Kelompok",render:(group)=><div><div className="fw-semibold">{group.name}</div><small className="text-body-secondary">Urutan: {group.ordering??0}</small></div>},{key:"features_count",title:"Jumlah Fitur",className:"text-center",headerClassName:"text-center",render:(group)=>group.features_count??0},{key:"status",title:"Status",className:"text-center",headerClassName:"text-center",render:(group)=><CBadge color={group.isActive?"success":"secondary"}>{group.isActive?"Aktif":"Nonaktif"}</CBadge>},{key:"actions",title:"Aksi",width:150,className:"text-center",headerClassName:"text-center",render:(group)=><div className="table-actions d-inline-flex gap-2"><CButton color="primary" variant="outline" size="sm" onClick={()=>openGroupEdit(group)} title="Edit"><CIcon icon={cilPencil} size="sm"/></CButton><CButton color="danger" variant="outline" size="sm" onClick={()=>deleteGroup(group)} title="Hapus"><CIcon icon={cilTrash} size="sm"/></CButton></div>}] } rows={paginatedGroups} rowKey="groupFeatureId" loading={loading} emptyMessage="Data group feature tidak ditemukan." hover responsive className="role-table"/><GlobalPagination currentPage={groupPagination.current_page} lastPage={groupPagination.last_page} total={groupPagination.total} perPage={groupPerPage} onPageChange={setGroupPage} loading={loading}/></CCardBody></CCard>
       ) : (
         <CCard className="role-panel role-list-panel mb-4">
                   <CCardHeader className="d-flex flex-wrap justify-content-between align-items-center gap-2">
@@ -288,15 +286,15 @@ const FeatureListPage = () => {
                               placeholder="Cari nama atau kelompok fitur"
                               value={searchInput}
                               onChange={(event) => setSearchInput(event.target.value)}
-                              onKeyDown={(event) => event.key === 'Enter' && applySearch()}
+                              onKeyDown={(event) => event.key === 'Enter' && event.preventDefault()}
                               aria-label="Cari fitur"
                               className="flex-grow-1 w-auto"
                               style={{ minWidth: 0 }}
                             />
                             <CFormSelect
                               aria-label="Filter status fitur"
-                              value={statusFilter}
-                              onChange={(event) => changeStatusFilter(event.target.value)}
+                              value={statusInput}
+                              onChange={(event) => setStatusInput(event.target.value)}
                               style={{ width: '160px', maxWidth: '160px' }}
                               options={[{ label: 'Semua Status', value: '' }, { label: 'Aktif', value: '1' }, { label: 'Nonaktif', value: '0' }]}
                             />
