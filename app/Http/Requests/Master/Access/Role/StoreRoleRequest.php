@@ -24,6 +24,8 @@ class StoreRoleRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:100'],
             'isActive' => ['sometimes', 'boolean'],
+            'featureIds' => ['sometimes', 'array'],
+            'featureIds.*' => ['uuid', 'exists:features,featureId'],
         ];
     }
 }
