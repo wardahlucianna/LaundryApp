@@ -17,6 +17,9 @@ import { apiBase } from '../../../../services/api'
 import { getAccessFeaturePath } from '../../../utils/accessNavigation'
 
 
+// Deduplicate in-flight GET requests across React StrictMode effect remounts.
+const pendingAccessGetRequests = new Map()
+
 const GroupFeatureDetail = () => {
   const getGroupStatus = (item) => Boolean(item.isActive ?? item.is_active)
   const { id } = useParams()
@@ -26,29 +29,37 @@ const GroupFeatureDetail = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
-  const request = useCallback(async (path) => {
-    const token =
-      localStorage.getItem('auth_token') ||
-      localStorage.getItem('access_token') ||
-      localStorage.getItem('token') ||
-      ''
-
-    const response = await fetch(`${apiBase}${path}`, {
-      headers: {
-        Accept: 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    })
-
-    const payload = await response.json().catch(() => ({}))
-
-    if (!response.ok) {
-      throw new Error(
-        payload.message || 'Permintaan gagal diproses.',
-      )
+  const request = useCallback((path) => {
+    const requestOptions = {}
+    const method = String(requestOptions.method || 'GET').toUpperCase()
+    const requestKey = `${method}:${apiBase}${path}`
+    if (method === 'GET' && pendingAccessGetRequests.has(requestKey)) return pendingAccessGetRequests.get(requestKey)
+    const token = localStorage.getItem('auth_token') || localStorage.getItem('access_token') || localStorage.getItem('token') || ''
+    const pendingRequest = (async () => {
+      const response = await fetch(`${apiBase}${path}`, {
+        ...requestOptions,
+        credentials: 'include',
+        headers: {
+          Accept: 'application/json',
+          ...(requestOptions.body ? { 'Content-Type': 'application/json' } : {}),
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          ...(requestOptions.headers || {}),
+        },
+      })
+      const payload = await response.json().catch(() => ({}))
+      if (!response.ok) {
+        const validationMessage = payload.errors ? Object.values(payload.errors).flat().join(' ') : ''
+        throw new Error(validationMessage || payload.message || 'Permintaan gagal diproses.')
+      }
+      return payload
+    })()
+    if (method === 'GET') {
+      pendingAccessGetRequests.set(requestKey, pendingRequest)
+      pendingRequest.finally(() => {
+        if (pendingAccessGetRequests.get(requestKey) === pendingRequest) pendingAccessGetRequests.delete(requestKey)
+      }).catch(() => {})
     }
-
-    return payload
+    return pendingRequest
   }, [])
 
   useEffect(() => {
