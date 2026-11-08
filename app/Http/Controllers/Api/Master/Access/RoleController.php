@@ -30,8 +30,12 @@ class RoleController extends Controller
 
     public function featureOptions()
     {
+        // Return only fields consumed by the role permission checklist.
         $features = PermissionFeature::query()
-            ->with('group')
+            ->select(['featureId', 'groupFeatureId', 'name', 'ordering'])
+            ->with(['group' => function ($query) {
+                $query->select(['groupFeatureId', 'name', 'ordering']);
+            }])
             ->where('isActive', true)
             ->orderBy('ordering')
             ->orderBy('name')
