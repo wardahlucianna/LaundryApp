@@ -6,6 +6,9 @@ import { CContainer, CSpinner } from '@coreui/react'
 import { buildAccessRoutes, routes } from '../routes.jsx'
 import { apiBase } from '../../services/api'
 
+// Reuse an in-flight menu request across React StrictMode effect remounts.
+let pendingMenusRequest = null
+
 const AppContent = () => {
   const [accessRoutes, setAccessRoutes] = useState([])
   const [isLoadingRoutes, setIsLoadingRoutes] = useState(true)
@@ -24,24 +27,30 @@ const AppContent = () => {
       }
 
       try {
-        const token =
-          localStorage.getItem('auth_token') ||
-          localStorage.getItem('access_token') ||
-          localStorage.getItem('token') ||
-          ''
+        if (!pendingMenusRequest) {
+          const token =
+            localStorage.getItem('auth_token') ||
+            localStorage.getItem('access_token') ||
+            localStorage.getItem('token') ||
+            ''
 
-        const response = await fetch(`${apiBase}/auth/me/menus`, {
-          headers: {
-            Accept: 'application/json',
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
-            'X-Requested-With': 'XMLHttpRequest',
-          },
-          credentials: 'include',
-        })
+          pendingMenusRequest = fetch(`${apiBase}/auth/me/menus`, {
+            headers: {
+              Accept: 'application/json',
+              ...(token ? { Authorization: `Bearer ${token}` } : {}),
+              'X-Requested-With': 'XMLHttpRequest',
+            },
+            credentials: 'include',
+          }).then(async (response) => {
+            if (!response.ok) throw new Error('Gagal membaca konfigurasi route menu.')
+            return response.json()
+          }).catch((error) => {
+            pendingMenusRequest = null
+            throw error
+          })
+        }
 
-        if (!response.ok) throw new Error('Gagal membaca konfigurasi route menu.')
-
-        const payload = await response.json()
+        const payload = await pendingMenusRequest
         if (active) {
           const groups = payload.data || []
           setAccessRoutes(buildAccessRoutes(groups))
@@ -65,11 +74,15 @@ const AppContent = () => {
     }
 
     loadAccessRoutes({ showLoading: true })
-    window.addEventListener('sunrise:permissions-updated', loadAccessRoutes)
+    const refreshAccessRoutes = () => {
+      pendingMenusRequest = null
+      loadAccessRoutes()
+    }
+    window.addEventListener('sunrise:permissions-updated', refreshAccessRoutes)
 
     return () => {
       active = false
-      window.removeEventListener('sunrise:permissions-updated', loadAccessRoutes)
+      window.removeEventListener('sunrise:permissions-updated', refreshAccessRoutes)
     }
   }, [])
 
