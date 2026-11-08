@@ -131,9 +131,23 @@ const RoleFormPage = () => {
         }
 
         const loadedRole = id ? (payload.data || payload) : null
-        const availableFeatures = id
+        const rawAvailableFeatures = id
           ? (loadedRole?.availableFeatures || [])
           : (payload.data || [])
+
+        // Simpan ke state hanya field yang dipakai checklist dan pengurutan.
+        const availableFeatures = rawAvailableFeatures.map((feature) => ({
+          featureId: feature.featureId,
+          name: feature.name,
+          ordering: feature.ordering,
+          group: feature.group
+            ? {
+                groupFeatureId: feature.group.groupFeatureId,
+                name: feature.group.name,
+                ordering: feature.group.ordering,
+              }
+            : null,
+        }))
 
         setFeatures(availableFeatures)
         setCollapsedGroups(
