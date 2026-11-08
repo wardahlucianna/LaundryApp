@@ -24,6 +24,11 @@ const MasterPageLayout = ({
       onClearNotice={onClearNotice}
       onClearError={onClearError}
     />
+    {headingActions && (
+      <div className="d-flex flex-wrap justify-content-end align-items-center gap-2 mb-3">
+        {headingActions}
+      </div>
+    )}
     {children}
   </div>
 )
