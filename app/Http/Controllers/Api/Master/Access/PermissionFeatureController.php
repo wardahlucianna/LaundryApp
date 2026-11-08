@@ -11,7 +11,13 @@ class PermissionFeatureController extends Controller
 {
     public function index(Request $request)
     {
-        $query = PermissionFeature::query()->with('group')->withCount('roles')->orderBy('ordering')->orderBy('name');
+        // Daftar fitur hanya mengirim field yang dipakai tabel FE.
+        $query = PermissionFeature::query()
+            ->select(['featureId', 'groupFeatureId', 'name', 'path', 'ordering', 'menuType', 'isActive'])
+            ->with(['group' => fn ($groupQuery) => $groupQuery->select(['groupFeatureId', 'name'])])
+            ->withCount('roles')
+            ->orderBy('ordering')
+            ->orderBy('name');
         if ($search = $request->string('search')->toString()) {
             $query->where(fn ($q) => $q->where('name', 'ilike', "%{$search}%")
                 ->orWhereHas('group', fn ($g) => $g->where('name', 'ilike', "%{$search}%")));
@@ -20,7 +26,26 @@ class PermissionFeatureController extends Controller
             $query->where('groupFeatureId', $request->input('groupFeatureId'));
         }
         if ($request->has('isActive')) $query->where('isActive', $request->boolean('isActive'));
-        return response()->json($query->paginate(min(max($request->integer('per_page', 100), 1), 100)));
+        $paginator = $query->paginate(min(max($request->integer('per_page', 100), 1), 100));
+
+        return response()->json([
+            'data' => $paginator->getCollection()->map(fn ($feature) => [
+                'featureId' => $feature->featureId,
+                'name' => $feature->name,
+                'ordering' => $feature->ordering,
+                'group' => $feature->group ? ['name' => $feature->group->name] : null,
+                'path' => $feature->path,
+                'menuType' => $feature->menuType,
+                'roles_count' => $feature->roles_count,
+                'isActive' => $feature->isActive,
+            ]),
+            'current_page' => $paginator->currentPage(),
+            'last_page' => $paginator->lastPage(),
+            'per_page' => $paginator->perPage(),
+            'total' => $paginator->total(),
+            'from' => $paginator->firstItem(),
+            'to' => $paginator->lastItem(),
+        ]);
     }
 
     public function show(PermissionFeature $permissionFeature)
