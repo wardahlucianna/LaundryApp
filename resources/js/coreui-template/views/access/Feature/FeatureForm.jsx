@@ -322,7 +322,11 @@ const FeatureFormPage = () => {
                           const shouldOpen = !groupDropdownOpen
                           if (shouldOpen && !groupsLoaded) {
                             try {
-                              const payload = await request('/permission-groups?per_page=100')
+                              const selectedId = id ? String(values.groupFeatureId || '') : ''
+                              const optionsPath = selectedId
+                                ? `/permission-groups/options?selectedId=${encodeURIComponent(selectedId)}`
+                                : '/permission-groups/options'
+                              const payload = await request(optionsPath)
                               const groupRows = Array.isArray(payload.data) ? payload.data : Array.isArray(payload) ? payload : []
                               setGroups(groupRows)
                               setGroupsLoaded(true)
