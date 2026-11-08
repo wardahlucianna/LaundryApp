@@ -26,7 +26,7 @@ import { apiBase } from '../../../../services/api'
 import { getAccessFeaturePath } from '../../../utils/accessNavigation'
 
 
-const getRoleActiveStatus = (role) => {
+const getPosisiActiveStatus = (role) => {
   const rawStatus = role?.isActive ?? role?.is_active ?? role?.active ?? role?.status
   if (typeof rawStatus === 'boolean') return rawStatus
   if (typeof rawStatus === 'number') return rawStatus === 1
@@ -39,13 +39,13 @@ const getRoleActiveStatus = (role) => {
 }
 
 // Share pending GET requests across StrictMode effect remounts.
-const pendingRoleFormGetRequests = new Map()
+const pendingPosisiFormGetRequests = new Map()
 
-const RoleFormPage = () => {
+const PosisiFormPage = () => {
   const navigate = useNavigate()
   const { id } = useParams()
 
-  const [role, setRole] = useState(null)
+  const [role, setPosisi] = useState(null)
   const [features, setFeatures] = useState([])
   const [values, setValues] = useState({
     name: '',
@@ -65,8 +65,8 @@ const RoleFormPage = () => {
     const method = String(options.method || 'GET').toUpperCase()
     const requestKey = `${method}:${apiBase}${path}`
 
-    if (method === 'GET' && pendingRoleFormGetRequests.has(requestKey)) {
-      return pendingRoleFormGetRequests.get(requestKey)
+    if (method === 'GET' && pendingPosisiFormGetRequests.has(requestKey)) {
+      return pendingPosisiFormGetRequests.get(requestKey)
     }
 
     const token =
@@ -100,10 +100,10 @@ const RoleFormPage = () => {
     })()
 
     if (method === 'GET') {
-      pendingRoleFormGetRequests.set(requestKey, pendingRequest)
+      pendingPosisiFormGetRequests.set(requestKey, pendingRequest)
       pendingRequest.finally(() => {
-        if (pendingRoleFormGetRequests.get(requestKey) === pendingRequest) {
-          pendingRoleFormGetRequests.delete(requestKey)
+        if (pendingPosisiFormGetRequests.get(requestKey) === pendingRequest) {
+          pendingPosisiFormGetRequests.delete(requestKey)
         }
       }).catch(() => {})
     }
@@ -130,9 +130,9 @@ const RoleFormPage = () => {
           return
         }
 
-        const loadedRole = id ? (payload.data || payload) : null
+        const loadedPosisi = id ? (payload.data || payload) : null
         const rawAvailableFeatures = id
-          ? (loadedRole?.availableFeatures || [])
+          ? (loadedPosisi?.availableFeatures || [])
           : (payload.data || [])
 
         // Simpan ke state hanya field yang dipakai checklist dan pengurutan.
@@ -156,17 +156,17 @@ const RoleFormPage = () => {
               .map((groupName) => [groupName, false]),
           ),
         )
-        setRole(loadedRole || null)
+        setPosisi(loadedPosisi || null)
 
         setValues({
-          name: loadedRole?.name || '',
-          is_active: loadedRole
-            ? getRoleActiveStatus(loadedRole)
+          name: loadedPosisi?.name || '',
+          is_active: loadedPosisi
+            ? getPosisiActiveStatus(loadedPosisi)
             : true,
         })
 
         setSelectedFeatureIds(
-          (loadedRole?.features || []).map((feature) => feature.featureId),
+          (loadedPosisi?.features || []).map((feature) => feature.featureId),
         )
       } catch (loadError) {
         if (active) {
@@ -293,13 +293,13 @@ const RoleFormPage = () => {
       // Perubahan role tidak mengubah menu pengguna yang sedang login;
       // tidak perlu invalidasi cache atau request ulang /auth/me/menus.
 
-      const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role', 'Manajemen Peran'])
-      if (!listPath) throw new Error('Path daftar Manajemen Peran belum terdaftar di database.')
+      const listPath = await getAccessFeaturePath(['Management Position', 'Manajemen Posisi', 'Manajemen Posisi'])
+      if (!listPath) throw new Error('Path daftar Manajemen Posisi belum terdaftar di database.')
       navigate(listPath, {
         state: {
           notice: id
-            ? 'Peran berhasil diperbarui.'
-            : 'Peran berhasil ditambahkan.',
+            ? 'Posisi berhasil diperbarui.'
+            : 'Posisi berhasil ditambahkan.',
         },
       })
     } catch (saveError) {
@@ -314,7 +314,7 @@ const RoleFormPage = () => {
 
   return (
     <MasterPageLayout
-      title="Manajemen Peran"
+      title="Manajemen Posisi"
       className="role-form-page"
       error={error}
       onClearError={() => setError('')}
@@ -330,7 +330,7 @@ const RoleFormPage = () => {
           }}
         >
           <strong className="fs-5">
-            {id ? 'Ubah Peran' : 'Tambah Peran'}
+            {id ? 'Ubah Posisi' : 'Tambah Posisi'}
           </strong>
         </CCardHeader>
 
@@ -339,7 +339,7 @@ const RoleFormPage = () => {
             <CRow className="g-3">
               <CCol xs={12} md={6}>
                 <CFormInput
-                  label="Nama Peran"
+                  label="Nama Posisi"
                   value={values.name}
                   onChange={handleNameChange}
                   required
@@ -493,11 +493,11 @@ const RoleFormPage = () => {
                 disabled={formDisabled}
                 onClick={async () => {
                   try {
-                    const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role', 'Manajemen Peran'])
+                    const listPath = await getAccessFeaturePath(['Management Position', 'Manajemen Posisi', 'Manajemen Posisi'])
                     if (listPath) navigate(listPath)
-                    else setError('Path Manajemen Peran belum terdaftar di database.')
+                    else setError('Path Manajemen Posisi belum terdaftar di database.')
                   } catch (navigationError) {
-                    setError(navigationError.message || 'Gagal membaca path Manajemen Peran dari database.')
+                    setError(navigationError.message || 'Gagal membaca path Manajemen Posisi dari database.')
                   }
                 }}
               >
@@ -527,4 +527,4 @@ const RoleFormPage = () => {
   )
 }
 
-export default RoleFormPage
+export default PosisiFormPage
