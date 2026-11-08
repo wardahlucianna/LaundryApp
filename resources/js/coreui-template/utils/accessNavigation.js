@@ -8,12 +8,34 @@ const normalizePath = (value) => {
   return path.startsWith('/') ? path : `/${path}`
 }
 
+const resolvePathFromGroups = (groups, featureNames = []) => {
+  const features = (groups || []).flatMap((group) => group.items || [])
+  const candidates = featureNames.map(normalize).filter(Boolean)
+
+  const found = features.find((feature) => {
+    const name = normalize(feature.name)
+    return candidates.some((candidate) => name === candidate || name.includes(candidate))
+  })
+
+  return normalizePath(found?.path)
+}
+
 /**
- * Resolve an access-management feature's list route from the current user's
- * database-backed menu payload. The caller can append route suffixes for forms
- * and details while keeping the list base path sourced from the DB.
+ * Resolve access-management route from the menu payload already loaded by
+ * AppContent. This avoids making an extra menus API request when clicking
+ * Create/Edit/Detail buttons. Fetch only if the cache is unavailable.
  */
 export const getAccessFeaturePath = async (featureNames = []) => {
+  try {
+    const cachedMenus = sessionStorage.getItem('sunriseLaundryMenus')
+    if (cachedMenus) {
+      const cachedPath = resolvePathFromGroups(JSON.parse(cachedMenus), featureNames)
+      if (cachedPath) return cachedPath
+    }
+  } catch {
+    // Invalid or stale cache: continue by fetching fresh menu data.
+  }
+
   const token =
     localStorage.getItem('auth_token') ||
     localStorage.getItem('access_token') ||
@@ -34,13 +56,8 @@ export const getAccessFeaturePath = async (featureNames = []) => {
   }
 
   const payload = await response.json()
-  const features = (payload.data || []).flatMap((group) => group.items || [])
-  const candidates = featureNames.map(normalize).filter(Boolean)
+  const groups = payload.data || []
+  sessionStorage.setItem('sunriseLaundryMenus', JSON.stringify(groups))
 
-  const found = features.find((feature) => {
-    const name = normalize(feature.name)
-    return candidates.some((candidate) => name === candidate || name.includes(candidate))
-  })
-
-  return normalizePath(found?.path)
+  return resolvePathFromGroups(groups, featureNames)
 }
