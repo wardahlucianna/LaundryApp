@@ -10,14 +10,26 @@ use App\Models\Access\PermissionFeature;
 class EnsurePermission
 {
     /**
-     * Route permission labels are legacy action codes. Access is now granted
-     * through role_permission_features, so map those labels to their feature.
+     * Legacy API permission labels map to feature menu names.
+     * A role must still have one of the matching active features assigned.
      */
     private function featureNamesFor(string $permissionCode): ?array
     {
-        return match (strtoupper($permissionCode)) {
-            'FEATURE_VIEW', 'FEATURE_CREATE', 'FEATURE_UPDATE', 'FEATURE_DELETE' => ['Manajemen Fitur'],
-            'ROLE_VIEW', 'ROLE_MANAGE', 'ACCESS_MANAGE' => ['Management Role', 'Manajemen Role', 'Manajemen Peran'],
+        return match (strtoupper(trim($permissionCode))) {
+            'FEATURE_VIEW', 'FEATURE_CREATE', 'FEATURE_UPDATE', 'FEATURE_DELETE' => [
+                'Manajemen Fitur',
+                'Management Fitur',
+                'Manajemen Feature',
+                'Management Feature',
+                'Fitur',
+                'Feature',
+                'Features',
+            ],
+            'ROLE_VIEW', 'ROLE_MANAGE', 'ACCESS_MANAGE' => [
+                'Management Role',
+                'Manajemen Role',
+                'Manajemen Peran',
+            ],
             default => null,
         };
     }
@@ -36,15 +48,20 @@ class EnsurePermission
         }
 
         $featureNames = $this->featureNamesFor($permissionCode);
-        $feature = $featureNames
+        $matchingFeatures = $featureNames
             ? PermissionFeature::query()
                 ->whereIn('name', $featureNames)
                 ->where('isActive', true)
-                ->first()
-            : null;
+                ->get()
+            : collect();
 
-        $allowed = $feature && $user->role?->features
-            ->contains(fn ($assigned) => $assigned->featureId === $feature->featureId && $assigned->isActive);
+        $assignedFeatures = $user->role?->features ?? collect();
+        $allowed = $matchingFeatures->isNotEmpty() && $matchingFeatures->contains(
+            fn ($feature) => $assignedFeatures->contains(
+                fn ($assigned) => (string) $assigned->featureId === (string) $feature->featureId
+                    && $assigned->isActive
+            )
+        );
 
         if (!$allowed) {
             return response()->json(['message' => 'Anda tidak memiliki hak akses untuk fitur ini.'], 403);
