@@ -281,25 +281,15 @@ const RoleFormPage = () => {
           body: JSON.stringify({
             name: values.name.trim(),
             is_active: values.is_active,
+            featureIds: selectedFeatureIds,
           }),
         },
       )
 
-      const savedRole = rolePayload.data || rolePayload
-      const isSuperAdmin =
-        values.name.trim().toUpperCase() === 'SUPER ADMIN'
-
-      if (!isSuperAdmin) {
-        await request(`/roles/${savedRole.roleId || id}/features`, {
-          method: 'PUT',
-          body: JSON.stringify({
-            featureIds: selectedFeatureIds,
-          }),
-        })
-      }
-
-      // Perubahan role tidak mengubah menu pengguna yang sedang login.
-      // Jangan invalidasi cache atau memanggil ulang endpoint /auth/me/menus.
+      // Nama/status role dan hak akses fitur tersimpan sekaligus
+      // melalui satu request POST/PUT ke endpoint /roles.
+      // Perubahan role tidak mengubah menu pengguna yang sedang login;
+      // tidak perlu invalidasi cache atau request ulang /auth/me/menus.
 
       const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role', 'Manajemen Peran'])
       if (!listPath) throw new Error('Path daftar Manajemen Peran belum terdaftar di database.')
