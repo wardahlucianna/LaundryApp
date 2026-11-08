@@ -46,8 +46,8 @@ const AppSidebar = () => {
         to: normalizeMenuPath(feature),
       })).filter((item) => {
         if (!item.to) return false
-        // Take out Manajemen Peran and Manajemen Kelompok Fitur from sidebar navigation.
-        return !['/roles', '/role', '/feature-group', '/feature-groups'].includes(item.to)
+        // Show all menu items that have a valid path, including Posisi and Kelompok Fitur.
+        return true
       })
       if ((group.name === 'Beranda' || group.name === 'Dashboard') && children.length === 1) items.push({ ...children[0], icon })
       else if (children.length) items.push({ component: CNavGroup, name: group.name, icon, items: children })
