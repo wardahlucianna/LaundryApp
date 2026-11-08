@@ -15,6 +15,7 @@ Route::middleware('auth:web')->group(function () {
     Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->middleware('permission:ROLE_MANAGE');
     Route::put('/roles/{role}/features', [RoleController::class, 'syncFeatures'])->middleware('permission:ACCESS_MANAGE');
 
+    Route::get('/permission-groups/options', [PermissionGroupController::class, 'options'])->middleware('permission:FEATURE_VIEW');
     Route::get('/permission-groups', [PermissionGroupController::class, 'index'])->middleware('permission:FEATURE_VIEW');
     Route::get('/permission-groups/{permissionGroup}', [PermissionGroupController::class, 'show'])->middleware('permission:FEATURE_VIEW');
     Route::post('/permission-groups', [PermissionGroupController::class, 'store'])->middleware('permission:FEATURE_CREATE');
