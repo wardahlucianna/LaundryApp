@@ -46,6 +46,7 @@ const FeatureFormPage = () => {
 
   const [feature, setFeature] = useState(null)
   const [groups, setGroups] = useState([])
+  const [groupsLoaded, setGroupsLoaded] = useState(false)
   const [groupSearch, setGroupSearch] = useState('')
   const [groupDropdownOpen, setGroupDropdownOpen] = useState(false)
   const [values, setValues] = useState({
@@ -121,25 +122,20 @@ const FeatureFormPage = () => {
           return pending
         }
 
-        const [groupsPayload, featurePayload] = await Promise.all([
-          requestShared('/permission-groups?per_page=100'),
-          id
-            ? requestShared(`/permission-features/${id}`)
-            : Promise.resolve(null),
-        ])
+        const featurePayload = id
+          ? await requestShared(`/permission-features/${id}`)
+          : null
 
         if (!active) {
           return
         }
 
-        const availableGroups = Array.isArray(groupsPayload.data)
-          ? groupsPayload.data
-          : Array.isArray(groupsPayload)
-            ? groupsPayload
-            : []
         const loadedFeature = featurePayload?.data?.data || featurePayload?.data || featurePayload || null
 
-        setGroups(availableGroups)
+        // Show the currently selected group from the feature relation without
+        // fetching the entire group catalog until the dropdown is opened.
+        setGroups(loadedFeature?.group ? [loadedFeature.group] : [])
+        setGroupsLoaded(false)
         setFeature(loadedFeature)
 
         const selectedGroupId = String(
@@ -322,8 +318,20 @@ const FeatureFormPage = () => {
                         aria-label="Pilih kelompok fitur"
                         aria-expanded={groupDropdownOpen}
                         disabled={formDisabled}
-                        onClick={() => {
-                          setGroupDropdownOpen((open) => !open)
+                        onClick={async () => {
+                          const shouldOpen = !groupDropdownOpen
+                          if (shouldOpen && !groupsLoaded) {
+                            try {
+                              const payload = await request('/permission-groups?per_page=100')
+                              const groupRows = Array.isArray(payload.data) ? payload.data : Array.isArray(payload) ? payload : []
+                              setGroups(groupRows)
+                              setGroupsLoaded(true)
+                            } catch (groupLoadError) {
+                              setError(groupLoadError.message || 'Gagal memuat pilihan kelompok fitur.')
+                              return
+                            }
+                          }
+                          setGroupDropdownOpen(shouldOpen)
                           setGroupSearch('')
                         }}
                       >
