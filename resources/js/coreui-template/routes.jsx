@@ -26,15 +26,38 @@ const normalizePath = (value) => {
   return trimmed || '/'
 }
 
-const resolveFeaturePath = (menuGroups, names) => {
+const flattenMenuFeatures = (menuGroups) =>
+  (menuGroups || []).flatMap((group) => group.items || [])
+
+const resolveFeaturePath = (menuGroups, names, fallbackPaths = []) => {
   const candidates = names.map((name) => name.toLowerCase())
-  const features = (menuGroups || []).flatMap((group) => group.items || [])
-  const feature = features.find((item) => candidates.includes(String(item.name || '').trim().toLowerCase()))
-  return normalizePath(feature?.path)
+  const features = flattenMenuFeatures(menuGroups)
+  const feature = features.find((item) =>
+    candidates.includes(String(item.name || '').trim().toLowerCase()),
+  )
+  if (feature?.path) return normalizePath(feature.path)
+
+  // Fall back to the known route path when the menu label differs from its alias.
+  const fallback = features.find((item) =>
+    fallbackPaths.includes(normalizePath(item.path)),
+  )
+  return normalizePath(fallback?.path)
 }
 
 export const buildAccessRoutes = (menuGroups) => {
-  const featureBase = resolveFeaturePath(menuGroups, ['Manajemen Fitur', 'Management Fitur'])
+  const featureBase = resolveFeaturePath(
+    menuGroups,
+    [
+      'Manajemen Fitur',
+      'Management Fitur',
+      'Manajemen Feature',
+      'Management Feature',
+      'Fitur',
+      'Feature',
+      'Features',
+    ],
+    ['/feature'],
+  )
   const roleBase = resolveFeaturePath(menuGroups, ['Manajemen Role', 'Management Role', 'Manajemen Peran'])
   const groupFeatureBase = resolveFeaturePath(menuGroups, ['Group Feature', 'Feature Group', 'Management Group Feature', 'Manajemen Group Feature', 'Manajemen Group Fitur', 'Manajemen Kelompok Fitur'])
   const dynamicRoutes = []
@@ -70,4 +93,3 @@ export const buildAccessRoutes = (menuGroups) => {
 
   return dynamicRoutes
 }
-
