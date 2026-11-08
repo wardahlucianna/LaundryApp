@@ -259,15 +259,19 @@ const FeatureFormPage = () => {
         body: JSON.stringify(body),
       })
 
-      // Refresh route/sidebar configuration only when menu-relevant data changed.
-      const menuConfigurationChanged = !id || [
-        ['groupFeatureId', String(feature?.groupFeatureId ?? feature?.group?.groupFeatureId ?? ''), String(body.groupFeatureId)],
-        ['name', String(feature?.name ?? ''), body.name],
-        ['path', String(feature?.path ?? ''), String(body.path ?? '')],
-        ['ordering', Number(feature?.ordering ?? 0), Number(body.ordering)],
-        ['menuType', String(feature?.menuType ?? 'sidebar'), body.menuType],
-        ['isActive', Boolean(feature?.isActive ?? feature?.is_active), Boolean(body.isActive)],
-      ].some(([, previous, next]) => previous !== next)
+      // Refresh route/sidebar only if the saved feature actually participates
+      // in sidebar navigation. Non-sidebar features do not require the menus API.
+      const isSidebarMenu = body.menuType === 'sidebar' && Boolean(body.path) && Boolean(body.isActive)
+      const menuConfigurationChanged = id
+        ? [
+            ['groupFeatureId', String(feature?.groupFeatureId ?? feature?.group?.groupFeatureId ?? ''), String(body.groupFeatureId)],
+            ['name', String(feature?.name ?? ''), body.name],
+            ['path', String(feature?.path ?? ''), String(body.path ?? '')],
+            ['ordering', Number(feature?.ordering ?? 0), Number(body.ordering)],
+            ['menuType', String(feature?.menuType ?? 'sidebar'), body.menuType],
+            ['isActive', Boolean(feature?.isActive ?? feature?.is_active), Boolean(body.isActive)],
+          ].some(([, previous, next]) => previous !== next) && isSidebarMenu
+        : isSidebarMenu
 
       if (menuConfigurationChanged) {
         window.dispatchEvent(new Event('sunrise:permissions-updated'))
