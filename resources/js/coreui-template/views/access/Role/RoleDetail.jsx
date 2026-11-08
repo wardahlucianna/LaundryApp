@@ -91,17 +91,15 @@ const RoleDetailPage = () => {
     setLoading(true)
     setError('')
 
-    Promise.all([
-      request(`/roles/${id}`),
-      request('/permission-features?is_active=1&per_page=100'),
-    ])
-      .then(([rolePayload, permissionsPayload]) => {
+    request(`/roles/${id}`)
+      .then((rolePayload) => {
         if (!active) {
           return
         }
 
-        setRole(rolePayload.data || rolePayload)
-        setPermissions(permissionsPayload.data || [])
+        const loadedRole = rolePayload.data || rolePayload
+        setRole(loadedRole)
+        setPermissions(loadedRole.availableFeatures || [])
       })
       .catch((loadError) => {
         if (active) {
