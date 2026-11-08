@@ -17,10 +17,24 @@ const resolvePathFromGroups = (groups, featureNames = []) => {
     return candidates.some((candidate) => name === candidate || name.includes(candidate))
   })
 
-  // routes.jsx already supports /feature as the canonical fallback route
-  // for the access-feature menu. Resolve it by path when the DB label differs
-  // from the aliases above, instead of failing after a successful save.
-  const fallback = features.find((feature) => normalizePath(feature.path) === '/feature')
+  // Resolve fallback by the requested menu family. Never let a Group Feature
+  // request silently fall back to the ordinary Feature route (/feature).
+  const isGroupFeatureRequest = candidates.some((candidate) =>
+    ['kelompok fitur', 'kelompok feature', 'group fitur', 'group feature', 'feature group', 'permission group'].some((alias) => candidate.includes(alias)),
+  )
+  const isRoleRequest = candidates.some((candidate) =>
+    ['role', 'peran'].some((alias) => candidate === alias || candidate.includes(alias)),
+  )
+
+  const fallbackPaths = isGroupFeatureRequest
+    ? ['/feature-group', '/group-feature', '/group-features', '/feature/group', '/feature-groups']
+    : isRoleRequest
+      ? ['/roles', '/role', '/management-role', '/manajemen-role', '/peran']
+      : ['/feature']
+
+  const fallback = features.find((feature) =>
+    fallbackPaths.includes(normalizePath(feature.path)),
+  )
 
   return normalizePath(found?.path || fallback?.path)
 }
