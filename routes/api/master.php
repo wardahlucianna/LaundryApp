@@ -1,10 +1,10 @@
 <?php
 
-use App\\Http\\Controllers\\Api\\Master\\Access\\PermissionController;
-use App\\Http\\Controllers\\Api\\Master\\Access\\PermissionFeatureController;
-use App\\Http\\Controllers\\Api\\Master\\Access\\PermissionGroupController;
-use App\\Http\\Controllers\\Api\\Master\\Access\\RoleController;
-use Illuminate\\Support\\Facades\\Route;
+use App\Http\Controllers\Api\Master\Access\PermissionController;
+use App\Http\Controllers\Api\Master\Access\PermissionFeatureController;
+use App\Http\Controllers\Api\Master\Access\PermissionGroupController;
+use App\Http\Controllers\Api\Master\Access\RoleController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:web')->group(function () {
     Route::get('/roles', [RoleController::class, 'index'])->middleware('permission:ROLE_VIEW');
