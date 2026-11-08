@@ -25,6 +25,9 @@ import GlobalPagination from '../../../components/data/GlobalPagination'
 import { apiBase } from '../../../../services/api'
 import { getAccessFeaturePath } from '../../../utils/accessNavigation'
 
+// Reuse pending GET requests across React StrictMode effect remounts.
+const pendingFeatureListGetRequests = new Map()
+
 const FeatureListPage = () => {
   const [features, setFeatures] = useState([])
   const [groups, setGroups] = useState([])
@@ -58,22 +61,42 @@ const FeatureListPage = () => {
   }, [location, navigate])
 
   const request = useCallback(async (path, options = {}) => {
-    const token = localStorage.getItem('auth_token') || localStorage.getItem('access_token') || localStorage.getItem('token') || ''
-    const response = await fetch(`${apiBase}${path}`, {
-      ...options,
-      headers: {
-        Accept: 'application/json',
-        ...(options.body ? { 'Content-Type': 'application/json' } : {}),
-        Authorization: `Bearer ${token}`,
-        ...(options.headers || {}),
-      },
-    })
-    const payload = await response.json().catch(() => ({}))
-    if (!response.ok) {
-      const validationMessage = payload.errors ? Object.values(payload.errors).flat().join(' ') : ''
-      throw new Error(validationMessage || payload.message || 'Permintaan gagal diproses.')
+    const method = String(options.method || 'GET').toUpperCase()
+    const requestKey = `${method}:${apiBase}${path}`
+
+    if (method === 'GET' && pendingFeatureListGetRequests.has(requestKey)) {
+      return pendingFeatureListGetRequests.get(requestKey)
     }
-    return payload
+
+    const token = localStorage.getItem('auth_token') || localStorage.getItem('access_token') || localStorage.getItem('token') || ''
+    const pendingRequest = (async () => {
+      const response = await fetch(`${apiBase}${path}`, {
+        ...options,
+        headers: {
+          Accept: 'application/json',
+          ...(options.body ? { 'Content-Type': 'application/json' } : {}),
+          Authorization: `Bearer ${token}`,
+          ...(options.headers || {}),
+        },
+      })
+      const payload = await response.json().catch(() => ({}))
+      if (!response.ok) {
+        const validationMessage = payload.errors ? Object.values(payload.errors).flat().join(' ') : ''
+        throw new Error(validationMessage || payload.message || 'Permintaan gagal diproses.')
+      }
+      return payload
+    })()
+
+    if (method === 'GET') {
+      pendingFeatureListGetRequests.set(requestKey, pendingRequest)
+      pendingRequest.finally(() => {
+        if (pendingFeatureListGetRequests.get(requestKey) === pendingRequest) {
+          pendingFeatureListGetRequests.delete(requestKey)
+        }
+      }).catch(() => {})
+    }
+
+    return pendingRequest
   }, [])
 
   const loadGroups = useCallback(async () => {
