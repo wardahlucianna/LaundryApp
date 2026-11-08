@@ -153,7 +153,7 @@ const RoleFormPage = () => {
         setCollapsedGroups(
           Object.fromEntries(
             [...new Set(availableFeatures.map((feature) => feature.group?.name || 'Lainnya'))]
-              .map((groupName) => [groupName, true]),
+              .map((groupName) => [groupName, false]),
           ),
         )
         setRole(loadedRole || null)
