@@ -55,6 +55,9 @@ const getGroupActiveStatus = (group) => {
   return false
 }
 
+// Deduplicate in-flight GET requests across React StrictMode effect remounts.
+const pendingAccessGetRequests = new Map()
+
 const GroupFeatureForm = () => {
   const navigate = useNavigate()
   const { id } = useParams()
@@ -74,41 +77,37 @@ const GroupFeatureForm = () => {
 
   const formDisabled = loading || saving || loadFailed
 
-  const request = useCallback(async (path, options = {}) => {
-    const token =
-      localStorage.getItem('auth_token') ||
-      localStorage.getItem('access_token') ||
-      localStorage.getItem('token') ||
-      ''
-
-    const response = await fetch(`${apiBase}${path}`, {
-      ...options,
-      credentials: 'include',
-      headers: {
-        Accept: 'application/json',
-        ...(options.body
-          ? { 'Content-Type': 'application/json' }
-          : {}),
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        ...(options.headers || {}),
-      },
-    })
-
-    const payload = await response.json().catch(() => ({}))
-
-    if (!response.ok) {
-      const validationMessage = payload.errors
-        ? Object.values(payload.errors).flat().join(' ')
-        : ''
-
-      throw new Error(
-        validationMessage ||
-          payload.message ||
-          'Permintaan gagal diproses.',
-      )
+  const request = useCallback((path, options = {}) => {
+    const requestOptions = options
+    const method = String(requestOptions.method || 'GET').toUpperCase()
+    const requestKey = `${method}:${apiBase}${path}`
+    if (method === 'GET' && pendingAccessGetRequests.has(requestKey)) return pendingAccessGetRequests.get(requestKey)
+    const token = localStorage.getItem('auth_token') || localStorage.getItem('access_token') || localStorage.getItem('token') || ''
+    const pendingRequest = (async () => {
+      const response = await fetch(`${apiBase}${path}`, {
+        ...requestOptions,
+        credentials: 'include',
+        headers: {
+          Accept: 'application/json',
+          ...(requestOptions.body ? { 'Content-Type': 'application/json' } : {}),
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          ...(requestOptions.headers || {}),
+        },
+      })
+      const payload = await response.json().catch(() => ({}))
+      if (!response.ok) {
+        const validationMessage = payload.errors ? Object.values(payload.errors).flat().join(' ') : ''
+        throw new Error(validationMessage || payload.message || 'Permintaan gagal diproses.')
+      }
+      return payload
+    })()
+    if (method === 'GET') {
+      pendingAccessGetRequests.set(requestKey, pendingRequest)
+      pendingRequest.finally(() => {
+        if (pendingAccessGetRequests.get(requestKey) === pendingRequest) pendingAccessGetRequests.delete(requestKey)
+      }).catch(() => {})
     }
-
-    return payload
+    return pendingRequest
   }, [])
 
   useEffect(() => {
