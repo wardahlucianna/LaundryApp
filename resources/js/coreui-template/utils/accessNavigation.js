@@ -58,7 +58,7 @@ export const getAccessFeaturePath = async (featureNames = []) => {
     ['kelompok fitur', 'kelompok feature', 'group fitur', 'group feature', 'feature group', 'permission group'].some((alias) => candidate.includes(alias)),
   )
   const isPosisiRequest = candidates.some((candidate) =>
-    ['role', 'peran'].some((alias) => candidate === alias || candidate.includes(alias)),
+    ['role', 'peran', 'posisi', 'position'].some((alias) => candidate === alias || candidate.includes(alias)),
   )
 
   if (isGroupFeatureRequest) return '/feature-group'
