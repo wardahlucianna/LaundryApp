@@ -25,7 +25,22 @@ class PermissionFeatureController extends Controller
 
     public function show(PermissionFeature $permissionFeature)
     {
-        return response()->json(['data' => $permissionFeature->load('group')]);
+        // Return only fields required by the edit form. Avoid serializing the
+        // full model and every column of the related group.
+        $permissionFeature->load(['group' => fn ($query) => $query->select('groupFeatureId', 'name', 'isActive')]);
+
+        return response()->json([
+            'data' => [
+                'featureId' => $permissionFeature->featureId,
+                'groupFeatureId' => $permissionFeature->groupFeatureId,
+                'name' => $permissionFeature->name,
+                'path' => $permissionFeature->path,
+                'ordering' => $permissionFeature->ordering,
+                'menuType' => $permissionFeature->menuType,
+                'isActive' => $permissionFeature->isActive,
+                'group' => $permissionFeature->group,
+            ],
+        ]);
     }
 
     public function store(Request $request)
