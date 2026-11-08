@@ -59,7 +59,25 @@ export const buildAccessRoutes = (menuGroups) => {
     ['/feature'],
   )
   const roleBase = resolveFeaturePath(menuGroups, ['Manajemen Role', 'Management Role', 'Manajemen Peran'])
-  const groupFeatureBase = resolveFeaturePath(menuGroups, ['Group Feature', 'Feature Group', 'Management Group Feature', 'Manajemen Group Feature', 'Manajemen Group Fitur', 'Manajemen Kelompok Fitur'])
+  const groupFeatureBase = resolveFeaturePath(
+    menuGroups,
+    [
+      'Group Feature',
+      'Feature Group',
+      'Feature Groups',
+      'Group Features',
+      'Permission Group',
+      'Permission Groups',
+      'Kelompok Fitur',
+      'Kelompok Feature',
+      'Group Fitur',
+      'Management Group Feature',
+      'Manajemen Group Feature',
+      'Manajemen Group Fitur',
+      'Manajemen Kelompok Fitur',
+    ],
+    ['/feature-group', '/group-feature', '/group-features', '/feature/group', '/feature-groups'],
+  )
   const dynamicRoutes = []
 
   if (groupFeatureBase) {
