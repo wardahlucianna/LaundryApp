@@ -298,11 +298,8 @@ const RoleFormPage = () => {
         })
       }
 
-      sessionStorage.removeItem('sunriseLaundryMenus')
-
-      window.dispatchEvent(
-        new Event('sunrise:permissions-updated'),
-      )
+      // Perubahan role tidak mengubah menu pengguna yang sedang login.
+      // Jangan invalidasi cache atau memanggil ulang endpoint /auth/me/menus.
 
       const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role', 'Manajemen Peran'])
       if (!listPath) throw new Error('Path daftar Manajemen Peran belum terdaftar di database.')
