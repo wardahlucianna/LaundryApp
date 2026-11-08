@@ -47,13 +47,31 @@ class EnsurePermission
             return $next($request);
         }
 
+        $normalizedCode = strtoupper(trim($permissionCode));
         $featureNames = $this->featureNamesFor($permissionCode);
-        $matchingFeatures = $featureNames
-            ? PermissionFeature::query()
-                ->whereIn('name', $featureNames)
-                ->where('isActive', true)
-                ->get()
-            : collect();
+        $featurePaths = match ($normalizedCode) {
+            'ROLE_VIEW', 'ROLE_MANAGE', 'ACCESS_MANAGE' => ['/roles', '/role', '/management-role', '/manajemen-role', '/peran'],
+            'FEATURE_VIEW', 'FEATURE_CREATE', 'FEATURE_UPDATE', 'FEATURE_DELETE' => ['/feature', '/features', '/permission-features'],
+            default => [],
+        };
+
+        // Resolve access using both canonical menu paths and legacy labels,
+        // so changing a feature's display name does not silently break authorization.
+        $matchingFeatures = PermissionFeature::query()
+            ->where('isActive', true)
+            ->where(function ($query) use ($featureNames, $featurePaths) {
+                if (!empty($featureNames)) {
+                    $query->whereIn('name', $featureNames);
+                }
+                if (!empty($featurePaths)) {
+                    if (!empty($featureNames)) {
+                        $query->orWhereIn('path', $featurePaths);
+                    } else {
+                        $query->whereIn('path', $featurePaths);
+                    }
+                }
+            })
+            ->get();
 
         $assignedFeatures = $user->role?->features ?? collect();
         $allowed = $matchingFeatures->isNotEmpty() && $matchingFeatures->contains(
