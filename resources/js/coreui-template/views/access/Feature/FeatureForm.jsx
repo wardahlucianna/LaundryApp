@@ -22,6 +22,7 @@ import { getAccessFeaturePath } from '../../../utils/accessNavigation'
 
 // Share in-flight form requests across React StrictMode effect remounts.
 const pendingFeatureFormRequests = new Map()
+const pendingGroupOptionsRequests = new Map()
 
 const getGroupId = (group) =>
   group?.groupFeatureId ??
@@ -47,6 +48,7 @@ const FeatureFormPage = () => {
   const [feature, setFeature] = useState(null)
   const [groups, setGroups] = useState([])
   const [groupsLoaded, setGroupsLoaded] = useState(false)
+  const [groupOptionsLoading, setGroupOptionsLoading] = useState(false)
   const [groupSearch, setGroupSearch] = useState('')
   const [groupDropdownOpen, setGroupDropdownOpen] = useState(false)
   const [values, setValues] = useState({
@@ -334,25 +336,56 @@ const FeatureFormPage = () => {
                         aria-label="Pilih kelompok fitur"
                         aria-expanded={groupDropdownOpen}
                         disabled={formDisabled}
-                        onClick={async () => {
+                        onClick={() => {
                           const shouldOpen = !groupDropdownOpen
-                          if (shouldOpen && !groupsLoaded) {
-                            try {
-                              const selectedId = id ? String(values.groupFeatureId || '') : ''
-                              const optionsPath = selectedId
-                                ? `/permission-groups/options?selectedId=${encodeURIComponent(selectedId)}`
-                                : '/permission-groups/options'
-                              const payload = await request(optionsPath)
-                              const groupRows = Array.isArray(payload.data) ? payload.data : Array.isArray(payload) ? payload : []
-                              setGroups(groupRows)
-                              setGroupsLoaded(true)
-                            } catch (groupLoadError) {
-                              setError(groupLoadError.message || 'Gagal memuat pilihan kelompok fitur.')
-                              return
-                            }
-                          }
                           setGroupDropdownOpen(shouldOpen)
                           setGroupSearch('')
+
+                          // Open the dropdown immediately. Fetch its options in the
+                          // background so the first click is responsive.
+                          if (shouldOpen && !groupsLoaded) {
+                            setGroupOptionsLoading(true)
+                            const selectedId = id ? String(values.groupFeatureId || '') : ''
+                            const optionsPath = selectedId
+                              ? `/permission-groups/options?selectedId=${encodeURIComponent(selectedId)}`
+                              : '/permission-groups/options'
+
+                            let pending = pendingGroupOptionsRequests.get(optionsPath)
+                            if (!pending) {
+                              pending = request(optionsPath).finally(() => {
+                                pendingGroupOptionsRequests.delete(optionsPath)
+                              })
+                              pendingGroupOptionsRequests.set(optionsPath, pending)
+                            }
+
+                            pending
+                              .then((payload) => {
+                                const rows = payload?.data?.data ?? payload?.data ?? payload
+                                const groupRows = Array.isArray(rows)
+                                  ? rows
+                                  : rows && typeof rows === 'object'
+                                    ? [rows]
+                                    : []
+                                setGroups((current) => {
+                                  const selectedGroup = current.find(
+                                    (group) => String(getGroupId(group)) === String(values.groupFeatureId),
+                                  )
+                                  const merged = selectedGroup && !groupRows.some(
+                                    (group) => String(getGroupId(group)) === String(values.groupFeatureId),
+                                  )
+                                    ? [selectedGroup, ...groupRows]
+                                    : groupRows
+                                  return merged
+                                })
+                                setGroupsLoaded(true)
+                              })
+                              .catch((groupLoadError) => {
+                                setError(groupLoadError.message || 'Gagal memuat pilihan kelompok fitur.')
+                              })
+                              .finally(() => {
+                                setGroupOptionsLoading(false)
+                              })
+                          }
                         }}
                       >
                         <span className={values.groupFeatureId ? '' : 'text-body-secondary'}>
@@ -378,7 +411,9 @@ const FeatureFormPage = () => {
                             disabled={formDisabled}
                             aria-label="Cari kelompok fitur"
                           />
-                          {filteredGroups.length ? filteredGroups.map((group) => (
+                          {groupOptionsLoading ? (
+                            <div className="small text-body-secondary p-2">Memuat kelompok fitur...</div>
+                          ) : filteredGroups.length ? filteredGroups.map((group) => (
                             <CButton
                               key={String(getGroupId(group))}
                               type="button"
