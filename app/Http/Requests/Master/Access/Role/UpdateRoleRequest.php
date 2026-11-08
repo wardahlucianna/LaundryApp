@@ -24,6 +24,8 @@ class UpdateRoleRequest extends FormRequest
         return [
             'name' => ['sometimes', 'required', 'string', 'max:100'],
             'isActive' => ['sometimes', 'boolean'],
+            'featureIds' => ['sometimes', 'array'],
+            'featureIds.*' => ['uuid', 'exists:features,featureId'],
         ];
     }
 }
