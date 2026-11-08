@@ -8,9 +8,29 @@ use Illuminate\Http\Request;
 
 class PermissionGroupController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(PermissionGroup::query()->withCount('features')->orderBy('ordering')->orderBy('name')->paginate(100));
+        // Field yang digunakan tabel FE: ID untuk aksi, ikon, nama,
+        // urutan, status, dan jumlah fitur. Kolom lainnya tidak dikirim.
+        $paginator = PermissionGroup::query()
+            ->select(['groupFeatureId', 'icon', 'name', 'ordering', 'isActive'])
+            ->withCount('features')
+            ->orderBy('ordering')
+            ->orderBy('name')
+            ->paginate(min(max($request->integer('per_page', 100), 1), 100));
+
+        $paginator->setCollection(
+            $paginator->getCollection()->map(fn (PermissionGroup $group) => [
+                'groupFeatureId' => $group->groupFeatureId,
+                'icon' => $group->icon,
+                'name' => $group->name,
+                'ordering' => $group->ordering,
+                'isActive' => $group->isActive,
+                'features_count' => $group->features_count,
+            ])
+        );
+
+        return response()->json($paginator);
     }
 
     public function options(Request $request)
