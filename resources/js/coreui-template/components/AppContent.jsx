@@ -65,12 +65,10 @@ const AppContent = () => {
     }
 
     loadAccessRoutes({ showLoading: true })
-    window.addEventListener('focus', loadAccessRoutes)
     window.addEventListener('sunrise:permissions-updated', loadAccessRoutes)
 
     return () => {
       active = false
-      window.removeEventListener('focus', loadAccessRoutes)
       window.removeEventListener('sunrise:permissions-updated', loadAccessRoutes)
     }
   }, [])
