@@ -259,7 +259,19 @@ const FeatureFormPage = () => {
         body: JSON.stringify(body),
       })
 
-      window.dispatchEvent(new Event('sunrise:permissions-updated'))
+      // Refresh route/sidebar configuration only when menu-relevant data changed.
+      const menuConfigurationChanged = !id || [
+        ['groupFeatureId', String(feature?.groupFeatureId ?? feature?.group?.groupFeatureId ?? ''), String(body.groupFeatureId)],
+        ['name', String(feature?.name ?? ''), body.name],
+        ['path', String(feature?.path ?? ''), String(body.path ?? '')],
+        ['ordering', Number(feature?.ordering ?? 0), Number(body.ordering)],
+        ['menuType', String(feature?.menuType ?? 'sidebar'), body.menuType],
+        ['isActive', Boolean(feature?.isActive ?? feature?.is_active), Boolean(body.isActive)],
+      ].some(([, previous, next]) => previous !== next)
+
+      if (menuConfigurationChanged) {
+        window.dispatchEvent(new Event('sunrise:permissions-updated'))
+      }
       const listPath = await getAccessFeaturePath(['Manajemen Fitur', 'Management Fitur'])
       if (!listPath) throw new Error('Path daftar Manajemen Fitur belum terdaftar di database.')
       navigate(listPath, {
