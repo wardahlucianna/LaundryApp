@@ -20,14 +20,14 @@ const resolvePathFromGroups = (groups, featureNames = []) => {
   const isGroupFeatureRequest = candidates.some((candidate) =>
     ['kelompok fitur', 'kelompok feature', 'group fitur', 'group feature', 'feature group', 'permission group'].some((alias) => candidate.includes(alias)),
   )
-  const isRoleRequest = candidates.some((candidate) =>
-    ['role', 'peran'].some((alias) => candidate === alias || candidate.includes(alias)),
+  const isPosisiRequest = candidates.some((candidate) =>
+    ['role', 'peran', 'posisi', 'position'].some((alias) => candidate === alias || candidate.includes(alias)),
   )
 
   const fallbackPaths = isGroupFeatureRequest
     ? ['/feature-group', '/group-feature', '/group-features', '/feature/group', '/feature-groups']
-    : isRoleRequest
-      ? ['/roles', '/role', '/management-role', '/manajemen-role', '/peran']
+    : isPosisiRequest
+      ? ['/roles', '/role', '/management-role', '/manajemen-role', '/peran', '/posisi']
       : ['/feature']
 
   const fallback = features.find((feature) =>
@@ -57,11 +57,11 @@ export const getAccessFeaturePath = async (featureNames = []) => {
   const isGroupFeatureRequest = candidates.some((candidate) =>
     ['kelompok fitur', 'kelompok feature', 'group fitur', 'group feature', 'feature group', 'permission group'].some((alias) => candidate.includes(alias)),
   )
-  const isRoleRequest = candidates.some((candidate) =>
+  const isPosisiRequest = candidates.some((candidate) =>
     ['role', 'peran'].some((alias) => candidate === alias || candidate.includes(alias)),
   )
 
   if (isGroupFeatureRequest) return '/feature-group'
-  if (isRoleRequest) return '/roles'
+  if (isPosisiRequest) return '/roles'
   return '/feature'
 }
