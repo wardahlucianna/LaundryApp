@@ -50,6 +50,7 @@ const RoleFormPage = () => {
   })
   const [selectedFeatureIds, setSelectedFeatureIds] = useState([])
   const [collapsedGroups, setCollapsedGroups] = useState({})
+  const [featureSearch, setFeatureSearch] = useState('')
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
@@ -116,6 +117,12 @@ const RoleFormPage = () => {
         const availableFeatures = featuresPayload.data || []
 
         setFeatures(availableFeatures)
+        setCollapsedGroups(
+          Object.fromEntries(
+            [...new Set(availableFeatures.map((feature) => feature.group?.name || 'Lainnya'))]
+              .map((groupName) => [groupName, true]),
+          ),
+        )
         setRole(loadedRole || null)
 
         setValues({
@@ -153,7 +160,11 @@ const RoleFormPage = () => {
   const groupedFeatures = useMemo(() => {
     const groups = new Map()
 
-    features.forEach((feature) => {
+    const keyword = featureSearch.trim().toLowerCase()
+
+    features
+      .filter((feature) => !keyword || String(feature.name || '').toLowerCase().includes(keyword) || String(feature.group?.name || 'Lainnya').toLowerCase().includes(keyword))
+      .forEach((feature) => {
       const groupName = feature.group?.name || 'Lainnya'
 
       if (!groups.has(groupName)) {
@@ -179,7 +190,7 @@ const RoleFormPage = () => {
           return orderA - orderB || featureA.name.localeCompare(featureB.name)
         }),
       }))
-  }, [features])
+  }, [features, featureSearch])
 
   const toggleFeature = (featureId, checked) => {
     setSelectedFeatureIds((current) => {
@@ -345,6 +356,15 @@ const RoleFormPage = () => {
                 {selectedFeatureIds.length} dipilih
               </span>
             </div>
+
+            <CFormInput
+              className="mb-3"
+              placeholder="Cari fitur atau kelompok fitur..."
+              value={featureSearch}
+              onChange={(event) => setFeatureSearch(event.target.value)}
+              disabled={formDisabled}
+              aria-label="Cari hak akses fitur"
+            />
 
             <style>
               {'.role-permission-checkbox .form-check-input { width: 1.15rem; height: 1.15rem; margin-top: 0.15rem; background-color: var(--cui-body-bg); border: 1.5px solid #6c757d; opacity: 1; } .role-permission-checkbox .form-check-input:checked { background-color: #0d6efd; border-color: #0d6efd; } .role-permission-checkbox .form-check-label { padding-left: 0.25rem; color: var(--cui-body-color); }'}
