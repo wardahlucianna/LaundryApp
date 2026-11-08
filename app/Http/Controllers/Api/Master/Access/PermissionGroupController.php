@@ -59,7 +59,18 @@ class PermissionGroupController extends Controller
 
     public function show(PermissionGroup $permissionGroup)
     {
-        return response()->json(['data' => $permissionGroup->fresh()]);
+        $group = $permissionGroup->fresh();
+
+        // Only fields needed to populate the edit group form.
+        return response()->json([
+            'data' => [
+                'groupFeatureId' => $group->groupFeatureId,
+                'name' => $group->name,
+                'icon' => $group->icon,
+                'ordering' => $group->ordering,
+                'isActive' => $group->isActive,
+            ],
+        ]);
     }
 
     public function store(Request $request)
