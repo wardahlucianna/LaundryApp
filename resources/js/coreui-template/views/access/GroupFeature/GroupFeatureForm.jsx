@@ -219,8 +219,17 @@ const GroupFeatureForm = () => {
         body: JSON.stringify(body),
       })
 
-      // Refresh the sidebar menu so the selected group icon is reflected.
-      window.dispatchEvent(new Event('sunrise:permissions-updated'))
+      // Refresh route/sidebar only for a new group or changed menu metadata.
+      const menuConfigurationChanged = !id || [
+        ['name', String(group?.name ?? ''), body.name],
+        ['icon', String(group?.icon ?? 'cilFolderOpen'), body.icon],
+        ['ordering', Number(group?.ordering ?? 1), Number(body.ordering)],
+        ['isActive', Boolean(group?.isActive ?? group?.is_active), Boolean(body.isActive)],
+      ].some(([, previous, next]) => previous !== next)
+
+      if (menuConfigurationChanged) {
+        window.dispatchEvent(new Event('sunrise:permissions-updated'))
+      }
 
       const listPath = await getAccessFeaturePath(['Manajemen Kelompok Fitur', 'Manajemen Group Fitur', 'Manajemen Kelompok Fitur', 'Group Feature', 'Feature Group'])
       if (!listPath) throw new Error('Path Manajemen Kelompok Fitur belum terdaftar di database.')
