@@ -20,6 +20,9 @@ import { apiBase } from '../../../../services/api'
 import { getAccessFeaturePath } from '../../../utils/accessNavigation'
 
 
+// Share in-flight form requests across React StrictMode effect remounts.
+const pendingFeatureFormRequests = new Map()
+
 const getGroupId = (group) =>
   group?.groupFeatureId ??
   group?.groupId ??
@@ -106,10 +109,22 @@ const FeatureFormPage = () => {
 
     const load = async () => {
       try {
+        const requestShared = (path) => {
+          if (pendingFeatureFormRequests.has(path)) {
+            return pendingFeatureFormRequests.get(path)
+          }
+
+          const pending = request(path).finally(() => {
+            pendingFeatureFormRequests.delete(path)
+          })
+          pendingFeatureFormRequests.set(path, pending)
+          return pending
+        }
+
         const [groupsPayload, featurePayload] = await Promise.all([
-          request('/permission-groups?per_page=100'),
+          requestShared('/permission-groups?per_page=100'),
           id
-            ? request(`/permission-features/${id}`)
+            ? requestShared(`/permission-features/${id}`)
             : Promise.resolve(null),
         ])
 
