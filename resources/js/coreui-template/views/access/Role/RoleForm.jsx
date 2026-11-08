@@ -281,7 +281,9 @@ const RoleFormPage = () => {
           body: JSON.stringify({
             name: values.name.trim(),
             is_active: values.is_active,
-            featureIds: selectedFeatureIds,
+            ...(values.name.trim().toUpperCase() !== 'SUPER ADMIN'
+              ? { featureIds: selectedFeatureIds }
+              : {}),
           }),
         },
       )
