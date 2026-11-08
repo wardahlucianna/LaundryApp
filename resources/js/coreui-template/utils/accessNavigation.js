@@ -17,7 +17,12 @@ const resolvePathFromGroups = (groups, featureNames = []) => {
     return candidates.some((candidate) => name === candidate || name.includes(candidate))
   })
 
-  return normalizePath(found?.path)
+  // routes.jsx already supports /feature as the canonical fallback route
+  // for the access-feature menu. Resolve it by path when the DB label differs
+  // from the aliases above, instead of failing after a successful save.
+  const fallback = features.find((feature) => normalizePath(feature.path) === '/feature')
+
+  return normalizePath(found?.path || fallback?.path)
 }
 
 /**
