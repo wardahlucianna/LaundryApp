@@ -41,18 +41,36 @@ class RoleController extends Controller
 
     public function show(Role $role)
     {
-        $role->load('features.group')->loadCount('users');
+        $usersCount = $role->users()->count();
+
+        // FE detail hanya membutuhkan identitas role, jumlah pengguna,
+        // ID fitur yang diberikan, dan ringkasan fitur aktif untuk tampilan.
+        $assignedFeatureIds = $role->features()
+            ->pluck('features.featureId')
+            ->values();
 
         $availableFeatures = PermissionFeature::query()
-            ->with('group')
+            ->select(['featureId', 'groupFeatureId', 'name', 'ordering'])
+            ->with(['group' => function ($query) {
+                $query->select(['groupFeatureId', 'name', 'ordering']);
+            }])
             ->where('isActive', true)
             ->orderBy('ordering')
             ->orderBy('name')
             ->get();
 
-        $role->setAttribute('availableFeatures', $availableFeatures);
-
-        return response()->json(['data' => $role]);
+        return response()->json([
+            'data' => [
+                'roleId' => $role->roleId,
+                'name' => $role->name,
+                'isActive' => $role->isActive,
+                'users_count' => $usersCount,
+                'features' => $assignedFeatureIds->map(fn ($featureId) => [
+                    'featureId' => $featureId,
+                ]),
+                'availableFeatures' => $availableFeatures,
+            ],
+        ]);
     }
 
     public function update(UpdateRoleRequest $request, Role $role)
