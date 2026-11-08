@@ -19,7 +19,11 @@ class RoleController extends Controller
         if ($search = $request->string('search')->toString()) {
             $query->where(fn ($q) => $q->where('name', 'ilike', "%{$search}%"));
         }
-        if ($request->has('isActive')) $query->where('isActive', $request->boolean('isActive'));
+        // Accept both camelCase and snake_case query parameters from FE.
+        $statusFilter = $request->input('isActive', $request->input('is_active'));
+        if ($statusFilter !== null && $statusFilter !== '') {
+            $query->where('isActive', filter_var($statusFilter, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? ((string) $statusFilter === '1'));
+        }
         return response()->json($query->paginate(min(max($request->integer('per_page', 10), 1), 100)));
     }
 
