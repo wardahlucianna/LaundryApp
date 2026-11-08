@@ -62,36 +62,18 @@ const AppSidebar = () => {
   })
 
   useEffect(() => {
-    let cancelled = false
-    const loadMenus = async () => {
+    // AppContent is the single source of truth for menu data.
+    const handleMenusLoaded = (event) => {
       try {
-        const response = await fetch(`${apiBase}/auth/me/menus`, {
-          headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
-          credentials: 'include',
-        })
-        if (!response.ok) throw new Error('Gagal memuat menu.')
-        const payload = await response.json()
-        if (!cancelled) {
-          const groups = payload.data || []
-          sessionStorage.setItem('sunriseLaundryMenus', JSON.stringify(groups))
-          setNavigation(buildNavigation(groups))
-        }
+        const groups = event.detail || JSON.parse(sessionStorage.getItem('sunriseLaundryMenus') || '[]')
+        setNavigation(buildNavigation(groups))
       } catch {
-        // Keep cached navigation visible if a background refresh temporarily fails.
+        // Keep the last valid navigation if cached data is malformed.
       }
     }
 
-    loadMenus()
-    // Keep sidebar permissions in sync when an administrator changes a role.
-    const refreshInterval = window.setInterval(loadMenus, 15000)
-    window.addEventListener('focus', loadMenus)
-    window.addEventListener('sunrise:permissions-updated', loadMenus)
-    return () => {
-      cancelled = true
-      window.clearInterval(refreshInterval)
-      window.removeEventListener('focus', loadMenus)
-      window.removeEventListener('sunrise:permissions-updated', loadMenus)
-    }
+    window.addEventListener('sunrise:menus-loaded', handleMenusLoaded)
+    return () => window.removeEventListener('sunrise:menus-loaded', handleMenusLoaded)
   }, [])
 
   return (
