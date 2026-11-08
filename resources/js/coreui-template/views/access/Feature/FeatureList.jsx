@@ -103,6 +103,11 @@ const FeatureListPage = () => {
     loadGroups().catch((loadError) => setError(loadError.message || 'Gagal memuat kelompok fitur.'))
   }, [isGroupFeatureRoute, loadGroups])
 
+  const loadGroups = useCallback(async () => {
+    const payload = await request('/permission-groups?per_page=100')
+    setGroups(payload.data || [])
+  }, [request])
+
   const loadFeatures = useCallback(async () => {
     setLoading(true)
     setError('')
