@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\Controllers\Api\Master\Access\PermissionController;
-use App\Http\Controllers\Api\Master\Access\PermissionFeatureController;
-use App\Http\Controllers\Api\Master\Access\PermissionGroupController;
-use App\Http\Controllers\Api\Master\Access\RoleController;
-use Illuminate\Support\Facades\Route;
+use App\\Http\\Controllers\\Api\\Master\\Access\\PermissionController;
+use App\\Http\\Controllers\\Api\\Master\\Access\\PermissionFeatureController;
+use App\\Http\\Controllers\\Api\\Master\\Access\\PermissionGroupController;
+use App\\Http\\Controllers\\Api\\Master\\Access\\RoleController;
+use Illuminate\\Support\\Facades\\Route;
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:web')->group(function () {
     Route::get('/roles', [RoleController::class, 'index'])->middleware('permission:ROLE_VIEW');
     Route::post('/roles', [RoleController::class, 'store'])->middleware('permission:ROLE_MANAGE');
     Route::get('/roles/features/options', [RoleController::class, 'featureOptions'])->middleware('permission:ROLE_VIEW');
