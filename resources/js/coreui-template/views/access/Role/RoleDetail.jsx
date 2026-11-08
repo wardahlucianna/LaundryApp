@@ -42,11 +42,11 @@ const permissionActionOrder = (permission) => {
 // Deduplicate in-flight GET requests across React StrictMode effect remounts.
 const pendingAccessGetRequests = new Map()
 
-const RoleDetailPage = () => {
+const PosisiDetailPage = () => {
   const { id } = useParams()
   const navigate = useNavigate()
 
-  const [role, setRole] = useState(null)
+  const [role, setPosisi] = useState(null)
   const [permissions, setPermissions] = useState([])
   const [collapsedGroups, setCollapsedGroups] = useState({})
   const [loading, setLoading] = useState(true)
@@ -97,9 +97,9 @@ const RoleDetailPage = () => {
           return
         }
 
-        const loadedRole = rolePayload.data || rolePayload
-        setRole(loadedRole)
-        setPermissions(loadedRole.availableFeatures || [])
+        const loadedPosisi = rolePayload.data || rolePayload
+        setPosisi(loadedPosisi)
+        setPermissions(loadedPosisi.availableFeatures || [])
       })
       .catch((loadError) => {
         if (active) {
@@ -184,21 +184,21 @@ const RoleDetailPage = () => {
 
   const goBack = async () => {
     try {
-      const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role', 'Manajemen Peran'])
+      const listPath = await getAccessFeaturePath(['Management Position', 'Manajemen Posisi', 'Manajemen Posisi'])
       if (listPath) navigate(listPath)
-      else setError('Path Management Role belum terdaftar di database.')
+      else setError('Path Management Position belum terdaftar di database.')
     } catch (navigationError) {
-      setError(navigationError.message || 'Gagal membaca path Management Role dari database.')
+      setError(navigationError.message || 'Gagal membaca path Management Position dari database.')
     }
   }
 
   const openEdit = async () => {
     if (role) {
       try {
-        const listPath = await getAccessFeaturePath(['Management Role', 'Manajemen Role', 'Manajemen Peran'])
+        const listPath = await getAccessFeaturePath(['Management Position', 'Manajemen Posisi', 'Manajemen Posisi'])
         if (listPath) navigate(`${listPath}/form/${role.roleId}`)
       } catch {
-        setError('Gagal membaca path Manajemen Peran dari database.')
+        setError('Gagal membaca path Manajemen Posisi dari database.')
       }
     }
   }
@@ -222,7 +222,7 @@ const RoleDetailPage = () => {
           onClick={openEdit}
         >
           <CIcon icon={cilPencil} className="me-1" />
-          Edit Peran
+          Edit Posisi
         </CButton>
       )}
     </>
@@ -230,7 +230,7 @@ const RoleDetailPage = () => {
 
   return (
     <MasterPageLayout
-      title="Manajemen Peran"
+      title="Manajemen Posisi"
       className="role-detail-page"
       headingActions={headingActions}
       error={error}
@@ -240,7 +240,7 @@ const RoleDetailPage = () => {
         {loading ? (
           <CCard className="mb-4">
             <CCardHeader>
-              <strong>Detail Peran</strong>
+              <strong>Detail Posisi</strong>
             </CCardHeader>
             <CCardBody>
               <div className="d-flex align-items-center gap-2 py-3 text-body-secondary">
@@ -254,14 +254,14 @@ const RoleDetailPage = () => {
             <>
               <CCard className="mb-4">
                 <CCardHeader>
-                  <strong>Informasi Peran</strong>
+                  <strong>Informasi Posisi</strong>
                 </CCardHeader>
 
                 <CCardBody>
                   <CRow className="g-3">
                     <CCol xs={12} md={6}>
                       <div className="small text-body-secondary mb-1">
-                        Nama Peran
+                        Nama Posisi
                       </div>
                       <div className="fw-semibold">
                         {role.name || '-'}
@@ -304,7 +304,7 @@ const RoleDetailPage = () => {
                 <CCardBody>
                   {groupedPermissions.length === 0 ? (
                     <div className="text-body-secondary text-center py-3">
-                      Peran ini belum memiliki hak akses.
+                      Posisi ini belum memiliki hak akses.
                     </div>
                   ) : (
                     <div className="d-flex flex-column gap-3">
@@ -404,4 +404,4 @@ const RoleDetailPage = () => {
   )
 }
 
-export default RoleDetailPage
+export default PosisiDetailPage
