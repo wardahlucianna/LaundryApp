@@ -30,6 +30,7 @@ class EnsurePermission
                 'Manajemen Role',
                 'Manajemen Peran',
             ],
+            'UNIT_VIEW', 'UNIT_MANAGE' => ['Satuan', 'Master Satuan', 'Manajemen Satuan'],
             default => null,
         };
     }
@@ -52,6 +53,7 @@ class EnsurePermission
         $featurePaths = match ($normalizedCode) {
             'ROLE_VIEW', 'ROLE_MANAGE', 'ACCESS_MANAGE' => ['/roles', '/role', '/management-role', '/manajemen-role', '/peran'],
             'FEATURE_VIEW', 'FEATURE_CREATE', 'FEATURE_UPDATE', 'FEATURE_DELETE' => ['/feature', '/features', '/permission-features'],
+            'UNIT_VIEW', 'UNIT_MANAGE' => ['/units'],
             default => [],
         };
 
