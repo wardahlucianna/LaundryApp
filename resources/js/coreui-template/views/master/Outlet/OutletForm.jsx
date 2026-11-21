@@ -128,6 +128,17 @@ const OutletForm = () => {
                   />
                 </CCol>
 
+                <CCol xs={12} md={6}>
+                  <CFormInput
+                    label="WhatsApp"
+                    placeholder="Contoh: 081234567890"
+                    value={values.whatsapp || ''}
+                    onChange={change('whatsapp')}
+                    maxLength={30}
+                    disabled={saving}
+                  />
+                </CCol>
+
                 <CCol xs={12}>
                   <label className="form-label" htmlFor="outlet-address">Alamat</label>
                   <textarea
@@ -138,17 +149,6 @@ const OutletForm = () => {
                     value={values.address || ''}
                     onChange={change('address')}
                     maxLength={2000}
-                    disabled={saving}
-                  />
-                </CCol>
-
-                <CCol xs={12} md={6}>
-                  <CFormInput
-                    label="WhatsApp"
-                    placeholder="Contoh: 081234567890"
-                    value={values.whatsapp || ''}
-                    onChange={change('whatsapp')}
-                    maxLength={30}
                     disabled={saving}
                   />
                 </CCol>
