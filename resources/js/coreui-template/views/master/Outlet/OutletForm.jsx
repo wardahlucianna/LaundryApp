@@ -4,7 +4,7 @@ import { CAlert, CButton, CCard, CCardBody, CCardHeader, CCol, CForm, CFormInput
 import MasterPageLayout from '../../../components/layout/MasterPageLayout'
 import { apiBase } from '../../../../services/api'
 
-const initialValues = { code: '', name: '', address: '', whatsapp: '', isPrimary: false, isActive: true, ordering: 1, openingTime: '08:00', closingTime: '21:00' }
+const initialValues = { name: '', address: '', whatsapp: '', isPrimary: false, isActive: true, openingTime: '08:00', closingTime: '21:00' }
 
 const OutletForm = () => {
   const { id } = useParams()
@@ -38,7 +38,7 @@ const OutletForm = () => {
   const save = async (event) => {
     event.preventDefault(); setSaving(true); setError('')
     try {
-      const payload = { ...values, ordering: Number(values.ordering) }
+      const payload = { ...values }
       await request(id ? `/outlets/${id}` : '/outlets', { method: id ? 'PUT' : 'POST', body: JSON.stringify(payload) })
       navigate('/outlets', { state: { notice: id ? 'Outlet berhasil diperbarui.' : 'Outlet berhasil ditambahkan.' } })
     } catch (e) { setError(e.message || 'Gagal menyimpan outlet.') } finally { setSaving(false) }
@@ -50,15 +50,12 @@ const OutletForm = () => {
       {loading ? <div className="d-flex align-items-center gap-2 text-body-secondary"><CSpinner size="sm" />Memuat data outlet...</div> : <CForm onSubmit={save}>
         {error && <CAlert color="danger">{error}</CAlert>}
         <div className="mb-4">
-          <div className="fw-semibold mb-3">Informasi Outlet</div>
           <CRow className="g-3">
-          <CCol xs={12} md={6}><CFormInput label="Kode Outlet *" value={values.code} onChange={change('code')} maxLength={30} required /></CCol>
-          <CCol xs={12} md={6}><CFormInput label="Nama Outlet *" value={values.name} onChange={change('name')} maxLength={120} required /></CCol>
+          <CCol xs={12}><CFormInput label="Nama Outlet *" value={values.name} onChange={change('name')} maxLength={120} required /></CCol>
           <CCol xs={12}><label className="form-label">Alamat</label><textarea className="form-control" rows={3} value={values.address} onChange={change('address')} maxLength={2000} /></CCol>
           </CRow>
         </div>
         <div className="mb-4 pt-3 border-top">
-          <div className="fw-semibold mb-3">Kontak dan Jam Operasional</div>
           <CRow className="g-3">
           <CCol xs={12} md={6}><CFormInput label="WhatsApp" value={values.whatsapp} onChange={change('whatsapp')} maxLength={30} placeholder="Contoh: 081234567890" /></CCol>
           <CCol xs={6} md={4}><CFormInput label="Jam Buka" type="time" value={values.openingTime} onChange={change('openingTime')} /></CCol>
@@ -66,11 +63,7 @@ const OutletForm = () => {
           </CRow>
         </div>
         <div className="mb-2 pt-3 border-top">
-          <div className="fw-semibold mb-3">Pengaturan Outlet</div>
           <CRow className="g-3">
-          <CCol xs={12} md={6}>
-            <CFormInput label="Urutan Tampilan" type="number" min="1" value={values.ordering} onChange={change('ordering')} required />
-          </CCol>
           <CCol xs={12} md={6}>
             <div className="role-status-box d-flex align-items-center justify-content-between rounded p-3 h-100">
               <div className="role-status-copy">
