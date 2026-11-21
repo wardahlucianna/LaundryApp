@@ -132,7 +132,7 @@ const PosisiFormPage = () => {
 
         const loadedPosisi = id ? (payload.data || payload) : null
         const rawAvailableFeatures = id
-          ? (loadedPosisi?.availableFeatures || [])
+          ? (loadedPosisi?.features || [])
           : (payload.data || [])
 
         // Simpan ke state hanya field yang dipakai checklist dan pengurutan.
@@ -140,6 +140,8 @@ const PosisiFormPage = () => {
           featureId: String(feature.featureId ?? feature.id ?? '').trim().toLowerCase(),
           name: feature.name,
           ordering: feature.ordering,
+          isActive: feature.isActive !== false,
+          hasAccess: Boolean(feature.hasAccess),
           group: feature.group
             ? {
                 groupFeatureId: feature.group.groupFeatureId,
@@ -165,19 +167,12 @@ const PosisiFormPage = () => {
             : true,
         })
 
-        const rawAssignedFeatureIds = loadedPosisi?.featureIds ?? loadedPosisi?.features ?? []
-        const assignedFeatureIds = Array.isArray(rawAssignedFeatureIds)
-          ? rawAssignedFeatureIds.map((feature) =>
-              String(feature?.featureId ?? feature?.id ?? feature ?? '').trim().toLowerCase(),
-            ).filter(Boolean)
-          : Object.values(rawAssignedFeatureIds).map((feature) =>
-              String(feature?.featureId ?? feature?.id ?? feature ?? '').trim().toLowerCase(),
-            ).filter(Boolean)
-
-        // Intersect with active feature options so stale/inactive IDs do not
-        // affect the checklist; preserve every valid assignment from the API.
-        const availableFeatureIds = new Set(availableFeatures.map((feature) => feature.featureId))
-        setSelectedFeatureIds(assignedFeatureIds.filter((featureId) => availableFeatureIds.has(featureId)))
+        // API detail sudah mengirim status akses pada setiap fitur.
+        setSelectedFeatureIds(
+          id
+            ? availableFeatures.filter((feature) => feature.hasAccess).map((feature) => feature.featureId)
+            : [],
+        )
       } catch (loadError) {
         if (active) {
           setLoadFailed(true)
@@ -409,7 +404,7 @@ const PosisiFormPage = () => {
               </div>
             ) : features.length === 0 ? (
               <CAlert color="info">
-                Belum ada fitur aktif yang tersedia.
+                Belum ada fitur yang tersedia.
               </CAlert>
             ) : (
               <div className="d-flex flex-column gap-3">
@@ -472,7 +467,7 @@ const PosisiFormPage = () => {
                               <CFormCheck
                                 className="fs-6 role-permission-checkbox"
                                 id={`role-feature-${feature.featureId}`}
-                                label={feature.name}
+                                label={feature.isActive ? feature.name : `${feature.name} (Nonaktif)`}
                                 checked={selectedFeatureIds.includes(
                                   String(feature.featureId).trim().toLowerCase(),
                                 )}
