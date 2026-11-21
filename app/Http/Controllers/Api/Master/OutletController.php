@@ -7,6 +7,7 @@ use App\Models\Master\Outlet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 
 class OutletController extends Controller
 {
@@ -90,8 +91,8 @@ class OutletController extends Controller
 
     private function validatedData(Request $request, ?Outlet $outlet = null): array
     {
-        return $request->validate([
-            'code' => ['required', 'string', 'max:30', Rule::unique('outlets', 'code')->ignore($outlet?->outletId, 'outletId')],
+        $data = $request->validate([
+            'code' => ['sometimes', 'nullable', 'string', 'max:30', Rule::unique('outlets', 'code')->ignore($outlet?->outletId, 'outletId')],
             'name' => ['required', 'string', 'max:120'],
             'address' => ['nullable', 'string', 'max:2000'],
             'whatsapp' => ['nullable', 'string', 'max:30'],
@@ -102,5 +103,13 @@ class OutletController extends Controller
             'openingTime' => ['nullable', 'date_format:H:i'],
             'closingTime' => ['nullable', 'date_format:H:i'],
         ]);
+
+        if (!$outlet && empty($data['code'])) {
+            do {
+                $data['code'] = 'OUT-' . Str::upper(Str::random(8));
+            } while (Outlet::query()->where('code', $data['code'])->exists());
+        }
+
+        return $data;
     }
 }
