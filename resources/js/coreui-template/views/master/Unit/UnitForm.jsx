@@ -112,7 +112,6 @@ const UnitForm = () => {
           ) : (
             <CForm onSubmit={save}>
               <div className="mb-4">
-                <div className="fw-semibold mb-3">Informasi Satuan</div>
                 <CRow className="g-3">
                   <CCol xs={12} md={6}>
                     <CFormInput
