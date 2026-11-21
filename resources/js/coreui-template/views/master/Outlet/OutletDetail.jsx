@@ -41,7 +41,7 @@ const OutletDetail = () => {
         </div>
         <div className="mb-4 pt-3 border-top">
           <div className="fw-semibold mb-3">Kontak dan Jam Operasional</div>
-          <CRow className="g-3">{field('WhatsApp', outlet.whatsapp)}{field('Email', outlet.email)}{field('Jam Buka', outlet.openingTime ? String(outlet.openingTime).slice(0,5) : '')}{field('Jam Tutup', outlet.closingTime ? String(outlet.closingTime).slice(0,5) : '')}</CRow>
+          <CRow className="g-3">{field('WhatsApp', outlet.whatsapp)}{field('Jam Buka', outlet.openingTime ? String(outlet.openingTime).slice(0,5) : '')}{field('Jam Tutup', outlet.closingTime ? String(outlet.closingTime).slice(0,5) : '')}</CRow>
         </div>
         <div className="mb-2 pt-3 border-top">
           <div className="fw-semibold mb-3">Pengaturan Outlet</div>
