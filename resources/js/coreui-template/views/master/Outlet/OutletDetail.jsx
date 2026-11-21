@@ -64,7 +64,6 @@ const OutletDetail = () => {
             <>
               <CRow className="g-4">
                 {field('Nama Outlet', outlet.name)}
-                {field('WhatsApp', outlet.whatsapp)}
                 {field('Alamat', outlet.address, true)}
               </CRow>
 
