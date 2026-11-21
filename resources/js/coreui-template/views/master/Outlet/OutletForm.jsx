@@ -116,7 +116,7 @@ const OutletForm = () => {
               {error && <CAlert color="danger">{error}</CAlert>}
 
               <CRow className="g-3">
-                <CCol xs={12}>
+                <CCol xs={12} md={6}>
                   <CFormInput
                     label="Nama Outlet"
                     placeholder="Masukkan nama outlet"
