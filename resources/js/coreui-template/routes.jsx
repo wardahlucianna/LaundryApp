@@ -3,6 +3,8 @@ const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const OutletList = React.lazy(() => import('./views/master/Outlet/OutletList'))
 const OutletForm = React.lazy(() => import('./views/master/Outlet/OutletForm'))
 const OutletDetail = React.lazy(() => import('./views/master/Outlet/OutletDetail'))
+const UnitList = React.lazy(() => import('./views/master/Unit/UnitList'))
+const UnitForm = React.lazy(() => import('./views/master/Unit/UnitForm'))
 const PosisiManagement = React.lazy(() => import('./views/access/Role/RoleList'))
 const PosisiFormPage = React.lazy(() => import('./views/access/Role/RoleForm'))
 const PosisiDetailPage = React.lazy(() => import('./views/access/Role/RoleDetail'))
@@ -19,6 +21,9 @@ export const routes = [
   { path: '/outlets/form', name: 'Tambah Outlet', element: OutletForm },
   { path: '/outlets/form/:id', name: 'Ubah Outlet', element: OutletForm },
   { path: '/outlets/detail/:id', name: 'Detail Outlet', element: OutletDetail },
+  { path: '/units', name: 'Master Satuan', element: UnitList },
+  { path: '/units/form', name: 'Tambah Satuan', element: UnitForm },
+  { path: '/units/form/:id', name: 'Ubah Satuan', element: UnitForm },
   { path: '/services', name: 'Layanan Laundry', element: () => <Placeholder title="Layanan Laundry" /> },
   { path: '/transactions', name: 'Transaksi', element: () => <Placeholder title="Transaksi" /> },
   { path: '/reports', name: 'Laporan', element: () => <Placeholder title="Laporan" /> },
@@ -44,7 +49,6 @@ const resolveFeaturePath = (menuGroups, names, fallbackPaths = []) => {
   )
   if (feature?.path) return normalizePath(feature.path)
 
-  // Fall back to the known route path when the menu label differs from its alias.
   const fallback = features.find((item) =>
     fallbackPaths.includes(normalizePath(item.path)),
   )
@@ -52,56 +56,9 @@ const resolveFeaturePath = (menuGroups, names, fallbackPaths = []) => {
 }
 
 export const buildAccessRoutes = (menuGroups) => {
-  const featureBase = resolveFeaturePath(
-    menuGroups,
-    [
-      'Manajemen Fitur',
-      'Management Fitur',
-      'Manajemen Feature',
-      'Management Feature',
-      'Fitur',
-      'Feature',
-      'Features',
-    ],
-    ['/feature'],
-  )
-  const roleBase = resolveFeaturePath(
-    menuGroups,
-    [
-      'Manajemen Posisi',
-      'Management Position',
-      'Position Management',
-      'Posisi',
-      'Manajemen Role',
-      'Management Role',
-      'Role Management',
-      'Role',
-      'Roles',
-      'Manajemen Peran',
-      'Pengelolaan Peran',
-      'Peran',
-    ],
-    ['/roles', '/role', '/management-role', '/manajemen-role', '/peran', '/posisi'],
-  )
-  const groupFeatureBase = resolveFeaturePath(
-    menuGroups,
-    [
-      'Group Feature',
-      'Feature Group',
-      'Feature Groups',
-      'Group Features',
-      'Permission Group',
-      'Permission Groups',
-      'Kelompok Fitur',
-      'Kelompok Feature',
-      'Group Fitur',
-      'Management Group Feature',
-      'Manajemen Group Feature',
-      'Manajemen Group Fitur',
-      'Manajemen Kelompok Fitur',
-    ],
-    ['/feature-group', '/group-feature', '/group-features', '/feature/group', '/feature-groups'],
-  )
+  const featureBase = resolveFeaturePath(menuGroups, ['Manajemen Fitur', 'Management Fitur', 'Manajemen Feature', 'Management Feature', 'Fitur', 'Feature', 'Features'], ['/feature'])
+  const roleBase = resolveFeaturePath(menuGroups, ['Manajemen Posisi', 'Management Position', 'Position Management', 'Posisi', 'Manajemen Role', 'Management Role', 'Role Management', 'Role', 'Roles', 'Manajemen Peran', 'Pengelolaan Peran', 'Peran'], ['/roles', '/role', '/management-role', '/manajemen-role', '/peran', '/posisi'])
+  const groupFeatureBase = resolveFeaturePath(menuGroups, ['Group Feature', 'Feature Group', 'Feature Groups', 'Group Features', 'Permission Group', 'Permission Groups', 'Kelompok Fitur', 'Kelompok Feature', 'Group Fitur', 'Management Group Feature', 'Manajemen Group Feature', 'Manajemen Group Fitur', 'Manajemen Kelompok Fitur'], ['/feature-group', '/group-feature', '/group-features', '/feature/group', '/feature-groups'])
   const dynamicRoutes = []
 
   if (groupFeatureBase) {
@@ -118,8 +75,6 @@ export const buildAccessRoutes = (menuGroups) => {
       { path: featureBase, name: 'Management Fitur', element: FeatureManagement },
       { path: `${featureBase}/form`, name: 'Form Fitur', element: FeatureFormPage },
       { path: `${featureBase}/form/:id`, name: 'Edit Fitur', element: FeatureFormPage },
-      // Keep the detail URL valid for existing menu links; the feature form
-      // loads the selected record by ID and avoids a PageNotFound fallback.
       { path: `${featureBase}/detail/:id`, name: 'Detail Fitur', element: FeatureFormPage },
       { path: `${featureBase}/group-feature/form`, name: 'Form Group Feature', element: GroupFeatureFormPage },
       { path: `${featureBase}/group-feature/form/:id`, name: 'Edit Group Feature', element: GroupFeatureFormPage },
