@@ -140,10 +140,7 @@ const UnitForm = () => {
                 </CRow>
               </div>
 
-              <hr className="my-4" />
-
               <div className="mb-2">
-                <div className="fw-semibold mb-3">Pengaturan Satuan</div>
                 <CRow className="g-3">
                   <CCol xs={12} md={6}>
                     <div className="role-status-box d-flex align-items-center justify-content-between rounded p-3 h-100">
