@@ -95,7 +95,7 @@ class OutletController extends Controller
             'code' => ['sometimes', 'nullable', 'string', 'max:30', Rule::unique('outlets', 'code')->ignore($outlet?->outletId, 'outletId')],
             'name' => ['required', 'string', 'max:120'],
             'address' => ['nullable', 'string', 'max:2000'],
-            'whatsapp' => ['nullable', 'string', 'max:30'],
+            'whatsapp' => ['nullable', 'string', 'max:30', 'regex:/^[0-9]+$/'],
             'email' => ['nullable', 'email', 'max:120'],
             'isPrimary' => ['sometimes', 'boolean'],
             'isActive' => ['sometimes', 'boolean'],
