@@ -3,6 +3,8 @@ const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const OutletList = React.lazy(() => import('./views/master/Outlet/OutletList'))
 const OutletForm = React.lazy(() => import('./views/master/Outlet/OutletForm'))
 const OutletDetail = React.lazy(() => import('./views/master/Outlet/OutletDetail'))
+const UnitList = React.lazy(() => import('./views/master/Unit/UnitList'))
+const UnitForm = React.lazy(() => import('./views/master/Unit/UnitForm'))
 const PosisiManagement = React.lazy(() => import('./views/access/Role/RoleList'))
 const PosisiFormPage = React.lazy(() => import('./views/access/Role/RoleForm'))
 const PosisiDetailPage = React.lazy(() => import('./views/access/Role/RoleDetail'))
@@ -19,6 +21,9 @@ export const routes = [
   { path: '/outlets/form', name: 'Tambah Outlet', element: OutletForm },
   { path: '/outlets/form/:id', name: 'Ubah Outlet', element: OutletForm },
   { path: '/outlets/detail/:id', name: 'Detail Outlet', element: OutletDetail },
+  { path: '/units', name: 'Master Satuan', element: UnitList },
+  { path: '/units/form', name: 'Tambah Satuan', element: UnitForm },
+  { path: '/units/form/:id', name: 'Ubah Satuan', element: UnitForm },
   { path: '/services', name: 'Layanan Laundry', element: () => <Placeholder title="Layanan Laundry" /> },
   { path: '/transactions', name: 'Transaksi', element: () => <Placeholder title="Transaksi" /> },
   { path: '/reports', name: 'Laporan', element: () => <Placeholder title="Laporan" /> },
