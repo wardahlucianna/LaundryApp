@@ -15,11 +15,11 @@ Route::middleware('auth:web')->group(function () {
     Route::put('/outlets/{outlet}', [OutletController::class, 'update'])->middleware('permission:ROLE_MANAGE');
     Route::delete('/outlets/{outlet}', [OutletController::class, 'destroy'])->middleware('permission:ROLE_MANAGE');
 
-    Route::get('/units', [UnitController::class, 'index'])->middleware('permission:ROLE_VIEW');
-    Route::post('/units', [UnitController::class, 'store'])->middleware('permission:ROLE_MANAGE');
-    Route::get('/units/{unit}', [UnitController::class, 'show'])->middleware('permission:ROLE_VIEW');
-    Route::put('/units/{unit}', [UnitController::class, 'update'])->middleware('permission:ROLE_MANAGE');
-    Route::delete('/units/{unit}', [UnitController::class, 'destroy'])->middleware('permission:ROLE_MANAGE');
+    Route::get('/units', [UnitController::class, 'index'])->middleware('permission:UNIT_VIEW');
+    Route::post('/units', [UnitController::class, 'store'])->middleware('permission:UNIT_MANAGE');
+    Route::get('/units/{unit}', [UnitController::class, 'show'])->middleware('permission:UNIT_VIEW');
+    Route::put('/units/{unit}', [UnitController::class, 'update'])->middleware('permission:UNIT_MANAGE');
+    Route::delete('/units/{unit}', [UnitController::class, 'destroy'])->middleware('permission:UNIT_MANAGE');
 
     Route::get('/roles', [RoleController::class, 'index'])->middleware('permission:ROLE_VIEW');
     Route::post('/roles', [RoleController::class, 'store'])->middleware('permission:ROLE_MANAGE');
