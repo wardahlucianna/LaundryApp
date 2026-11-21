@@ -1,12 +1,12 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\\Seeders;
 
-use App\Models\Access\PermissionFeature;
-use App\Models\Access\PermissionGroup;
-use App\Models\Access\Role;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\\Models\\Access\\PermissionFeature;
+use App\\Models\\Access\\PermissionGroup;
+use App\\Models\\Access\\Role;
+use Illuminate\\Database\\Seeder;
+use Illuminate\\Support\\Facades\\DB;
 
 class FeatureSeeder extends Seeder
 {
@@ -40,6 +40,7 @@ class FeatureSeeder extends Seeder
                 ['Operasional', 'Pesanan', '/orders', 20],
                 ['Operasional', 'Proses Laundry', '/process', 30],
                 ['Master Data', 'Manajemen Pelanggan', '/customers', 40],
+                ['Master Data', 'Satuan', '/units', 45],
                 ['Transaksi', 'Pembayaran', '/payments', 50],
                 ['Operasional', 'Antar Jemput', '/deliveries', 60],
                 ['Laporan', 'Laporan', '/reports', 70],
