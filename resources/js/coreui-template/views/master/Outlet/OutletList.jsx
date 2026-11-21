@@ -57,6 +57,41 @@ const OutletList = () => {
     }
   }, [location, navigate])
 
+  const applySearch = () => {
+    const nextSearch = searchInput.trim()
+    const nextStatus = statusInput
+
+    if (nextSearch === search && nextStatus === status && page === 1) {
+      load()
+      return
+    }
+
+    setPage(1)
+    setSearch(nextSearch)
+    setStatus(nextStatus)
+  }
+
+  const resetSearch = () => {
+    setSearchInput('')
+    setStatusInput('')
+
+    if (search === '' && status === '' && page === 1) {
+      load()
+      return
+    }
+
+    setSearch('')
+    setStatus('')
+    setPage(1)
+  }
+
+  const handleSearchKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      applySearch()
+    }
+  }
+
   const confirmDelete = async () => {
     if (!target) return
     setDeleting(true)
@@ -79,7 +114,66 @@ const OutletList = () => {
     <CCard className="role-panel role-list-panel mb-4">
       <CCardHeader className="d-flex flex-wrap justify-content-between align-items-center gap-2"><strong className="fs-5">Daftar Outlet</strong><CButton color="primary" size="sm" className="role-compact-button" onClick={() => navigate('/outlets/form')}><CIcon icon={cilPlus} className="me-1" />Tambah Outlet</CButton></CCardHeader>
       <CCardBody>
-        <CRow className="mb-3"><CCol xs={12}><div className="d-flex flex-column gap-2 w-100"><div className="d-flex flex-column flex-md-row align-items-stretch align-items-md-center gap-2 w-100"><CFormInput className="flex-grow-1 w-auto" placeholder="Cari nama, WhatsApp, atau alamat outlet" value={searchInput} onChange={e => setSearchInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && (setPage(1), setSearch(searchInput.trim()), setStatus(statusInput))} /><CFormSelect style={{ maxWidth: 160 }} value={statusInput} onChange={e => setStatusInput(e.target.value)} options={[{ label: 'Semua Status', value: '' }, { label: 'Aktif', value: '1' }, { label: 'Nonaktif', value: '0' }]} /></div><div className="d-flex flex-wrap align-items-center gap-2 pb-3 border-bottom"><CButton color="primary" size="sm" className="role-search-button role-compact-button" onClick={() => { setPage(1); setSearch(searchInput.trim()); setStatus(statusInput) }}><CIcon icon={cilSearch} className="me-1" />Cari</CButton><CButton color="secondary" variant="outline" size="sm" className="role-reset-button role-compact-button" onClick={() => { setSearchInput(''); setSearch(''); setStatusInput(''); setStatus(''); setPage(1) }}><CIcon icon={cilReload} className="me-1" />Reset</CButton></div></div></CCol></CRow>
+        <CRow className="mb-3">
+          <CCol xs={12}>
+            <div className="d-flex flex-column gap-2 w-100">
+              <div className="d-flex flex-column flex-md-row align-items-stretch align-items-md-center gap-2 w-100">
+                <CFormInput
+                  placeholder="Cari nama, WhatsApp, atau alamat outlet"
+                  value={searchInput}
+                  onChange={(event) => setSearchInput(event.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      event.preventDefault()
+                      applySearch()
+                    }
+                  }}
+                  aria-label="Cari outlet"
+                  className="flex-grow-1 w-auto"
+                  style={{ minWidth: 0 }}
+                />
+                <CFormSelect
+                  aria-label="Filter status outlet"
+                  value={statusInput}
+                  onChange={(event) => setStatusInput(event.target.value)}
+                  style={{ width: '160px', maxWidth: '160px' }}
+                  options={[
+                    { label: 'Semua Status', value: '' },
+                    { label: 'Aktif', value: '1' },
+                    { label: 'Nonaktif', value: '0' },
+                  ]}
+                />
+              </div>
+              <div className="d-flex flex-wrap align-items-center justify-content-start gap-2 pb-3 border-bottom">
+                <CButton
+                  color="primary"
+                  size="sm"
+                  aria-label="Cari"
+                  title="Cari"
+                  className="role-search-button role-compact-button"
+                  type="button"
+                  onClick={applySearch}
+                >
+                  <CIcon icon={cilSearch} size="sm" className="me-1" />
+                  Cari
+                </CButton>
+                <CButton
+                  color="secondary"
+                  variant="outline"
+                  size="sm"
+                  aria-label="Reset filter"
+                  title="Reset filter"
+                  className="role-reset-button role-compact-button"
+                  type="button"
+                  onClick={resetSearch}
+                >
+                  <CIcon icon={cilReload} size="sm" className="me-1" />
+                  Reset
+                </CButton>
+              </div>
+            </div>
+          </CCol>
+        </CRow>
         <GlobalTable columns={columns} rows={rows} rowKey="outletId" loading={loading} emptyMessage="Data outlet belum tersedia." hover responsive className="role-table" />
         <GlobalPagination currentPage={pagination.current_page} lastPage={pagination.last_page} total={pagination.total} perPage={10} onPageChange={setPage} loading={loading} />
       </CCardBody>
