@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { CBadge, CButton, CCard, CCardBody, CCardHeader, CCol, CFormInput, CFormSelect, CRow } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilPencil, cilPlus, cilSearch, cilReload, cilTrash } from '@coreui/icons'
@@ -11,6 +11,7 @@ import { apiBase } from '../../../../services/api'
 
 const OutletList = () => {
   const navigate = useNavigate()
+  const location = useLocation()
   const [rows, setRows] = useState([])
   const [searchInput, setSearchInput] = useState('')
   const [search, setSearch] = useState('')
@@ -48,6 +49,13 @@ const OutletList = () => {
   }, [page, search, status, request])
 
   useEffect(() => { load() }, [load])
+
+  useEffect(() => {
+    if (location.state?.notice) {
+      setNotice(location.state.notice)
+      navigate(location.pathname, { replace: true, state: {} })
+    }
+  }, [location, navigate])
 
   const confirmDelete = async () => {
     if (!target) return
