@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Master;
 use App\Http\Controllers\Controller;
 use App\Models\Master\Unit;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 
 class UnitController extends Controller
 {
@@ -43,7 +43,10 @@ class UnitController extends Controller
 
     public function store(Request $request)
     {
-        $unit = Unit::create($this->validatedData($request));
+        $data = $this->validatedData($request);
+        $data['code'] = 'SAT-' . strtoupper(Str::random(12));
+
+        $unit = Unit::create($data);
 
         return response()->json(['data' => $unit], 201);
     }
@@ -55,7 +58,7 @@ class UnitController extends Controller
 
     public function update(Request $request, Unit $unit)
     {
-        $unit->update($this->validatedData($request, $unit));
+        $unit->update($this->validatedData($request));
 
         return response()->json(['data' => $unit->fresh()]);
     }
@@ -67,15 +70,12 @@ class UnitController extends Controller
         return response()->json(['message' => 'Satuan berhasil dihapus.']);
     }
 
-    private function validatedData(Request $request, ?Unit $unit = null): array
+    private function validatedData(Request $request): array
     {
         return $request->validate([
-            'code' => ['required', 'string', 'max:30', Rule::unique('units', 'code')->ignore($unit?->unitId, 'unitId')],
             'name' => ['required', 'string', 'max:100'],
             'symbol' => ['required', 'string', 'max:20'],
-            'description' => ['nullable', 'string', 'max:500'],
             'isActive' => ['sometimes', 'boolean'],
-            'ordering' => ['sometimes', 'integer', 'min:1'],
         ]);
     }
 }
