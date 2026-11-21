@@ -73,13 +73,16 @@ const GroupFeatureList = () => {
   }, [])
 
   const loadGroups = useCallback(async () => {
-    setLoading(true); setError('')
+    setLoading(true)
+    setError('')
     try {
       const payload = await request('/permission-groups?per_page=100')
       setGroups(payload.data || [])
     } catch (loadError) {
       setError(loadError.message || 'Gagal memuat kelompok fitur.')
-    } finally { setLoading(false) }
+    } finally {
+      setLoading(false)
+    }
   }, [request])
   useEffect(() => { loadGroups() }, [loadGroups])
 
@@ -116,8 +119,30 @@ const GroupFeatureList = () => {
     } catch (deleteRequestError) { setDeleteError(deleteRequestError.message || 'Gagal menghapus kelompok fitur.') }
     finally { setDeleting(false) }
   }
-  const applySearch = () => { setPage(1); setSearch(searchInput.trim()); setStatusFilter(statusInput) }
-  const resetSearch = () => { setSearchInput(''); setSearch(''); setStatusInput(''); setStatusFilter(''); setPage(1) }
+  const applySearch = () => {
+    const nextSearch = searchInput.trim()
+    const nextStatus = statusInput
+    if (nextSearch === search && nextStatus === statusFilter && page === 1) {
+      loadGroups()
+      return
+    }
+    setPage(1)
+    setSearch(nextSearch)
+    setStatusFilter(nextStatus)
+    loadGroups()
+  }
+  const resetSearch = () => {
+    setSearchInput('')
+    setStatusInput('')
+    if (search === '' && statusFilter === '' && page === 1) {
+      loadGroups()
+      return
+    }
+    setSearch('')
+    setStatusFilter('')
+    setPage(1)
+    loadGroups()
+  }
 
   const columns = [
     { key: 'number', title: 'No.', width: '60px', render: (_group, index) => (page - 1) * perPage + index + 1 },
