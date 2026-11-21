@@ -45,24 +45,39 @@ const OutletForm = () => {
   }
 
   return <MasterPageLayout title={id ? 'Ubah Outlet' : 'Tambah Outlet'} className="role-form-page" error={error} onClearError={() => setError('')}>
+    <div className="role-form-page">
     <CCard className="role-panel role-form-card mb-4"><CCardHeader><strong className="fs-5">{id ? 'Ubah Outlet' : 'Tambah Outlet'}</strong></CCardHeader><CCardBody>
       {loading ? <div className="d-flex align-items-center gap-2 text-body-secondary"><CSpinner size="sm" />Memuat data outlet...</div> : <CForm onSubmit={save}>
         {error && <CAlert color="danger">{error}</CAlert>}
-        <CRow className="g-3">
+        <div className="mb-4">
+          <div className="fw-semibold mb-3">Informasi Outlet</div>
+          <CRow className="g-3">
           <CCol xs={12} md={6}><CFormInput label="Kode Outlet *" value={values.code} onChange={change('code')} maxLength={30} required /></CCol>
           <CCol xs={12} md={6}><CFormInput label="Nama Outlet *" value={values.name} onChange={change('name')} maxLength={120} required /></CCol>
           <CCol xs={12}><label className="form-label">Alamat</label><textarea className="form-control" rows={3} value={values.address} onChange={change('address')} maxLength={2000} /></CCol>
+          </CRow>
+        </div>
+        <div className="mb-4 pt-3 border-top">
+          <div className="fw-semibold mb-3">Kontak dan Jam Operasional</div>
+          <CRow className="g-3">
           <CCol xs={12} md={6}><CFormInput label="WhatsApp" value={values.whatsapp} onChange={change('whatsapp')} maxLength={30} placeholder="Contoh: 081234567890" /></CCol>
           <CCol xs={12} md={6}><CFormInput label="Email" type="email" value={values.email} onChange={change('email')} maxLength={120} /></CCol>
           <CCol xs={12} md={4}><CFormInput label="Urutan" type="number" min="1" value={values.ordering} onChange={change('ordering')} required /></CCol>
           <CCol xs={6} md={4}><CFormInput label="Jam Buka" type="time" value={values.openingTime} onChange={change('openingTime')} /></CCol>
           <CCol xs={6} md={4}><CFormInput label="Jam Tutup" type="time" value={values.closingTime} onChange={change('closingTime')} /></CCol>
-          <CCol xs={12} md={4}><div className="role-status-box rounded p-3 h-100"><div className="fw-semibold mb-2">Outlet Utama</div><CFormSwitch label={values.isPrimary ? 'Ya' : 'Tidak'} checked={Boolean(values.isPrimary)} onChange={change('isPrimary')} /></div></CCol>
-          <CCol xs={12} md={4}><div className="role-status-box rounded p-3 h-100"><div className="fw-semibold mb-2">Status</div><CFormSwitch label={values.isActive ? 'Aktif' : 'Nonaktif'} checked={Boolean(values.isActive)} onChange={change('isActive')} /></div></CCol>
-        </CRow>
+          </CRow>
+        </div>
+        <div className="mb-2 pt-3 border-top">
+          <div className="fw-semibold mb-3">Pengaturan Outlet</div>
+          <CRow className="g-3">
+          <CCol xs={12} md={6}><div className="role-status-box rounded p-3 h-100"><div className="fw-semibold mb-2">Outlet Utama</div><CFormSwitch label={values.isPrimary ? 'Ya' : 'Tidak'} checked={Boolean(values.isPrimary)} onChange={change('isPrimary')} /></div></CCol>
+          <CCol xs={12} md={6}><div className="role-status-box rounded p-3 h-100"><div className="fw-semibold mb-2">Status</div><CFormSwitch label={values.isActive ? 'Aktif' : 'Nonaktif'} checked={Boolean(values.isActive)} onChange={change('isActive')} /></div></CCol>
+          </CRow>
+        </div>
         <div className="d-flex justify-content-end gap-2 mt-4 pt-3 border-top"><CButton color="secondary" variant="outline" size="sm" type="button" disabled={saving} onClick={() => navigate('/outlets')}>Batal</CButton><CButton color="primary" size="sm" type="submit" disabled={saving}>{saving ? 'Menyimpan...' : 'Simpan'}</CButton></div>
       </CForm>}
     </CCardBody></CCard>
+    </div>
   </MasterPageLayout>
 }
 export default OutletForm
