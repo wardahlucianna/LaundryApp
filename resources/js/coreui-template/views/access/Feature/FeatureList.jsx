@@ -102,8 +102,16 @@ const FeatureListPage = () => {
   }, [])
 
   const loadGroups = useCallback(async () => {
-    const payload = await request('/permission-groups?per_page=100')
-    setGroups(payload.data || [])
+    setLoading(true)
+    setError('')
+    try {
+      const payload = await request('/permission-groups?per_page=100')
+      setGroups(payload.data || [])
+    } catch (loadError) {
+      setError(loadError.message || 'Gagal memuat kelompok fitur.')
+    } finally {
+      setLoading(false)
+    }
   }, [request])
 
   useEffect(() => {
@@ -177,17 +185,27 @@ const FeatureListPage = () => {
   }
 
   const applySearch = () => {
+    const nextSearch = searchInput.trim()
+    const nextStatus = statusInput
+    if (nextSearch === search && nextStatus === statusFilter && page === 1) {
+      loadFeatures()
+      return
+    }
     setPage(1)
-    setSearch(searchInput.trim())
-    setStatusFilter(statusInput)
+    setSearch(nextSearch)
+    setStatusFilter(nextStatus)
   }
 
   const resetSearch = () => {
     setSearchInput('')
     setStatusInput('')
+    if (search === '' && statusFilter === '' && page === 1) {
+      loadFeatures()
+      return
+    }
+    setSearch('')
     setStatusFilter('')
     setPage(1)
-    setSearch('')
   }
 
   const groupIcons = { cilFolderOpen, cilPeople, cilBasket, cilCash, cilSettings, cilChartLine, cilSpeedometer, cilBuilding, cilTags }
@@ -215,8 +233,22 @@ const FeatureListPage = () => {
     else setError('Path Manajemen Fitur belum terdaftar di database.')
   }
 
-  const applyGroupSearch = () => { setGroupSearch(groupSearchInput.trim()); setGroupStatusFilter(groupStatusInput); setGroupPage(1) }
-  const resetGroupSearch = () => { setGroupSearchInput(''); setGroupSearch(''); setGroupStatusInput(''); setGroupStatusFilter(''); setGroupPage(1) }
+  const applyGroupSearch = () => {
+    const nextSearch = groupSearchInput.trim()
+    const nextStatus = groupStatusInput
+    setGroupSearch(nextSearch)
+    setGroupStatusFilter(nextStatus)
+    setGroupPage(1)
+    loadGroups()
+  }
+  const resetGroupSearch = () => {
+    setGroupSearchInput('')
+    setGroupStatusInput('')
+    setGroupSearch('')
+    setGroupStatusFilter('')
+    setGroupPage(1)
+    loadGroups()
+  }
 
   const getGroupName = (feature) => feature.group?.name || '—'
 
