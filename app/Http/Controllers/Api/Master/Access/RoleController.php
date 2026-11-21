@@ -65,35 +65,40 @@ class RoleController extends Controller
     {
         $usersCount = $role->users()->count();
 
-        // FE detail hanya membutuhkan identitas role, jumlah pengguna,
-        // ID fitur yang diberikan, dan ringkasan fitur aktif untuk tampilan.
+        // Ambil seluruh fitur dan sertakan status akses untuk role ini.
         $assignedFeatureIds = DB::table('roleFeatures')
             ->where('roleId', $role->roleId)
             ->pluck('featureId')
-            ->map(fn ($featureId) => strtolower((string) $featureId))
-            ->values();
+            ->mapWithKeys(fn ($featureId) => [strtolower((string) $featureId) => true]);
 
-        $availableFeatures = PermissionFeature::query()
-            ->select(['featureId', 'groupFeatureId', 'name', 'ordering'])
+        $features = PermissionFeature::query()
+            ->select(['featureId', 'groupFeatureId', 'name', 'ordering', 'isActive'])
             ->with(['group' => function ($query) {
                 $query->select(['groupFeatureId', 'name', 'ordering']);
             }])
-            ->where('isActive', true)
             ->orderBy('ordering')
             ->orderBy('name')
-            ->get();
+            ->get()
+            ->map(fn ($feature) => [
+                'featureId' => $feature->featureId,
+                'name' => $feature->name,
+                'ordering' => $feature->ordering,
+                'isActive' => (bool) $feature->isActive,
+                'group' => $feature->group ? [
+                    'groupFeatureId' => $feature->group->groupFeatureId,
+                    'name' => $feature->group->name,
+                    'ordering' => $feature->group->ordering,
+                ] : null,
+                'hasAccess' => $assignedFeatureIds->has(strtolower((string) $feature->featureId)),
+            ]);
 
         return response()->json([
             'data' => [
                 'roleId' => $role->roleId,
                 'name' => $role->name,
                 'isActive' => $role->isActive,
-                'users_count' => $usersCount,
-                'featureIds' => $assignedFeatureIds->all(),
-                'features' => $assignedFeatureIds->map(fn ($featureId) => [
-                    'featureId' => $featureId,
-                ])->all(),
-                'availableFeatures' => $availableFeatures,
+                'usersCount' => $usersCount,
+                'features' => $features,
             ],
         ]);
     }
