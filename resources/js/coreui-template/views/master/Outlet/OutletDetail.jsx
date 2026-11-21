@@ -36,16 +36,13 @@ const OutletDetail = () => {
       <CCardHeader className="d-flex justify-content-between align-items-center"><strong className="fs-5">Detail Outlet</strong>{outlet && <CButton color="primary" size="sm" onClick={() => navigate(`/outlets/form/${id}`)}><CIcon icon={cilPencil} className="me-1" />Ubah</CButton>}</CCardHeader>
       <CCardBody>
         {loading ? <div className="d-flex align-items-center gap-2 text-body-secondary"><CSpinner size="sm" />Memuat detail outlet...</div> : outlet && <><div className="mb-4">
-          <div className="fw-semibold mb-3">Informasi Outlet</div>
-          <CRow className="g-3">{field('Kode Outlet', outlet.code)}{field('Nama Outlet', outlet.name)}{field('Alamat', outlet.address)}</CRow>
+          <CRow className="g-3">{field('Nama Outlet', outlet.name)}{field('Alamat', outlet.address)}</CRow>
         </div>
         <div className="mb-4 pt-3 border-top">
-          <div className="fw-semibold mb-3">Kontak dan Jam Operasional</div>
           <CRow className="g-3">{field('WhatsApp', outlet.whatsapp)}{field('Jam Buka', outlet.openingTime ? String(outlet.openingTime).slice(0,5) : '')}{field('Jam Tutup', outlet.closingTime ? String(outlet.closingTime).slice(0,5) : '')}</CRow>
         </div>
         <div className="mb-2 pt-3 border-top">
-          <div className="fw-semibold mb-3">Pengaturan Outlet</div>
-          <CRow className="g-3">{field('Urutan', outlet.ordering)}<CCol xs={12} md={6}><div className="small text-body-secondary mb-1">Outlet Utama</div><CBadge color={outlet.isPrimary ? 'info' : 'secondary'}>{outlet.isPrimary ? 'Ya' : 'Tidak'}</CBadge></CCol><CCol xs={12} md={6}><div className="small text-body-secondary mb-1">Status</div><CBadge color={outlet.isActive ? 'success' : 'secondary'}>{outlet.isActive ? 'Aktif' : 'Nonaktif'}</CBadge></CCol></CRow>
+          <CRow className="g-3"><CCol xs={12} md={6}><div className="small text-body-secondary mb-1">Outlet Utama</div><CBadge color={outlet.isPrimary ? 'info' : 'secondary'}>{outlet.isPrimary ? 'Ya' : 'Tidak'}</CBadge></CCol><CCol xs={12} md={6}><div className="small text-body-secondary mb-1">Status</div><CBadge color={outlet.isActive ? 'success' : 'secondary'}>{outlet.isActive ? 'Aktif' : 'Nonaktif'}</CBadge></CCol></CRow>
         </div>
         <div className="d-flex justify-content-end gap-2 mt-4 pt-3 border-top"><CButton color="secondary" variant="outline" size="sm" onClick={() => navigate('/outlets')}>Kembali</CButton></div></>}
       </CCardBody>
