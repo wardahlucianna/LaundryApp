@@ -118,7 +118,7 @@ const OutletForm = () => {
               <CRow className="g-3">
                 <CCol xs={12} md={6}>
                   <CFormInput
-                    label="Nama Outlet"
+                    label={<span>Nama Outlet <span className="text-danger">*</span></span>}
                     placeholder="Masukkan nama outlet"
                     value={values.name}
                     onChange={change('name')}
