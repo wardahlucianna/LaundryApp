@@ -1,9 +1,9 @@
 <?php
 
-namespace App\\Models\\Master;
+namespace App\Models\Master;
 
-use Illuminate\\Database\\Eloquent\\Model;
-use Illuminate\\Support\\Str;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Unit extends Model
 {
