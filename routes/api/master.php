@@ -7,6 +7,11 @@ use App\Http\Controllers\Api\Master\Access\RoleController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:web')->group(function () {
+    Route::get('/outlets', [OutletController::class, 'index'])->middleware('permission:ROLE_VIEW');
+    Route::post('/outlets', [OutletController::class, 'store'])->middleware('permission:ROLE_MANAGE');
+    Route::get('/outlets/{outlet}', [OutletController::class, 'show'])->middleware('permission:ROLE_VIEW');
+    Route::put('/outlets/{outlet}', [OutletController::class, 'update'])->middleware('permission:ROLE_MANAGE');
+    Route::delete('/outlets/{outlet}', [OutletController::class, 'destroy'])->middleware('permission:ROLE_MANAGE');
     Route::get('/roles', [RoleController::class, 'index'])->middleware('permission:ROLE_VIEW');
     Route::post('/roles', [RoleController::class, 'store'])->middleware('permission:ROLE_MANAGE');
     Route::get('/roles/features/options', [RoleController::class, 'featureOptions'])->middleware('permission:ROLE_VIEW');
