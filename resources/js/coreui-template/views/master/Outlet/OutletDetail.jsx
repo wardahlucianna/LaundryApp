@@ -66,8 +66,6 @@ const OutletDetail = () => {
                 {field('Nama Outlet', outlet.name)}
                 {field('WhatsApp', outlet.whatsapp)}
                 {field('Alamat', outlet.address, true)}
-                {field('Jam Buka', outlet.openingTime ? String(outlet.openingTime).slice(0, 5) : '')}
-                {field('Jam Tutup', outlet.closingTime ? String(outlet.closingTime).slice(0, 5) : '')}
               </CRow>
 
               <hr className="my-4" />
