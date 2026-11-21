@@ -14,11 +14,10 @@ class Unit extends Model
     public $incrementing = false;
     protected $keyType = 'string';
 
-    protected $fillable = ['code', 'name', 'symbol', 'description', 'isActive', 'ordering'];
+    protected $fillable = ['name', 'symbol', 'isActive'];
 
     protected $casts = [
         'isActive' => 'boolean',
-        'ordering' => 'integer',
     ];
 
     protected static function booted(): void
