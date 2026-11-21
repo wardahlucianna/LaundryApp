@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import {
-  CAlert, CButton, CCard, CCardBody, CCardHeader, CCol,
+  CButton, CCard, CCardBody, CCardHeader, CCol,
   CForm, CFormInput, CFormSwitch, CRow, CSpinner,
 } from '@coreui/react'
 import MasterPageLayout from '../../../components/layout/MasterPageLayout'
@@ -95,12 +95,15 @@ const UnitForm = () => {
       <CCard className="role-panel role-form-card mb-4">
         <CCardHeader
           className="d-flex align-items-center py-3"
-          style={{ backgroundColor: 'var(--cui-tertiary-bg)', borderBottom: '1px solid var(--cui-border-color)' }}
+          style={{
+            backgroundColor: 'var(--cui-tertiary-bg)',
+            borderBottom: '1px solid var(--cui-border-color)',
+          }}
         >
           <strong className="fs-5">{id ? 'Ubah Satuan' : 'Tambah Satuan'}</strong>
         </CCardHeader>
 
-        <CCardBody>
+        <CCardBody className="p-4">
           {loading ? (
             <div className="d-flex align-items-center gap-2 py-3 text-body-secondary">
               <CSpinner size="sm" />
@@ -108,54 +111,67 @@ const UnitForm = () => {
             </div>
           ) : (
             <CForm onSubmit={save}>
-              {error && <CAlert color="danger">{error}</CAlert>}
-
-              <CRow className="g-3">
-                <CCol xs={12} md={6}>
-                  <CFormInput
-                    label={<span>Nama Satuan <span className="text-danger">*</span></span>}
-                    placeholder="Masukkan nama satuan"
-                    value={values.name}
-                    onChange={change('name')}
-                    maxLength={100}
-                    required
-                    disabled={saving}
-                  />
-                </CCol>
-
-                <CCol xs={12} md={6}>
-                  <CFormInput
-                    label={<span>Simbol <span className="text-danger">*</span></span>}
-                    placeholder="Contoh: Kg, Pcs, Liter"
-                    value={values.symbol}
-                    onChange={change('symbol')}
-                    maxLength={20}
-                    required
-                    disabled={saving}
-                  />
-                </CCol>
-              </CRow>
-
-              <CRow className="g-3">
-                <CCol xs={12} md={6}>
-                  <div className="role-status-box d-flex align-items-center justify-content-between rounded p-3 h-100">
-                    <div className="role-status-copy">
-                      <div className="fw-semibold mb-1">Status</div>
-                      <div className="role-status-note">Satuan aktif dapat digunakan dalam transaksi.</div>
-                    </div>
-                    <CFormSwitch
-                      className={`role-status-switch ${values.isActive ? 'is-active' : 'is-inactive'}`}
-                      label={values.isActive ? 'Aktif' : 'Nonaktif'}
-                      checked={Boolean(values.isActive)}
-                      onChange={change('isActive')}
+              <div className="mb-4">
+                <div className="fw-semibold mb-3">Informasi Satuan</div>
+                <CRow className="g-3">
+                  <CCol xs={12} md={6}>
+                    <CFormInput
+                      label={<span>Nama Satuan <span className="text-danger">*</span></span>}
+                      placeholder="Masukkan nama satuan"
+                      value={values.name}
+                      onChange={change('name')}
+                      maxLength={100}
+                      required
                       disabled={saving}
                     />
-                  </div>
-                </CCol>
-              </CRow>
+                  </CCol>
+
+                  <CCol xs={12} md={6}>
+                    <CFormInput
+                      label={<span>Simbol <span className="text-danger">*</span></span>}
+                      placeholder="Contoh: Kg, Pcs, Liter"
+                      value={values.symbol}
+                      onChange={change('symbol')}
+                      maxLength={20}
+                      required
+                      disabled={saving}
+                    />
+                  </CCol>
+                </CRow>
+              </div>
+
+              <hr className="my-4" />
+
+              <div className="mb-2">
+                <div className="fw-semibold mb-3">Pengaturan Satuan</div>
+                <CRow className="g-3">
+                  <CCol xs={12} md={6}>
+                    <div className="role-status-box d-flex align-items-center justify-content-between rounded p-3 h-100">
+                      <div className="role-status-copy">
+                        <div className="fw-semibold mb-1">Status</div>
+                        <div className="role-status-note">Satuan aktif dapat digunakan dalam transaksi.</div>
+                      </div>
+                      <CFormSwitch
+                        className={`role-status-switch ${values.isActive ? 'is-active' : 'is-inactive'}`}
+                        label={values.isActive ? 'Aktif' : 'Nonaktif'}
+                        checked={Boolean(values.isActive)}
+                        onChange={change('isActive')}
+                        disabled={saving}
+                      />
+                    </div>
+                  </CCol>
+                </CRow>
+              </div>
 
               <div className="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
-                <CButton color="secondary" size="sm" variant="outline" type="button" disabled={saving} onClick={() => navigate('/units')}>
+                <CButton
+                  color="secondary"
+                  size="sm"
+                  variant="outline"
+                  type="button"
+                  disabled={saving}
+                  onClick={() => navigate('/units')}
+                >
                   Batal
                 </CButton>
                 <CButton color="primary" size="sm" type="submit" disabled={saving}>
