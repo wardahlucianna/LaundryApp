@@ -20,7 +20,8 @@ return new class extends Migration
             $table->unsignedInteger('ordering')->default(1);
             $table->time('openingTime')->nullable();
             $table->time('closingTime')->nullable();
-            $table->timestamps();
+            $table->timestamp('createdAt')->nullable();
+            $table->timestamp('updatedAt')->nullable();
             $table->index(['isActive', 'ordering']);
         });
     }
