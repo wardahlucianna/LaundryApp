@@ -15,14 +15,13 @@ class Outlet extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'code', 'name', 'address', 'whatsapp', 'email',
-        'isPrimary', 'isActive', 'ordering', 'openingTime', 'closingTime',
+        'name', 'address', 'whatsapp', 'email',
+        'isPrimary', 'isActive', 'openingTime', 'closingTime',
     ];
 
     protected $casts = [
         'isPrimary' => 'boolean',
         'isActive' => 'boolean',
-        'ordering' => 'integer',
     ];
 
     protected static function booted(): void
