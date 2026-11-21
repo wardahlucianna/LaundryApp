@@ -66,7 +66,8 @@ const OutletForm = () => {
   }, [id, request])
 
   const change = (key) => (event) => {
-    const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value
+    const rawValue = event.target.type === 'checkbox' ? event.target.checked : event.target.value
+    const value = key === 'whatsapp' ? rawValue.replace(/\D/g, '') : rawValue
     setValues((current) => ({ ...current, [key]: value }))
   }
 
@@ -132,6 +133,9 @@ const OutletForm = () => {
                   <CFormInput
                     label="WhatsApp"
                     placeholder="Contoh: 081234567890"
+                    type="tel"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     value={values.whatsapp || ''}
                     onChange={change('whatsapp')}
                     maxLength={30}
