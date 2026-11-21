@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Master\Access\PermissionFeatureController;
 use App\Http\Controllers\Api\Master\Access\PermissionGroupController;
 use App\Http\Controllers\Api\Master\Access\RoleController;
 use App\Http\Controllers\Api\Master\OutletController;
+use App\Http\Controllers\Api\Master\UnitController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:web')->group(function () {
