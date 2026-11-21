@@ -8,6 +8,8 @@ use Illuminate\Support\Str;
 class Outlet extends Model
 {
     protected $table = 'outlets';
+    const CREATED_AT = 'createdAt';
+    const UPDATED_AT = 'updatedAt';
     protected $primaryKey = 'outletId';
     public $incrementing = false;
     protected $keyType = 'string';
