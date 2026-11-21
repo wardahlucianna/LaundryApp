@@ -4,7 +4,7 @@ import { CAlert, CButton, CCard, CCardBody, CCardHeader, CCol, CForm, CFormInput
 import MasterPageLayout from '../../../components/layout/MasterPageLayout'
 import { apiBase } from '../../../../services/api'
 
-const initialValues = { code: '', name: '', address: '', whatsapp: '', email: '', isPrimary: false, isActive: true, ordering: 1, openingTime: '08:00', closingTime: '21:00' }
+const initialValues = { code: '', name: '', address: '', whatsapp: '', isPrimary: false, isActive: true, ordering: 1, openingTime: '08:00', closingTime: '21:00' }
 
 const OutletForm = () => {
   const { id } = useParams()
@@ -61,8 +61,6 @@ const OutletForm = () => {
           <div className="fw-semibold mb-3">Kontak dan Jam Operasional</div>
           <CRow className="g-3">
           <CCol xs={12} md={6}><CFormInput label="WhatsApp" value={values.whatsapp} onChange={change('whatsapp')} maxLength={30} placeholder="Contoh: 081234567890" /></CCol>
-          <CCol xs={12} md={6}><CFormInput label="Email" type="email" value={values.email} onChange={change('email')} maxLength={120} /></CCol>
-          <CCol xs={12} md={4}><CFormInput label="Urutan" type="number" min="1" value={values.ordering} onChange={change('ordering')} required /></CCol>
           <CCol xs={6} md={4}><CFormInput label="Jam Buka" type="time" value={values.openingTime} onChange={change('openingTime')} /></CCol>
           <CCol xs={6} md={4}><CFormInput label="Jam Tutup" type="time" value={values.closingTime} onChange={change('closingTime')} /></CCol>
           </CRow>
@@ -70,8 +68,37 @@ const OutletForm = () => {
         <div className="mb-2 pt-3 border-top">
           <div className="fw-semibold mb-3">Pengaturan Outlet</div>
           <CRow className="g-3">
-          <CCol xs={12} md={6}><div className="role-status-box rounded p-3 h-100"><div className="fw-semibold mb-2">Outlet Utama</div><CFormSwitch label={values.isPrimary ? 'Ya' : 'Tidak'} checked={Boolean(values.isPrimary)} onChange={change('isPrimary')} /></div></CCol>
-          <CCol xs={12} md={6}><div className="role-status-box rounded p-3 h-100"><div className="fw-semibold mb-2">Status</div><CFormSwitch label={values.isActive ? 'Aktif' : 'Nonaktif'} checked={Boolean(values.isActive)} onChange={change('isActive')} /></div></CCol>
+          <CCol xs={12} md={6}>
+            <CFormInput label="Urutan Tampilan" type="number" min="1" value={values.ordering} onChange={change('ordering')} required />
+          </CCol>
+          <CCol xs={12} md={6}>
+            <div className="role-status-box d-flex align-items-center justify-content-between rounded p-3 h-100">
+              <div className="role-status-copy">
+                <div className="fw-semibold mb-1">Outlet Utama</div>
+                <div className="role-status-note">Tentukan outlet yang menjadi outlet utama.</div>
+              </div>
+              <CFormSwitch
+                className={`role-status-switch ${values.isPrimary ? 'is-active' : 'is-inactive'}`}
+                label={values.isPrimary ? 'Ya' : 'Tidak'}
+                checked={Boolean(values.isPrimary)}
+                onChange={change('isPrimary')}
+              />
+            </div>
+          </CCol>
+          <CCol xs={12} md={6}>
+            <div className="role-status-box d-flex align-items-center justify-content-between rounded p-3 h-100">
+              <div className="role-status-copy">
+                <div className="fw-semibold mb-1">Status</div>
+                <div className="role-status-note">Aktifkan outlet agar dapat digunakan.</div>
+              </div>
+              <CFormSwitch
+                className={`role-status-switch ${values.isActive ? 'is-active' : 'is-inactive'}`}
+                label={values.isActive ? 'Aktif' : 'Nonaktif'}
+                checked={Boolean(values.isActive)}
+                onChange={change('isActive')}
+              />
+            </div>
+          </CCol>
           </CRow>
         </div>
         <div className="d-flex justify-content-end gap-2 mt-4 pt-3 border-top"><CButton color="secondary" variant="outline" size="sm" type="button" disabled={saving} onClick={() => navigate('/outlets')}>Batal</CButton><CButton color="primary" size="sm" type="submit" disabled={saving}>{saving ? 'Menyimpan...' : 'Simpan'}</CButton></div>
