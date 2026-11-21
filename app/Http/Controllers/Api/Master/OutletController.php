@@ -13,8 +13,8 @@ class OutletController extends Controller
     {
         $query = Outlet::query()
             ->select([
-                'outletId', 'name', 'address', 'whatsapp', 'email',
-                'isPrimary', 'isActive', 'openingTime', 'closingTime',
+                'outletId', 'name', 'address', 'whatsapp',
+                'isPrimary', 'isActive',
             ])
             ->orderByDesc('isPrimary')
             ->orderBy('name');
@@ -91,11 +91,8 @@ class OutletController extends Controller
             'name' => ['required', 'string', 'max:120'],
             'address' => ['nullable', 'string', 'max:2000'],
             'whatsapp' => ['nullable', 'string', 'max:30', 'regex:/^[0-9]+$/'],
-            'email' => ['nullable', 'email', 'max:120'],
             'isPrimary' => ['sometimes', 'boolean'],
             'isActive' => ['sometimes', 'boolean'],
-            'openingTime' => ['nullable', 'date_format:H:i'],
-            'closingTime' => ['nullable', 'date_format:H:i'],
         ]);
 
         return $data;
