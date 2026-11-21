@@ -12,16 +12,13 @@ class UnitController extends Controller
     public function index(Request $request)
     {
         $query = Unit::query()
-            ->select(['unitId', 'code', 'name', 'symbol', 'description', 'isActive', 'ordering'])
-            ->orderBy('ordering')
+            ->select(['unitId', 'name', 'symbol', 'isActive'])
             ->orderBy('name');
 
         if ($search = trim($request->string('search')->toString())) {
             $query->where(fn ($q) => $q
-                ->where('code', 'ilike', "%{$search}%")
-                ->orWhere('name', 'ilike', "%{$search}%")
-                ->orWhere('symbol', 'ilike', "%{$search}%")
-                ->orWhere('description', 'ilike', "%{$search}%"));
+                ->where('name', 'ilike', "%{$search}%")
+                ->orWhere('symbol', 'ilike', "%{$search}%"));
         }
 
         if ($request->has('isActive')) {
@@ -44,8 +41,6 @@ class UnitController extends Controller
     public function store(Request $request)
     {
         $data = $this->validatedData($request);
-        $data['code'] = 'SAT-' . strtoupper(Str::random(12));
-
         $unit = Unit::create($data);
 
         return response()->json(['data' => $unit], 201);
