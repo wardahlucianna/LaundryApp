@@ -15,8 +15,8 @@ class Outlet extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'name', 'address', 'whatsapp', 'email',
-        'isPrimary', 'isActive', 'openingTime', 'closingTime',
+        'name', 'address', 'whatsapp',
+        'isPrimary', 'isActive',
     ];
 
     protected $casts = [
