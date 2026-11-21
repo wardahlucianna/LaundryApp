@@ -13,8 +13,6 @@ const initialValues = {
   whatsapp: '',
   isPrimary: false,
   isActive: true,
-  openingTime: '08:00',
-  closingTime: '21:00',
 }
 
 const OutletForm = () => {
@@ -59,8 +57,6 @@ const OutletForm = () => {
         setValues({
           ...initialValues,
           ...data,
-          openingTime: data.openingTime ? String(data.openingTime).slice(0, 5) : '',
-          closingTime: data.closingTime ? String(data.closingTime).slice(0, 5) : '',
         })
       })
       .catch((loadError) => active && setError(loadError.message || 'Gagal memuat outlet.'))
@@ -157,25 +153,6 @@ const OutletForm = () => {
                   />
                 </CCol>
 
-                <CCol xs={6} md={3}>
-                  <CFormInput
-                    label="Jam Buka"
-                    type="time"
-                    value={values.openingTime || ''}
-                    onChange={change('openingTime')}
-                    disabled={saving}
-                  />
-                </CCol>
-
-                <CCol xs={6} md={3}>
-                  <CFormInput
-                    label="Jam Tutup"
-                    type="time"
-                    value={values.closingTime || ''}
-                    onChange={change('closingTime')}
-                    disabled={saving}
-                  />
-                </CCol>
               </CRow>
 
               <hr className="my-4" />
