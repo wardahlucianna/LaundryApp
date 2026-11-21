@@ -1,11 +1,11 @@
 <?php
 
-namespace App\\Http\\Controllers\\Api\\Master;
+namespace App\Http\Controllers\Api\Master;
 
-use App\\Http\\Controllers\\Controller;
-use App\\Models\\Master\\Unit;
-use Illuminate\\Http\\Request;
-use Illuminate\\Validation\\Rule;
+use App\Http\Controllers\Controller;
+use App\Models\Master\Unit;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class UnitController extends Controller
 {
