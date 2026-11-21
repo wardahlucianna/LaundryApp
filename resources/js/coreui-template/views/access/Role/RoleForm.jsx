@@ -120,8 +120,8 @@ const PosisiFormPage = () => {
 
     const load = async () => {
       try {
-        // Saat edit, endpoint detail role sudah membawa daftar fitur aktif
-        // dan fitur yang terpilih. Form cukup melakukan satu request.
+        // Saat edit, endpoint detail role sudah membawa seluruh fitur
+        // beserta penanda hasAccess. Form cukup melakukan satu request.
         const payload = id
           ? await request(`/roles/${id}`)
           : await request('/roles/features/options')
