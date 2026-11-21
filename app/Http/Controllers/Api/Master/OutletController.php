@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Master\Outlet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Str;
 
 class OutletController extends Controller
 {
@@ -15,17 +13,15 @@ class OutletController extends Controller
     {
         $query = Outlet::query()
             ->select([
-                'outletId', 'code', 'name', 'address', 'whatsapp', 'email',
-                'isPrimary', 'isActive', 'ordering', 'openingTime', 'closingTime',
+                'outletId', 'name', 'address', 'whatsapp', 'email',
+                'isPrimary', 'isActive', 'openingTime', 'closingTime',
             ])
             ->orderByDesc('isPrimary')
-            ->orderBy('ordering')
             ->orderBy('name');
 
         if ($search = trim($request->string('search')->toString())) {
             $query->where(fn ($q) => $q
-                ->where('code', 'ilike', "%{$search}%")
-                ->orWhere('name', 'ilike', "%{$search}%")
+                ->where('name', 'ilike', "%{$search}%")
                 ->orWhere('address', 'ilike', "%{$search}%"));
         }
 
@@ -92,23 +88,15 @@ class OutletController extends Controller
     private function validatedData(Request $request, ?Outlet $outlet = null): array
     {
         $data = $request->validate([
-            'code' => ['sometimes', 'nullable', 'string', 'max:30', Rule::unique('outlets', 'code')->ignore($outlet?->outletId, 'outletId')],
             'name' => ['required', 'string', 'max:120'],
             'address' => ['nullable', 'string', 'max:2000'],
             'whatsapp' => ['nullable', 'string', 'max:30', 'regex:/^[0-9]+$/'],
             'email' => ['nullable', 'email', 'max:120'],
             'isPrimary' => ['sometimes', 'boolean'],
             'isActive' => ['sometimes', 'boolean'],
-            'ordering' => ['sometimes', 'integer', 'min:1'],
             'openingTime' => ['nullable', 'date_format:H:i'],
             'closingTime' => ['nullable', 'date_format:H:i'],
         ]);
-
-        if (!$outlet && empty($data['code'])) {
-            do {
-                $data['code'] = 'OUT-' . Str::upper(Str::random(8));
-            } while (Outlet::query()->where('code', $data['code'])->exists());
-        }
 
         return $data;
     }
