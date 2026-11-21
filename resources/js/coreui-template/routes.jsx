@@ -1,5 +1,7 @@
 import React from 'react'
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
+const OutletList = React.lazy(() => import('./views/master/Outlet/OutletList'))
+const OutletForm = React.lazy(() => import('./views/master/Outlet/OutletForm'))
 const PosisiManagement = React.lazy(() => import('./views/access/Role/RoleList'))
 const PosisiFormPage = React.lazy(() => import('./views/access/Role/RoleForm'))
 const PosisiDetailPage = React.lazy(() => import('./views/access/Role/RoleDetail'))
@@ -12,6 +14,9 @@ const Placeholder = ({ title }) => <div className="pt-4"><h2>{title}</h2><p>Hala
 export const routes = [
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/customers', name: 'Pelanggan', element: () => <Placeholder title="Pelanggan" /> },
+  { path: '/outlets', name: 'Manajemen Outlet', element: OutletList },
+  { path: '/outlets/form', name: 'Tambah Outlet', element: OutletForm },
+  { path: '/outlets/form/:id', name: 'Ubah Outlet', element: OutletForm },
   { path: '/services', name: 'Layanan Laundry', element: () => <Placeholder title="Layanan Laundry" /> },
   { path: '/transactions', name: 'Transaksi', element: () => <Placeholder title="Transaksi" /> },
   { path: '/reports', name: 'Laporan', element: () => <Placeholder title="Laporan" /> },
