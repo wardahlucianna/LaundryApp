@@ -1,13 +1,12 @@
 <?php
 
-namespace App\\Http\\Controllers\\Api\\Master;
+namespace App\Http\Controllers\Api\Master;
 
-use App\\Http\\Controllers\\Controller;
-use App\\Models\\Master\\Outlet;
-use Illuminate\\Database\\QueryException;
-use Illuminate\\Http\\Request;
-use Illuminate\\Support\\Facades\\DB;
-use Illuminate\\Validation\\Rule;
+use App\Http\Controllers\Controller;
+use App\Models\Master\Outlet;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class OutletController extends Controller
 {
