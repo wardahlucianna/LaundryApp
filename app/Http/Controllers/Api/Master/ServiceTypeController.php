@@ -12,13 +12,11 @@ class ServiceTypeController extends Controller
     public function index(Request $request)
     {
         $query = ServiceType::query()
-            ->select(['serviceTypeId', 'name', 'description', 'isActive'])
+            ->select(['serviceTypeId', 'name', 'isActive'])
             ->orderBy('name');
 
         if ($search = trim($request->string('search')->toString())) {
-            $query->where(fn ($q) => $q
-                ->where('name', 'ilike', "%{$search}%")
-                ->orWhere('description', 'ilike', "%{$search}%"));
+            $query->where('name', 'ilike', "%{$search}%");
         }
 
         if ($request->has('isActive')) {
@@ -73,7 +71,6 @@ class ServiceTypeController extends Controller
                 'max:100',
                 Rule::unique('serviceTypes', 'name')->ignore($serviceType?->serviceTypeId, 'serviceTypeId'),
             ],
-            'description' => ['nullable', 'string', 'max:500'],
             'isActive' => ['sometimes', 'boolean'],
         ]);
     }
