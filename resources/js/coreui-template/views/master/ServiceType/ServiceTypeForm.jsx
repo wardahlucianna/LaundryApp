@@ -7,7 +7,7 @@ import {
 import MasterPageLayout from '../../../components/layout/MasterPageLayout'
 import { apiBase } from '../../../../services/api'
 
-const initialValues = { name: '', description: '', isActive: true }
+const initialValues = { name: '', isActive: true }
 
 const ServiceTypeForm = () => {
   const { id } = useParams()
@@ -50,7 +50,6 @@ const ServiceTypeForm = () => {
         const data = payload.data || {}
         setValues({
           name: data.name || '',
-          description: data.description || '',
           isActive: data.isActive ?? true,
         })
       })
@@ -104,19 +103,6 @@ const ServiceTypeForm = () => {
                     onChange={change('name')}
                     maxLength={100}
                     required
-                    disabled={saving}
-                  />
-                </CCol>
-                <CCol xs={12}>
-                  <label className="form-label" htmlFor="service-type-description">Deskripsi</label>
-                  <textarea
-                    id="service-type-description"
-                    className="form-control"
-                    rows={3}
-                    placeholder="Masukkan deskripsi jenis layanan (opsional)"
-                    value={values.description}
-                    onChange={change('description')}
-                    maxLength={500}
                     disabled={saving}
                   />
                 </CCol>
