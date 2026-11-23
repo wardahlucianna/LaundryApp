@@ -1,5 +1,5 @@
 import React, { Suspense, useEffect } from 'react'
-import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { CSpinner, useColorModes } from '@coreui/react'
 import apiClient from '../services/api'
@@ -11,22 +11,21 @@ const Login = React.lazy(() => import('./views/pages/Login'))
 
 // Tetap validasi session meskipun pengguna sedang diam di halaman.
 function AuthSessionWatcher() {
-  const location = useLocation()
-
   useEffect(() => {
-    if (location.pathname === '/login') return undefined
-
     const checkSession = () => {
+      if (window.location.pathname === '/login') return
+
       apiClient.get('/auth/me').catch(() => {
         // Response 401 ditangani oleh interceptor apiClient dan diarahkan ke login.
       })
     }
 
-    checkSession()
+    // Session tidak perlu diminta ulang setiap pindah halaman.
+    // Request API pada halaman tetap menangani session yang sudah kedaluwarsa.
     const intervalId = window.setInterval(checkSession, 60 * 1000)
 
     return () => window.clearInterval(intervalId)
-  }, [location.pathname])
+  }, [])
 
   return null
 }
