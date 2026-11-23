@@ -105,7 +105,6 @@ const ServiceTypeList = () => {
   const columns = [
     { key: 'number', title: 'No.', width: 60, render: (_row, index) => (pagination.current_page - 1) * 10 + index + 1 },
     { key: 'name', title: 'Nama Jenis Layanan', render: (row) => <span className="fw-semibold">{row.name}</span> },
-    { key: 'description', title: 'Deskripsi', render: (row) => row.description || '—' },
     { key: 'status', title: 'Status', render: (row) => <CBadge color={row.isActive ? 'success' : 'secondary'}>{row.isActive ? 'Aktif' : 'Nonaktif'}</CBadge> },
     { key: 'actions', title: 'Aksi', width: 110, className: 'text-center', headerClassName: 'text-center', render: (row) => <div className="table-actions d-inline-flex gap-2"><CButton color="primary" variant="outline" size="sm" onClick={() => navigate(`/service-types/form/${row.serviceTypeId}`)} title="Ubah jenis layanan" aria-label={`Ubah ${row.name}`}><CIcon icon={cilPencil} /></CButton><CButton color="danger" variant="outline" size="sm" onClick={() => setTarget(row)} title="Hapus jenis layanan" aria-label={`Hapus ${row.name}`}><CIcon icon={cilTrash} /></CButton></div> },
   ]
@@ -123,7 +122,7 @@ const ServiceTypeList = () => {
               <CCol xs={12}>
                 <div className="d-flex flex-column gap-2 w-100">
                   <div className="d-flex flex-column flex-md-row align-items-stretch align-items-md-center gap-2 w-100">
-                    <CFormInput className="flex-grow-1 w-auto" placeholder="Cari nama atau deskripsi jenis layanan" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), applySearch())} />
+                    <CFormInput className="flex-grow-1 w-auto" placeholder="Cari nama jenis layanan" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), applySearch())} />
                     <CFormSelect style={{ maxWidth: 160 }} value={statusInput} onChange={(e) => setStatusInput(e.target.value)} options={[{ label: 'Semua Status', value: '' }, { label: 'Aktif', value: '1' }, { label: 'Nonaktif', value: '0' }]} />
                   </div>
                   <div className="d-flex flex-wrap align-items-center gap-2 pb-3 border-bottom">
