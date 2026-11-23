@@ -94,7 +94,7 @@ const ServiceTypeForm = () => {
             <div className="d-flex align-items-center gap-2 py-3 text-body-secondary"><CSpinner size="sm" /><span>Memuat data jenis layanan...</span></div>
           ) : (
             <CForm onSubmit={save}>
-              <CRow className="g-3">
+              <CRow className="g-3 align-items-end">
                 <CCol xs={12} md={6}>
                   <CFormInput
                     label={<span>Nama Jenis Layanan <span className="text-danger">*</span></span>}
@@ -106,27 +106,22 @@ const ServiceTypeForm = () => {
                     disabled={saving}
                   />
                 </CCol>
-              </CRow>
-
-              <div className="mt-4">
-                <CRow className="g-3">
-                  <CCol xs={12} md={6}>
-                    <div className="role-status-box d-flex align-items-center justify-content-between rounded p-3 h-100">
-                      <div className="role-status-copy">
-                        <div className="fw-semibold mb-1">Status</div>
-                        <div className="role-status-note">Jenis layanan aktif dapat digunakan pada master layanan.</div>
-                      </div>
-                      <CFormSwitch
-                        className={`role-status-switch ${values.isActive ? 'is-active' : 'is-inactive'}`}
-                        label={values.isActive ? 'Aktif' : 'Nonaktif'}
-                        checked={Boolean(values.isActive)}
-                        onChange={change('isActive')}
-                        disabled={saving}
-                      />
+                <CCol xs={12} md={6}>
+                  <div className="role-status-box d-flex align-items-center justify-content-between rounded p-3 h-100">
+                    <div className="role-status-copy">
+                      <div className="fw-semibold mb-1">Status</div>
+                      <div className="role-status-note">Jenis layanan aktif dapat digunakan pada master layanan.</div>
                     </div>
-                  </CCol>
-                </CRow>
-              </div>
+                    <CFormSwitch
+                      className={`role-status-switch ${values.isActive ? 'is-active' : 'is-inactive'}`}
+                      label={values.isActive ? 'Aktif' : 'Nonaktif'}
+                      checked={Boolean(values.isActive)}
+                      onChange={change('isActive')}
+                      disabled={saving}
+                    />
+                  </div>
+                </CCol>
+              </CRow>
 
               <div className="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
                 <CButton color="secondary" size="sm" variant="outline" type="button" disabled={saving} onClick={() => navigate('/service-types')}>Batal</CButton>
