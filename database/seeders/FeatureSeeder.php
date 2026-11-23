@@ -41,6 +41,7 @@ class FeatureSeeder extends Seeder
                 ['Operasional', 'Proses Laundry', '/process', 30],
                 ['Master Data', 'Manajemen Pelanggan', '/customers', 40],
                 ['Master Data', 'Satuan', '/units', 45],
+                ['Master Data', 'Jenis Layanan', '/service-types', 46],
                 ['Transaksi', 'Pembayaran', '/payments', 50],
                 ['Operasional', 'Antar Jemput', '/deliveries', 60],
                 ['Laporan', 'Laporan', '/reports', 70],
