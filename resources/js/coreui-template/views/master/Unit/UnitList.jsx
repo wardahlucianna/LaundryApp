@@ -50,6 +50,30 @@ const UnitList = () => {
 
   useEffect(() => { load() }, [load])
 
+  const applySearch = () => {
+    const nextSearch = searchInput.trim()
+    const nextStatus = statusInput
+    if (nextSearch === search && nextStatus === status && page === 1) {
+      load()
+      return
+    }
+    setPage(1)
+    setSearch(nextSearch)
+    setStatus(nextStatus)
+  }
+
+  const resetSearch = () => {
+    setSearchInput('')
+    setStatusInput('')
+    if (search === '' && status === '' && page === 1) {
+      load()
+      return
+    }
+    setSearch('')
+    setStatus('')
+    setPage(1)
+  }
+
   useEffect(() => {
     if (location.state?.notice) {
       setNotice(location.state.notice)
@@ -85,12 +109,12 @@ const UnitList = () => {
           <CRow className="mb-3"><CCol xs={12}>
             <div className="d-flex flex-column gap-2 w-100">
               <div className="d-flex flex-column flex-md-row align-items-stretch align-items-md-center gap-2 w-100">
-                <CFormInput className="flex-grow-1 w-auto" placeholder="Cari nama atau simbol satuan" value={searchInput} onChange={e => setSearchInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && (setPage(1), setSearch(searchInput.trim()), setStatus(statusInput))} />
+                <CFormInput className="flex-grow-1 w-auto" placeholder="Cari nama atau simbol satuan" value={searchInput} onChange={e => setSearchInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), applySearch())} />
                 <CFormSelect style={{ maxWidth: 160 }} value={statusInput} onChange={e => setStatusInput(e.target.value)} options={[{ label: 'Semua Status', value: '' }, { label: 'Aktif', value: '1' }, { label: 'Nonaktif', value: '0' }]} />
               </div>
               <div className="d-flex flex-wrap align-items-center gap-2 pb-3 border-bottom">
-                <CButton color="primary" size="sm" className="role-search-button role-compact-button" onClick={() => { setPage(1); setSearch(searchInput.trim()); setStatus(statusInput) }}><CIcon icon={cilSearch} className="me-1" />Cari</CButton>
-                <CButton color="secondary" variant="outline" size="sm" className="role-reset-button role-compact-button" onClick={() => { setSearchInput(''); setSearch(''); setStatusInput(''); setStatus(''); setPage(1) }}><CIcon icon={cilReload} className="me-1" />Reset</CButton>
+                <CButton color="primary" size="sm" className="role-search-button role-compact-button" onClick={applySearch}><CIcon icon={cilSearch} className="me-1" />Cari</CButton>
+                <CButton color="secondary" variant="outline" size="sm" className="role-reset-button role-compact-button" onClick={resetSearch}><CIcon icon={cilReload} className="me-1" />Reset</CButton>
               </div>
             </div>
           </CCol></CRow>
