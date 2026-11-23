@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import {
   CAlert, CButton, CCard, CCardBody, CCardHeader, CCol,
   CForm, CFormInput, CFormSwitch, CRow, CSpinner,
 } from '@coreui/react'
 import MasterPageLayout from '../../../components/layout/MasterPageLayout'
-import { apiBase } from '../../../../services/api'
+import apiClient from '../../../../services/api'
 
 const initialValues = {
   name: '',
@@ -23,26 +23,6 @@ const OutletForm = () => {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
-  const request = useCallback(async (path, options = {}) => {
-    const token = localStorage.getItem('auth_token') || localStorage.getItem('access_token') || localStorage.getItem('token') || ''
-    const response = await fetch(`${apiBase}${path}`, {
-      ...options,
-      credentials: 'include',
-      headers: {
-        Accept: 'application/json',
-        ...(options.body ? { 'Content-Type': 'application/json' } : {}),
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        ...(options.headers || {}),
-      },
-    })
-    const payload = await response.json().catch(() => ({}))
-    if (!response.ok) {
-      const validationMessage = payload.errors ? Object.values(payload.errors).flat().join(' ') : ''
-      throw new Error(validationMessage || payload.message || 'Permintaan gagal.')
-    }
-    return payload
-  }, [])
-
   useEffect(() => {
     if (!id) {
       setLoading(false)
@@ -50,8 +30,9 @@ const OutletForm = () => {
     }
 
     let active = true
-    request(`/outlets/${id}`)
-      .then((payload) => {
+    const controller = new AbortController()
+    apiClient.get(`/outlets/${id}`, { signal: controller.signal })
+      .then(({ data: payload }) => {
         if (!active) return
         const data = payload.data || {}
         setValues({
@@ -59,10 +40,14 @@ const OutletForm = () => {
           ...data,
         })
       })
-      .catch((loadError) => active && setError(loadError.message || 'Gagal memuat outlet.'))
+      .catch((loadError) => {
+        if (!active || loadError.code === 'ERR_CANCELED') return
+        const validationMessage = loadError.response?.data?.errors ? Object.values(loadError.response.data.errors).flat().join(' ') : ''
+        setError(validationMessage || loadError.response?.data?.message || 'Gagal memuat outlet.')
+      })
       .finally(() => active && setLoading(false))
 
-    return () => { active = false }
+    return () => { active = false; controller.abort() }
   }, [id, request])
 
   const change = (key) => (event) => {
@@ -77,15 +62,13 @@ const OutletForm = () => {
     setError('')
 
     try {
-      await request(id ? `/outlets/${id}` : '/outlets', {
-        method: id ? 'PUT' : 'POST',
-        body: JSON.stringify(values),
-      })
+      await apiClient({ url: id ? `/outlets/${id}` : '/outlets', method: id ? 'put' : 'post', data: values })
       navigate('/outlets', {
         state: { notice: id ? 'Outlet berhasil diperbarui.' : 'Outlet berhasil ditambahkan.' },
       })
     } catch (saveError) {
-      setError(saveError.message || 'Gagal menyimpan outlet.')
+      const validationMessage = saveError.response?.data?.errors ? Object.values(saveError.response.data.errors).flat().join(' ') : ''
+      setError(validationMessage || saveError.response?.data?.message || 'Gagal menyimpan outlet.')
     } finally {
       setSaving(false)
     }
