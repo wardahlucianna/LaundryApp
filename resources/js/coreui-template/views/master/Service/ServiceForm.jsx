@@ -22,7 +22,7 @@ const ServiceForm = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const existing = useMemo(() => id ? (location.state?.service || mockServices[id]) : null, [id, location.state])
-  const [values, setValues] = useState(() => existing ? { ...existing, prices: [...existing.prices] } : { ...initialValues, type: location.state?.serviceType || '' })
+  const [values, setValues] = useState(() => existing ? { ...existing, duration: String(existing.duration || '').split(' ')[0], durationUnit: String(existing.duration || '').split(' ')[1] || existing.durationUnit || 'Hari', prices: (existing.prices || []).map((price) => typeof price === 'object' ? String(price.price ?? '') : String(price)) } : { ...initialValues, type: location.state?.serviceType || '' })
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
 
@@ -35,7 +35,7 @@ const ServiceForm = () => {
     if (values.prices.some((price) => price === '' || Number(price) <= 0)) { setError('Harga untuk setiap outlet wajib diisi.'); return }
     setSaving(true)
     setError('')
-    navigate('/services', { state: { notice: 'Contoh tampilan: data layanan berhasil disimpan. Integrasi API belum diaktifkan.' } })
+    navigate('/services', { state: { notice: 'Contoh tampilan: data layanan berhasil disimpan. Integrasi API belum diaktifkan.', activeType: values.type } })
   }
 
   return (
