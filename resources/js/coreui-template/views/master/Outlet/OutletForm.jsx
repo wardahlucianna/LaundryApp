@@ -29,6 +29,7 @@ const OutletForm = () => {
       return
     }
 
+    setLoading(true)
     let active = true
     const controller = new AbortController()
     apiClient.get(`/outlets/${id}`, { signal: controller.signal })
@@ -48,7 +49,7 @@ const OutletForm = () => {
       .finally(() => active && setLoading(false))
 
     return () => { active = false; controller.abort() }
-  }, [id, request])
+  }, [id])
 
   const change = (key) => (event) => {
     const rawValue = event.target.type === 'checkbox' ? event.target.checked : event.target.value
