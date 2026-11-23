@@ -2,7 +2,6 @@ import React from 'react'
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const OutletList = React.lazy(() => import('./views/master/Outlet/OutletList'))
 const OutletForm = React.lazy(() => import('./views/master/Outlet/OutletForm'))
-const OutletDetail = React.lazy(() => import('./views/master/Outlet/OutletDetail'))
 const UnitList = React.lazy(() => import('./views/master/Unit/UnitList'))
 const UnitForm = React.lazy(() => import('./views/master/Unit/UnitForm'))
 const PosisiManagement = React.lazy(() => import('./views/access/Role/RoleList'))
@@ -20,7 +19,6 @@ export const routes = [
   { path: '/outlets', name: 'Manajemen Outlet', element: OutletList },
   { path: '/outlets/form', name: 'Tambah Outlet', element: OutletForm },
   { path: '/outlets/form/:id', name: 'Ubah Outlet', element: OutletForm },
-  { path: '/outlets/detail/:id', name: 'Detail Outlet', element: OutletDetail },
   { path: '/units', name: 'Master Satuan', element: UnitList },
   { path: '/units/form', name: 'Tambah Satuan', element: UnitForm },
   { path: '/units/form/:id', name: 'Ubah Satuan', element: UnitForm },
