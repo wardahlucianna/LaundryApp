@@ -14,7 +14,7 @@ class ServiceType extends Model
     public $incrementing = false;
     protected $keyType = 'string';
 
-    protected $fillable = ['name', 'description', 'isActive'];
+    protected $fillable = ['name', 'isActive'];
 
     protected $casts = [
         'isActive' => 'boolean',
