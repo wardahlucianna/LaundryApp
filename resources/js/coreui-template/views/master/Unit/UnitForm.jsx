@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import {
   CButton, CCard, CCardBody, CCardHeader, CCol,
   CForm, CFormInput, CFormSwitch, CRow, CSpinner,
 } from '@coreui/react'
 import MasterPageLayout from '../../../components/layout/MasterPageLayout'
-import { apiBase } from '../../../../services/api'
+import apiClient from '../../../../services/api'
 
 const initialValues = { name: '', symbol: '', isActive: true }
 
@@ -17,26 +17,6 @@ const UnitForm = () => {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
-  const request = useCallback(async (path, options = {}) => {
-    const token = localStorage.getItem('auth_token') || localStorage.getItem('access_token') || localStorage.getItem('token') || ''
-    const response = await fetch(`${apiBase}${path}`, {
-      ...options,
-      credentials: 'include',
-      headers: {
-        Accept: 'application/json',
-        ...(options.body ? { 'Content-Type': 'application/json' } : {}),
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        ...(options.headers || {}),
-      },
-    })
-    const payload = await response.json().catch(() => ({}))
-    if (!response.ok) {
-      const validationMessage = payload.errors ? Object.values(payload.errors).flat().join(' ') : ''
-      throw new Error(validationMessage || payload.message || 'Permintaan gagal.')
-    }
-    return payload
-  }, [])
-
   useEffect(() => {
     if (!id) {
       setLoading(false)
@@ -44,8 +24,9 @@ const UnitForm = () => {
     }
 
     let active = true
-    request(`/units/${id}`)
-      .then((payload) => {
+    const controller = new AbortController()
+    apiClient.get(`/units/${id}`, { signal: controller.signal })
+      .then(({ data: payload }) => {
         if (!active) return
         const data = payload.data || {}
         setValues({
@@ -54,10 +35,14 @@ const UnitForm = () => {
           isActive: data.isActive ?? true,
         })
       })
-      .catch((loadError) => active && setError(loadError.message || 'Gagal memuat satuan.'))
+      .catch((loadError) => {
+        if (!active || loadError.code === 'ERR_CANCELED') return
+        const validationMessage = loadError.response?.data?.errors ? Object.values(loadError.response.data.errors).flat().join(' ') : ''
+        setError(validationMessage || loadError.response?.data?.message || 'Gagal memuat satuan.')
+      })
       .finally(() => active && setLoading(false))
 
-    return () => { active = false }
+    return () => { active = false; controller.abort() }
   }, [id, request])
 
   const change = (key) => (event) => {
@@ -71,15 +56,13 @@ const UnitForm = () => {
     setError('')
 
     try {
-      await request(id ? `/units/${id}` : '/units', {
-        method: id ? 'PUT' : 'POST',
-        body: JSON.stringify(values),
-      })
+      await apiClient({ url: id ? `/units/${id}` : '/units', method: id ? 'put' : 'post', data: values })
       navigate('/units', {
         state: { notice: id ? 'Satuan berhasil diperbarui.' : 'Satuan berhasil ditambahkan.' },
       })
     } catch (saveError) {
-      setError(saveError.message || 'Gagal menyimpan satuan.')
+      const validationMessage = saveError.response?.data?.errors ? Object.values(saveError.response.data.errors).flat().join(' ') : ''
+      setError(validationMessage || saveError.response?.data?.message || 'Gagal menyimpan satuan.')
     } finally {
       setSaving(false)
     }
