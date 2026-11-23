@@ -6,6 +6,8 @@ const UnitList = React.lazy(() => import('./views/master/Unit/UnitList'))
 const UnitForm = React.lazy(() => import('./views/master/Unit/UnitForm'))
 const ServiceTypeList = React.lazy(() => import('./views/master/ServiceType/ServiceTypeList'))
 const ServiceTypeForm = React.lazy(() => import('./views/master/ServiceType/ServiceTypeForm'))
+const ServiceList = React.lazy(() => import('./views/master/Service/ServiceList'))
+const ServiceForm = React.lazy(() => import('./views/master/Service/ServiceForm'))
 const PosisiManagement = React.lazy(() => import('./views/access/Role/RoleList'))
 const PosisiFormPage = React.lazy(() => import('./views/access/Role/RoleForm'))
 const PosisiDetailPage = React.lazy(() => import('./views/access/Role/RoleDetail'))
@@ -27,7 +29,9 @@ export const routes = [
   { path: '/service-types', name: 'Master Jenis Layanan', element: ServiceTypeList },
   { path: '/service-types/form', name: 'Tambah Jenis Layanan', element: ServiceTypeForm },
   { path: '/service-types/form/:id', name: 'Ubah Jenis Layanan', element: ServiceTypeForm },
-  { path: '/services', name: 'Layanan Laundry', element: () => <Placeholder title="Layanan Laundry" /> },
+  { path: '/services', name: 'Master Layanan', element: ServiceList },
+  { path: '/services/form', name: 'Tambah Layanan', element: ServiceForm },
+  { path: '/services/form/:id', name: 'Ubah Layanan', element: ServiceForm },
   { path: '/transactions', name: 'Transaksi', element: () => <Placeholder title="Transaksi" /> },
   { path: '/reports', name: 'Laporan', element: () => <Placeholder title="Laporan" /> },
   { path: '/settings', name: 'Pengaturan', element: () => <Placeholder title="Pengaturan" /> },
