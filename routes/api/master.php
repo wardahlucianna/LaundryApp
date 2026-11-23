@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Master\Access\PermissionFeatureController;
 use App\Http\Controllers\Api\Master\Access\PermissionGroupController;
 use App\Http\Controllers\Api\Master\Access\RoleController;
 use App\Http\Controllers\Api\Master\OutletController;
+use App\Http\Controllers\Api\Master\ServiceTypeController;
 use App\Http\Controllers\Api\Master\UnitController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +21,13 @@ Route::middleware('auth:web')->group(function () {
     Route::get('/units/{unit}', [UnitController::class, 'show'])->middleware('permission:UNIT_VIEW');
     Route::put('/units/{unit}', [UnitController::class, 'update'])->middleware('permission:UNIT_MANAGE');
     Route::delete('/units/{unit}', [UnitController::class, 'destroy'])->middleware('permission:UNIT_MANAGE');
+
+    Route::get('/service-types', [ServiceTypeController::class, 'index'])->middleware('permission:SERVICE_TYPE_VIEW');
+    Route::post('/service-types', [ServiceTypeController::class, 'store'])->middleware('permission:SERVICE_TYPE_MANAGE');
+    Route::get('/service-types/{serviceType}', [ServiceTypeController::class, 'show'])->middleware('permission:SERVICE_TYPE_VIEW');
+    Route::put('/service-types/{serviceType}', [ServiceTypeController::class, 'update'])->middleware('permission:SERVICE_TYPE_MANAGE');
+    Route::delete('/service-types/{serviceType}', [ServiceTypeController::class, 'destroy'])->middleware('permission:SERVICE_TYPE_MANAGE');
+
     Route::get('/roles', [RoleController::class, 'index'])->middleware('permission:ROLE_VIEW');
     Route::post('/roles', [RoleController::class, 'store'])->middleware('permission:ROLE_MANAGE');
     Route::get('/roles/features/options', [RoleController::class, 'featureOptions'])->middleware('permission:ROLE_VIEW');
