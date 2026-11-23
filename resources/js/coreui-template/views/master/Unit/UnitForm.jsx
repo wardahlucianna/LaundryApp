@@ -23,6 +23,7 @@ const UnitForm = () => {
       return
     }
 
+    setLoading(true)
     let active = true
     const controller = new AbortController()
     apiClient.get(`/units/${id}`, { signal: controller.signal })
@@ -43,7 +44,7 @@ const UnitForm = () => {
       .finally(() => active && setLoading(false))
 
     return () => { active = false; controller.abort() }
-  }, [id, request])
+  }, [id])
 
   const change = (key) => (event) => {
     const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value
