@@ -24,7 +24,7 @@ const formatRupiah = (value) => new Intl.NumberFormat('id-ID', { style: 'currenc
 const ServiceList = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  const [activeType, setActiveType] = useState('Semua')
+  const [activeType, setActiveType] = useState(location.state?.activeType || 'Semua')
   const [searchInput, setSearchInput] = useState('')
   const [search, setSearch] = useState('')
   const [statusInput, setStatusInput] = useState('')
