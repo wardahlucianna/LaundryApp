@@ -23,6 +23,7 @@ const ServiceTypeForm = () => {
       return undefined
     }
 
+    setLoading(true)
     let active = true
     const controller = new AbortController()
     apiClient.get(`/service-types/${id}`, { signal: controller.signal })
@@ -42,7 +43,7 @@ const ServiceTypeForm = () => {
       .finally(() => active && setLoading(false))
 
     return () => { active = false; controller.abort() }
-  }, [id, request])
+  }, [id])
 
   const change = (key) => (event) => {
     const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value
