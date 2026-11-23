@@ -12,6 +12,19 @@ export const apiBase = !configuredBase
 
 // LaundryApp uses session/cookie authentication.
 // Do not attach Authorization: Bearer tokens from localStorage.
+const pendingGetRequests = new Map()
+
+export const getDeduped = (url, config = {}) => {
+  const key = `${url}:${JSON.stringify(config.params || {})}`
+  if (pendingGetRequests.has(key)) return pendingGetRequests.get(key)
+
+  const request = apiClient.get(url, config).finally(() => {
+    if (pendingGetRequests.get(key) === request) pendingGetRequests.delete(key)
+  })
+  pendingGetRequests.set(key, request)
+  return request
+}
+
 const apiClient = axios.create({
   baseURL: apiBase,
   withCredentials: true,
