@@ -31,6 +31,7 @@ class EnsurePermission
                 'Manajemen Peran',
             ],
             'UNIT_VIEW', 'UNIT_MANAGE' => ['Satuan', 'Master Satuan', 'Manajemen Satuan'],
+            'SERVICE_TYPE_VIEW', 'SERVICE_TYPE_MANAGE' => ['Jenis Layanan', 'Master Jenis Layanan'],
             default => null,
         };
     }
@@ -54,6 +55,7 @@ class EnsurePermission
             'ROLE_VIEW', 'ROLE_MANAGE', 'ACCESS_MANAGE' => ['/roles', '/role', '/management-role', '/manajemen-role', '/peran'],
             'FEATURE_VIEW', 'FEATURE_CREATE', 'FEATURE_UPDATE', 'FEATURE_DELETE' => ['/feature', '/features', '/permission-features'],
             'UNIT_VIEW', 'UNIT_MANAGE' => ['/units'],
+            'SERVICE_TYPE_VIEW', 'SERVICE_TYPE_MANAGE' => ['/service-types'],
             default => [],
         };
 
