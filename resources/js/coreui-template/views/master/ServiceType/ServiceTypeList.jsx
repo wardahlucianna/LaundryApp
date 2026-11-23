@@ -7,7 +7,7 @@ import MasterPageLayout from '../../../components/layout/MasterPageLayout'
 import GlobalTable from '../../../components/data/GlobalTable'
 import GlobalPagination from '../../../components/data/GlobalPagination'
 import ConfirmModal from '../../../components/ConfirmModal'
-import { apiBase } from '../../../../services/api'
+import apiClient, { getDeduped } from '../../../../services/api'
 
 const ServiceTypeList = () => {
   const navigate = useNavigate()
@@ -26,15 +26,13 @@ const ServiceTypeList = () => {
   const [deleting, setDeleting] = useState(false)
 
   const request = useCallback(async (path, options = {}) => {
-    const token = localStorage.getItem('auth_token') || localStorage.getItem('access_token') || localStorage.getItem('token') || ''
-    const response = await fetch(`${apiBase}${path}`, {
-      ...options,
-      credentials: 'include',
-      headers: { Accept: 'application/json', ...(options.body ? { 'Content-Type': 'application/json' } : {}), ...(token ? { Authorization: `Bearer ${token}` } : {}) },
-    })
-    const payload = await response.json().catch(() => ({}))
-    if (!response.ok) throw new Error(payload.errors ? Object.values(payload.errors).flat().join(' ') : payload.message || 'Permintaan gagal.')
-    return payload
+    const method = String(options.method || 'GET').toUpperCase()
+    if (method === 'GET') {
+      const { data } = await getDeduped(path)
+      return data
+    }
+    const { data } = await apiClient({ url: path, method: method.toLowerCase(), data: options.body ? JSON.parse(options.body) : undefined })
+    return data
   }, [])
 
   const load = useCallback(async () => {
